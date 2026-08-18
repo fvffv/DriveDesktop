@@ -1,0 +1,162 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{08617FA8-7510-1E6C-B14A-FF8E7BC43EEF}|drive-desktop.csproj|d:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\viewmodels\\viewmodelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08617FA8-7510-1E6C-B14A-FF8E7BC43EEF}|drive-desktop.csproj|solutionrelative:viewmodels\\viewmodelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08617FA8-7510-1E6C-B14A-FF8E7BC43EEF}|drive-desktop.csproj|d:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\viewmodels\\mainwindowviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08617FA8-7510-1E6C-B14A-FF8E7BC43EEF}|drive-desktop.csproj|solutionrelative:viewmodels\\mainwindowviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08617FA8-7510-1E6C-B14A-FF8E7BC43EEF}|drive-desktop.csproj|d:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\views\\mainwindow.axaml||{4DC5468E-D6D5-4393-818C-BC82F347E8FD}",
+      "RelativeMoniker": "D:0:0:{08617FA8-7510-1E6C-B14A-FF8E7BC43EEF}|drive-desktop.csproj|solutionrelative:views\\mainwindow.axaml||{4DC5468E-D6D5-4393-818C-BC82F347E8FD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\14281\\.nuget\\packages\\avalonia\\12.0.3\\buildTransitive\\Avalonia.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08617FA8-7510-1E6C-B14A-FF8E7BC43EEF}|drive-desktop.csproj|d:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08617FA8-7510-1E6C-B14A-FF8E7BC43EEF}|drive-desktop.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08617FA8-7510-1E6C-B14A-FF8E7BC43EEF}|drive-desktop.csproj|d:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\app.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08617FA8-7510-1E6C-B14A-FF8E7BC43EEF}|drive-desktop.csproj|solutionrelative:app.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08617FA8-7510-1E6C-B14A-FF8E7BC43EEF}|drive-desktop.csproj|d:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\app.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
+      "RelativeMoniker": "D:0:0:{08617FA8-7510-1E6C-B14A-FF8E7BC43EEF}|drive-desktop.csproj|solutionrelative:app.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\14281\\.nuget\\packages\\avalonia\\12.0.3\\buildTransitive\\Avalonia.props||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "App.axaml",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\App.axaml",
+              "RelativeDocumentMoniker": "App.axaml",
+              "ToolTip": "D:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\App.axaml",
+              "RelativeToolTip": "App.axaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-05-14T14:01:24.337Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainWindow.axaml",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\Views\\MainWindow.axaml",
+              "RelativeDocumentMoniker": "Views\\MainWindow.axaml",
+              "ToolTip": "D:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\Views\\MainWindow.axaml",
+              "RelativeToolTip": "Views\\MainWindow.axaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-05-14T14:10:59.077Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{dcc4ea97-1c0c-482b-b205-e541c0df9728}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e5c86464-96be-4d7c-9a8b-abcb3bbf5f92}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{73068c07-fba1-453f-99ae-6edf972119b2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "App.axaml.cs",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\App.axaml.cs",
+              "RelativeDocumentMoniker": "App.axaml.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\App.axaml.cs",
+              "RelativeToolTip": "App.axaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T14:01:25.785Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ViewModelBase.cs",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\ViewModels\\ViewModelBase.cs",
+              "RelativeDocumentMoniker": "ViewModels\\ViewModelBase.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\ViewModels\\ViewModelBase.cs",
+              "RelativeToolTip": "ViewModels\\ViewModelBase.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAswAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T12:57:38.699Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T12:57:17.089Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Avalonia.targets",
+              "DocumentMoniker": "C:\\Users\\14281\\.nuget\\packages\\avalonia\\12.0.3\\buildTransitive\\Avalonia.targets",
+              "ToolTip": "C:\\Users\\14281\\.nuget\\packages\\avalonia\\12.0.3\\buildTransitive\\Avalonia.targets [\u53EA\u8BFB]",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAQAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2026-05-14T12:37:06.057Z",
+              "EditorCaption": " [\u53EA\u8BFB]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Avalonia.props",
+              "DocumentMoniker": "C:\\Users\\14281\\.nuget\\packages\\avalonia\\12.0.3\\buildTransitive\\Avalonia.props",
+              "ToolTip": "C:\\Users\\14281\\.nuget\\packages\\avalonia\\12.0.3\\buildTransitive\\Avalonia.props [\u53EA\u8BFB]",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAQAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2026-05-14T12:37:05.565Z",
+              "EditorCaption": " [\u53EA\u8BFB]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainWindowViewModel.cs",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\ViewModels\\MainWindowViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\MainWindowViewModel.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u7F51\u76D8\u7CFB\u7EDF\\drive-desktop\\ViewModels\\MainWindowViewModel.cs",
+              "RelativeToolTip": "ViewModels\\MainWindowViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T12:30:04.379Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

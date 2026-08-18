@@ -1,0 +1,477 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             xmlns:tc="using:drive_desktop.Components.TemplateControls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="950"
+             xmlns:loader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             x:DataType="vm:FilePageViewModel"
+             xmlns:u="https://irihi.tech/ursa"
+             Background="{DynamicResource HomeBg}"
+             xmlns:userControls="clr-namespace:drive_desktop.Components.UserControls"
+             x:Class="drive_desktop.Components.UserControls.FilePage">
+    <Design.DataContext>
+        <vm:FilePageViewModel />
+    </Design.DataContext>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    <x:Double x:Key="SkeletonOpacity">0.15</x:Double>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Default">
+                    <x:Double x:Key="SkeletonOpacity">1.0</x:Double>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.Styles>
+
+        <Style Selector="Border.BreadcrumbBorder">
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SideBarBrColor}" />
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="BorderThickness" Value="1" />
+
+            <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}" />
+            <Setter Property="Padding" Value="20,12" />
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+
+
+        </Style>
+        <Style Selector="Border.BreadcrumbBorder:pointerover">
+            <Setter Property="Background" Value="{DynamicResource HomeBg}" />
+            <Setter Property="Cursor" Value="IBeam" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+        </Style>
+
+
+        <!--路由输入框旁边的图标-->
+        <Style Selector="TextBlock.routeIcon">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <!--路由输入框-->
+        <Style Selector="TextBox.routeInput">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="TextBox.routeInput:focus">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <!--全选按钮-->
+        <Style Selector="CheckBox.AllCheckBox">
+            <Setter Property="Cursor" Value="Hand"></Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Panel Background="Transparent" Height="35">
+
+                        <Border x:Name="CheckBorder"
+                                Margin="0,3,0,0"
+                                Padding="10,5,10,5"
+                                CornerRadius="50" Transitions="{StaticResource CommonColorTransitions}">
+
+                            <StackPanel Spacing="5" Orientation="Horizontal" VerticalAlignment="Center"
+                                        HorizontalAlignment="Center">
+                                <TextBlock x:Name="CheckBorderIcon" VerticalAlignment="Center"
+                                           TextAlignment="Center"
+                                           FontFamily="{StaticResource FASolid}" Foreground="#C0C4CC" Text="○"
+                                           FontSize="20" />
+                                <TextBlock x:Name="CheckBorderText" VerticalAlignment="Center" Text="全选" FontSize="12"
+                                           Foreground="{DynamicResource SideTextColor}" />
+                            </StackPanel>
+
+
+                        </Border>
+                    </Panel>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="CheckBox.AllCheckBox:pointerover /template/ TextBlock#CheckBorderIcon">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="CheckBox.AllCheckBox:pointerover /template/ TextBlock#CheckBorderText">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <!--选中样式-->
+        <Style Selector="CheckBox.AllCheckBox:checked /template/ TextBlock#CheckBorderText">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="Text" Value="已全选" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style Selector="CheckBox.AllCheckBox:checked /template/ TextBlock#CheckBorderIcon">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="Text" Value="&#xf00c;" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontSize" Value="15" />
+        </Style>
+
+
+        <Style Selector="Button.RefreshButton:pressed">
+            <Setter Property="RenderTransform" Value="translateY(-2px) rotate(180deg)" />
+        </Style>
+
+
+        <Style Selector="TextBlock.BreadcrumbText">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Foreground" Duration="0:0:0.1" />
+                </Transitions>
+            </Setter>
+
+        </Style>
+        <Style Selector="TextBlock.BreadcrumbText:pointerover">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}"></Setter>
+
+        </Style>
+
+
+    </UserControl.Styles>
+    <Border Padding="30,0" Background="{DynamicResource HomeBg}" Transitions="{StaticResource CommonColorTransitions}">
+        <Grid RowDefinitions="Auto,Auto, *" Focusable="True">
+            <userControls:TopBar Grid.Row="0" Grid.Column="0" DataContext="{Binding TopBarViewModel}" />
+            <!--面包屑-->
+            <Border Grid.Row="1" Classes="BreadcrumbBorder">
+                <Panel>
+                    <TextBlock FontSize="16" Text="&#xf07c;" HorizontalAlignment="Left" VerticalAlignment="Center"
+                               Foreground="{DynamicResource SideTextColor}"
+                               FontFamily="{StaticResource FASolid}" />
+                    <!--路由输入框  这里使用TextBox的IsFocused属性来自动判断是否聚焦 来切换其他组件显示消失-->
+                    <Panel Margin="30,0,0,0">
+                        <TextBlock IsVisible="{Binding #RouteInput.IsFocused}" Classes="routeIcon" FontSize="18"
+                                   Foreground="#8D9095" Text="&#xf040;" FontFamily="{StaticResource FASolid}"
+                                   HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <TextBox x:Name="RouteInput" Classes="naked routeInput" Margin="25,0,0,0"
+                                 Text="{Binding BreadcrumbPath,Mode=TwoWay}"
+                                 IsEnabled="{Binding BreadcrumbTextBoxEnabled}"
+                                 HorizontalAlignment="Stretch">
+                            <TextBox.KeyBindings>
+                                <KeyBinding Gesture="Enter"
+                                            Command="{Binding BreadcrumbInputCommand}" />
+                            </TextBox.KeyBindings>
+                        </TextBox>
+                        <!--面包屑-->
+                        <u:Breadcrumb ItemsSource="{Binding BreadcrumbList}"
+                                      IsVisible="{Binding !#RouteInput.IsFocused}"
+                                      Separator="> ">
+                            <u:Breadcrumb.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Classes="naked"
+                                            Command="{Binding $parent[UserControl].((vm:FilePageViewModel)DataContext).BreadcrumbClickCommand}"
+                                            CommandParameter="{Binding}">
+                                        <TextBlock Classes="BreadcrumbText" Text="{Binding FolderName}" />
+                                    </Button>
+                                </DataTemplate>
+                            </u:Breadcrumb.ItemTemplate>
+                        </u:Breadcrumb>
+                    </Panel>
+
+                    <!--刷新按钮-->
+                    <Button Classes="naked RefreshButton" HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Command="{Binding RefreshCurrentDirectoryCommand}">
+                        <TextBlock FontSize="20" Text="&#xf2f1;" HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontFamily="{StaticResource FASolid}" />
+                        <Button.Transitions>
+                            <Transitions>
+                                <TransformOperationsTransition Property="RenderTransform"
+                                                               Duration="0:0:0.3"
+                                                               Easing="CubicEaseOut" />
+                            </Transitions>
+                        </Button.Transitions>
+
+                    </Button>
+                </Panel>
+            </Border>
+            <!--文件管理面板-->
+            <tc:LoadMoreScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="2" Margin="0,10,0,0"
+                                     IsLoadMoreEnabled="True" LoadMoreThreshold="50"
+                                     LoadMoreCommand="{Binding LoadNextPageCommand}">
+                <Panel>
+                    <!--骨架-->
+                    <StackPanel Opacity="{DynamicResource SkeletonOpacity}" IsVisible="{Binding IsLoading}">
+                        <Panel Margin="0,0,0,10">
+                            <u:Skeleton IsLoading="True" IsActive="True" Width="80" Height="20" CornerRadius="4"
+                                        HorizontalAlignment="Left" />
+                        </Panel>
+                        <ItemsRepeater ItemsSource="{Binding SkeletonItems}">
+                            <ItemsRepeater.Layout>
+                                <UniformGridLayout MinItemWidth="150" MinItemHeight="150" MinColumnSpacing="12"
+                                                   MinRowSpacing="12" />
+                            </ItemsRepeater.Layout>
+                            <ItemsRepeater.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Classes="FileItemBorder">
+                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
+                                            <u:Skeleton IsLoading="True" IsActive="True" Width="42" Height="42"
+                                                        CornerRadius="8" Margin="0,0,0,10" />
+                                            <u:Skeleton IsLoading="True" IsActive="True" Width="100" Height="13"
+                                                        CornerRadius="2" />
+                                            <u:Skeleton IsLoading="True" IsActive="True" Width="80" Height="11"
+                                                        CornerRadius="2" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsRepeater.ItemTemplate>
+                        </ItemsRepeater>
+                    </StackPanel>
+                    <!--文件预览-->
+                    <StackPanel IsVisible="{Binding !IsLoading}">
+                        <!--文件夹标题和数量和全选按钮-->
+                        <DockPanel IsVisible="{Binding !IsFolderEmpty}">
+                            <!--文件夹标题-->
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="文件夹" FontSize="16"
+                                       FontWeight="Bold" />
+                            <!--数量-->
+                            <Border Margin="5,0,0,0" CornerRadius="50" Padding="8,2" VerticalAlignment="Center"
+                                    Background="{DynamicResource SideBarBrColor}"
+                                    Transitions="{StaticResource CommonColorTransitions}">
+
+                                <TextBlock VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Text="{Binding FolderInfos.Count}"
+                                           FontSize="11" FontWeight="600" Foreground="{DynamicResource SideTextColor}" />
+                            </Border>
+                            <!--全选-->
+                            <CheckBox IsChecked="{Binding FolderIsAllChecked}"
+                                      Command="{Binding FolderSelectAllCommand}"
+                                      CommandParameter="{Binding $self.IsChecked}" Classes="AllCheckBox"
+                                      HorizontalAlignment="Right" />
+                        </DockPanel>
+                        <!--文件夹列表-->
+                        <ItemsRepeater IsVisible="{Binding !IsFolderEmpty}" ItemsSource="{Binding FolderInfos}">
+
+                            <ItemsRepeater.Layout>
+                                <UniformGridLayout MinItemWidth="170"
+                                                   MinItemHeight="150"
+                                                   MinColumnSpacing="12" MinRowSpacing="12" />
+                            </ItemsRepeater.Layout>
+                            <ItemsRepeater.ItemTemplate>
+                                <DataTemplate>
+                                    <!--文件夹模板-->
+                                    <Border ClipToBounds="False" Focusable="True"
+                                            DoubleTapped="InputElement_OnDoubleTapped"
+                                            Classes="FileCard" Classes.selected="{Binding #ItemCheckBox.IsChecked}">
+                                        <Panel>
+                                            <!-- 1. 勾选框 -->
+                                            <CheckBox x:Name="ItemCheckBox"
+                                                      Classes="CardCheckbox"
+                                                      Command="{Binding $parent[UserControl].((vm:FilePageViewModel)DataContext).FolderItemCheckCommand}"
+                                                      IsChecked="{Binding IsChecked, Mode=TwoWay}" />
+
+                                            <!-- 2. 菜单按钮 (三个点) -->
+                                            <Button Classes="CardMore">
+                                                <Button.Flyout>
+                                                    <Flyout ShowMode="Transient" Placement="Bottom"
+                                                            FlyoutPresenterClasses="el-dropdown-menu">
+                                                        <StackPanel Width="120" Spacing="2" Margin="-8,-4"
+                                                                    Button.Click="Button_OnClick">
+                                                            <Button Classes="el-dropdown-item" Content="重命名"
+                                                                    Command="{Binding $parent[UserControl].((vm:FilePageViewModel)DataContext).EditNameCommand}"
+                                                                    CommandParameter="{Binding}" />
+                                                            <Border Height="1"
+                                                                    Background="{DynamicResource CheckButtonCheckBg}"
+                                                                    Margin="0,4" />
+                                                            <Button Classes="el-dropdown-item"
+                                                                    Command="{Binding $parent[UserControl].((vm:FilePageViewModel)DataContext).DelFileOrFolderCommand}"
+                                                                    CommandParameter="{Binding}">
+                                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                    <TextBlock Foreground="{DynamicResource DelColor}"
+                                                                               FontFamily="{StaticResource FASolid}"
+                                                                               Text="&#xf1f8;"
+                                                                               VerticalAlignment="Center" />
+                                                                    <TextBlock Foreground="{DynamicResource DelColor}"
+                                                                               Text="删除文件夹" VerticalAlignment="Center" />
+                                                                </StackPanel>
+                                                            </Button>
+                                                        </StackPanel>
+                                                    </Flyout>
+                                                </Button.Flyout>
+                                            </Button>
+
+                                            <!-- 3. 内容布局 -->
+                                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <!-- 图标 (大圆角卡片专属大尺寸图标) -->
+                                                <TextBlock Classes="IconLarge"
+                                                           Foreground="#FACC15"
+                                                           FontFamily="{StaticResource FASolid}"
+                                                           Text="&#xf07b;"
+                                                           HorizontalAlignment="Center" />
+
+                                                <!-- 名称 (居中截断) -->
+                                                <TextBlock ToolTip.Tip="{Binding FolderName}"
+                                                           MaxWidth="110"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           FontWeight="SemiBold"
+                                                           FontSize="13"
+                                                           TextAlignment="Center"
+                                                           Margin="0,0,0,4"
+                                                           Text="{Binding FolderName}" />
+
+                                                <!-- 时间 -->
+                                                <TextBlock Foreground="{DynamicResource TextColor3}"
+                                                           FontSize="11"
+                                                           TextAlignment="Center"
+                                                           Text="{Binding CreationTime, StringFormat='yyyy/MM/dd HH:mm'}" />
+                                            </StackPanel>
+                                        </Panel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsRepeater.ItemTemplate>
+                        </ItemsRepeater>
+                        <!--文件标题和数量和全选按钮-->
+                        <DockPanel IsVisible="{Binding !IsFileEmpty}">
+
+                            <!--文件标题-->
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="文件" FontSize="16"
+                                       FontWeight="Bold" />
+                            <!--数量-->
+                            <Border Margin="5,0,0,0" CornerRadius="50" Padding="8,2" VerticalAlignment="Center"
+                                    Background="{DynamicResource SideBarBrColor}"
+                                    Transitions="{StaticResource CommonColorTransitions}">
+                                <TextBlock VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Text="{Binding FileCount}"
+                                           FontSize="11" FontWeight="600" Foreground="{DynamicResource SideTextColor}" />
+                            </Border>
+                            <!--全选-->
+                            <CheckBox IsChecked="{Binding FileIsAllChecked}" Command="{Binding FileSelectAllCommand}"
+                                      CommandParameter="{Binding $self.IsChecked}" Classes="AllCheckBox"
+                                      HorizontalAlignment="Right" />
+                        </DockPanel>
+                        <!--文件-->
+                        <ItemsRepeater IsVisible="{Binding !IsFileEmpty}" ItemsSource="{Binding FileInfos}">
+                            <ItemsRepeater.Layout>
+                                <UniformGridLayout MinItemWidth="170" MinItemHeight="150"
+                                                   MinColumnSpacing="12" MinRowSpacing="12" />
+                            </ItemsRepeater.Layout>
+                            <ItemsRepeater.ItemTemplate>
+                                <DataTemplate>
+                                    <!--文件模板-->
+                                    <Border ClipToBounds="False" DoubleTapped="InputElement_OnDoubleTapped2"
+                                            AttachedToVisualTree="Visual_OnAttachedToVisualTree"
+                                            Classes="FileCard"
+                                            Classes.selected="{Binding #ItemCheckBox.IsChecked}">
+                                        <Panel>
+                                            <!-- 1. 勾选框 -->
+                                            <CheckBox x:Name="ItemCheckBox"
+                                                      Classes="CardCheckbox"
+                                                      Command="{Binding $parent[UserControl].((vm:FilePageViewModel)DataContext).FileItemCheckCommand}"
+                                                      IsChecked="{Binding IsChecked, Mode=TwoWay}" />
+
+                                            <!-- 2. 菜单按钮 (三个点) -->
+                                            <Button Classes="CardMore">
+                                                <Button.Flyout>
+                                                    <Flyout ShowMode="TransientWithDismissOnPointerMoveAway"
+                                                            Placement="Bottom"
+                                                            FlyoutPresenterClasses="el-dropdown-menu">
+                                                        <StackPanel Width="120" Spacing="2" Margin="-8,-4"
+                                                                    Button.Click="Button_OnClick">
+                                                            <Button Classes="el-dropdown-item" Content="下载"
+                                                                    Command="{Binding $parent[UserControl].((vm:FilePageViewModel)DataContext).DownloadFileCommand}"
+                                                                    CommandParameter="{Binding}" />
+                                                            <Button Classes="el-dropdown-item" Content="复制直链"
+                                                                    Command="{Binding $parent[UserControl].((vm:FilePageViewModel)DataContext).CopyFileLinkCommand}"
+                                                                    CommandParameter="{Binding}" />
+                                                            <Button Classes="el-dropdown-item" Content="分享"
+                                                                    Command="{Binding $parent[UserControl].((vm:FilePageViewModel)DataContext).OpenShareFileCommand}"
+                                                                    CommandParameter="{Binding}" />
+                                                            <Border Height="1"
+                                                                    Background="{DynamicResource CheckButtonCheckBg}"
+                                                                    Margin="0,4" />
+                                                            <Button Classes="el-dropdown-item" Content="重命名"
+                                                                    Command="{Binding $parent[UserControl].((vm:FilePageViewModel)DataContext).EditNameCommand}"
+                                                                    CommandParameter="{Binding}" />
+                                                            <Button Classes="el-dropdown-item" Content="属性"
+                                                                    Command="{Binding $parent[UserControl].((vm:FilePageViewModel)DataContext).OpenFilePropertiesCommand}"
+                                                                    CommandParameter="{Binding}" />
+                                                            <Border Height="1"
+                                                                    Background="{DynamicResource CheckButtonCheckBg}"
+                                                                    Margin="0,4" />
+                                                            <Button Classes="el-dropdown-item"
+                                                                    Command="{Binding $parent[UserControl].((vm:FilePageViewModel)DataContext).DelFileOrFolderCommand}"
+                                                                    CommandParameter="{Binding}">
+                                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                    <TextBlock Foreground="{DynamicResource DelColor}"
+                                                                               FontFamily="{StaticResource FASolid}"
+                                                                               Text="&#xf1f8;"
+                                                                               VerticalAlignment="Center" />
+                                                                    <TextBlock Foreground="{DynamicResource DelColor}"
+                                                                               Text="删除文件" VerticalAlignment="Center" />
+                                                                </StackPanel>
+                                                            </Button>
+                                                        </StackPanel>
+                                                    </Flyout>
+                                                </Button.Flyout>
+                                            </Button>
+
+                                            <!-- 内容布局 -->
+                                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <!-- 图标与缩略图容器 -->
+                                                <Panel Margin="0,0,0,15">
+                                                    <TextBlock x:Name="FallbackIcon"
+                                                               Classes="IconLarge"
+                                                               Margin="0"
+                                                               IsVisible="{Binding #ThumbnailImage.Source, Converter={x:Static ObjectConverters.IsNull}}"
+                                                               FontFamily="{Binding FileTypeInfo.FontFamilyResource}"
+                                                               Foreground="{Binding FileTypeInfo.HexColor}"
+                                                               Text="{Binding FileTypeInfo.IconCode}"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center" />
+
+                                                    <!-- 图像缩略图 (如果有) -->
+                                                    <Border ClipToBounds="True" CornerRadius="8" Width="56" Height="56"
+                                                            IsVisible="{Binding #ThumbnailImage.Source, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                                        <Image x:Name="ThumbnailImage"
+                                                               Stretch="UniformToFill"
+                                                               loader:ImageLoader.Source="{Binding ImageUrl}" />
+                                                    </Border>
+                                                </Panel>
+
+                                                <!-- 文件名 -->
+                                                <TextBlock ToolTip.Tip="{Binding FileName}"
+                                                           MaxWidth="110"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           FontWeight="SemiBold"
+                                                           FontSize="13"
+                                                           TextAlignment="Center"
+                                                           Margin="0,0,0,4"
+                                                           Text="{Binding FileName}" />
+
+                                                <!-- 日期 -->
+                                                <TextBlock Foreground="{DynamicResource TextColor3}"
+                                                           FontSize="11"
+                                                           TextAlignment="Center"
+                                                           Text="{Binding CreationTime, StringFormat='yyyy/MM/dd HH:mm'}" />
+                                            </StackPanel>
+                                        </Panel>
+                                    </Border>
+                                </DataTemplate>
+
+                            </ItemsRepeater.ItemTemplate>
+                        </ItemsRepeater>
+                        <!--空空如也-->
+                        <StackPanel Classes.bounceEffect="{Binding IsConditionMet}"
+                                    IsVisible="{Binding IsConditionMet}" HorizontalAlignment="Center" Spacing="10">
+
+                            <TextBlock TextAlignment="Center" Foreground="{DynamicResource ThemeColor}" FontSize="66"
+                                       Text="&#xf49e;" FontFamily="{StaticResource FASolid}" Margin="0,40,0,20" />
+                            <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="16" Text="这里空空如也" />
+                            <TextBlock TextAlignment="Center" Foreground="DarkGray" Text="当前目录下没有任何文件或文件夹" />
+                        </StackPanel>
+                        <StackPanel VerticalAlignment="Bottom" IsVisible="{Binding IsTurnPage}" Spacing="5">
+                            <TextBlock Text="正在加载中..." HorizontalAlignment="Center" Foreground="Gray" FontSize="12" />
+                            <ProgressBar IsIndeterminate="True" HorizontalAlignment="Stretch" Height="4" />
+                        </StackPanel>
+
+                    </StackPanel>
+
+                </Panel>
+
+            </tc:LoadMoreScrollViewer>
+
+        </Grid>
+    </Border>
+
+
+</UserControl>

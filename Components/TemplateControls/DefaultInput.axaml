@@ -1,0 +1,79 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:drive_desktop.Components.TemplateControls">
+    <Design.PreviewWith>
+        <controls:DefaultInput />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|DefaultInput">
+        <Setter Property="Height" Value="50" />
+        <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <!--边框-->
+                    <Border Classes="BgBorder1" CornerRadius="{TemplateBinding CornerRadius}"
+                            Background="Transparent" />
+                    <!--底色-->
+                    <Border CornerRadius="{TemplateBinding CornerRadius}" ZIndex="-1" Opacity="0.8"
+                            
+                            Background="{TemplateBinding Background}" />
+
+                    <Grid Margin="10,0,10,0" ColumnDefinitions="Auto,*">
+                        <!--图标-->
+                        <TextBlock Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   Margin="3,5,10,5"
+                                   TextAlignment="Center"
+                                   FontFamily="{StaticResource FASolid}"
+                                   Foreground="{TemplateBinding IconColor}"
+                                   FontSize="{TemplateBinding IconFontSize}"
+                                   Text="{TemplateBinding IconText}" IsVisible="{TemplateBinding IsShowIcon}" />
+                        <!--内容-->
+                        <TextBox x:Name="PART_TextBox"
+                                 Grid.Column="1"
+                                 HorizontalAlignment="Stretch"
+                                 Classes="naked2"
+                                 AcceptsReturn="{TemplateBinding AcceptsReturn}"
+                                 TextWrapping="Wrap"
+                                 PasswordChar="{TemplateBinding PasswordChar}"
+                                 PlaceholderText="{TemplateBinding Watermark}"
+                                 FontSize="{TemplateBinding FontSize}"
+                                 Text="{TemplateBinding Text,Mode=TwoWay}" />
+
+                    </Grid>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+
+    </Style>
+    <!--属性谓词选择器 监听AcceptsReturn值  做出改变-->
+    <Style Selector="controls|DefaultInput[AcceptsReturn=False] /template/ TextBox#PART_TextBox">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="controls|DefaultInput[AcceptsReturn=True] /template/ TextBox#PART_TextBox">
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="Margin" Value="0,10,0,0" />
+    </Style>
+    <Style Selector="controls|DefaultInput /template/ Border.BgBorder1">
+        <Setter Property="BorderBrush" Value="{TemplateBinding BorderColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="controls|DefaultInput:focus-within /template/ Border.BgBorder1">
+
+
+        <Setter Property="BorderBrush" Value="#0078d4" />
+    </Style>
+
+
+</Styles>

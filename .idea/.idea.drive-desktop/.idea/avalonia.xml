@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="App.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/TemplateControls/CircularProgressBar.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/TemplateControls/CodeView.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/TemplateControls/DefaultButton.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/TemplateControls/DefaultDialog.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/TemplateControls/DefaultInput.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/TemplateControls/DefaultToggleButton.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/TemplateControls/FilterMultiComboBox.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/TemplateControls/LoadMoreScrollViewer.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/TemplateControls/RadioButton.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/TemplateControls/SidebarRadioButton.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/AiChat.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/CustomViewEdit.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/DocumentViewDialog.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/FilePage.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/FilePropertiesDialog.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/FileSharePage.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/FileTransmission.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/ImageView.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/ImageViewDialog.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/MoveFilesDialog.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/NewFolderDialog.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/Search.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/SearchPage.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/SettingPage.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/ShareFileDialog.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/Sidebar.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/Sidebar2.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/StatisticsDashboardPage.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/TextViewDialog.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/ThemeSwitch.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/TopBar.axaml" value="drive-desktop.csproj" />
+        <entry key="Views/Home.axaml" value="drive-desktop.csproj" />
+        <entry key="Views/MainWindow.axaml" value="drive-desktop.csproj" />
+        <entry key="Views/ShareView.axaml" value="drive-desktop.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

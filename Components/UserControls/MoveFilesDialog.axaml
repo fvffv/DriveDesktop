@@ -1,0 +1,205 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             xmlns:tc="using:drive_desktop.Components.TemplateControls"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="850"
+             x:DataType="vm:MoveFilesViewModel"
+             xmlns:model="using:drive_desktop.Models"
+             x:Class="drive_desktop.Components.UserControls.MoveFilesDialog">
+    <UserControl.DataContext>
+        <vm:MoveFilesViewModel />
+    </UserControl.DataContext>
+    <UserControl.Styles>
+        <Style Selector="RadioButton.FolderRadio">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="GroupName" Value="MoveFile"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Margin" Value="0,5,0,5" />
+        </Style>
+
+        <Style Selector="TextBlock#FolderRadioAngle">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="FontFamily" Value="{StaticResource FASolid}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="RadioButton.FolderRadio:pointerover /template/ TextBlock#FolderRadioAngle">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <!--文件夹图标-->
+        <Style Selector="TextBlock.RadioFolderIcon">
+            <Setter Property="FontFamily" Value="{StaticResource FASolid}" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="#FDD835" />
+            <Setter Property="Text" Value="&#xf07b;" />
+        </Style>
+        <!--最左边圆圈-->
+        <Style Selector="Border#FolderRadioCheckIcon">
+            <Setter Property="BorderBrush" Value="{DynamicResource RadioButtonCheckBg}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="50" />
+            <Setter Property="Width" Value="15" />
+            <Setter Property="Height" Value="15" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.1" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <!--最左边圆圈-->
+        <Style Selector="RadioButton.FolderRadio:checked /template/ Border#FolderRadioCheckIcon">
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="BorderThickness" Value="5" />
+        </Style>
+        <!--边框-->
+        <Style Selector="Border#FolderRadioBorder">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="BorderBrush" Value="{DynamicResource RadioButtonCheckBg}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="RadioButton.FolderRadio:checked /template/ Border#FolderRadioBorder">
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+        </Style>
+
+    </UserControl.Styles>
+    <tc:DefaultDialog IsOpen="{Binding IsShowMoveFilesDialog}">
+        <Grid RowDefinitions="*,auto">
+            <!--上部分-->
+            <StackPanel Spacing="25" Width="600" Height="525">
+                <Panel>
+                    <TextBlock FontWeight="Bold" Text="移动到" FontSize="18" />
+                    <Button Classes="naked" HorizontalAlignment="Right" Command="{Binding CloseCommand}">
+                        <TextBlock Classes="close" FontFamily="{StaticResource FASolid}" FontSize="18" Text="&#xf00d;" />
+                    </Button>
+                </Panel>
+                <Grid ColumnDefinitions="Auto,*">
+                    <DockPanel VerticalAlignment="Top" Grid.Column="0" Width="200" Height="450">
+                        <TextBlock DockPanel.Dock="Top" FontWeight="Bold" Foreground="{DynamicResource TextColor3}"
+                                   Text="{Binding SelectNum, StringFormat='待移动项目 ({0})'}"
+                                   Margin="0,0,0,20" />
+                        <ScrollViewer DockPanel.Dock="Top" Padding="10,0,10,0">
+                                <ItemsRepeater DockPanel.Dock="Top" ItemsSource="{Binding FolderOrFileInfos}">
+                                    <ItemsRepeater.ItemTemplate>
+                                        <DataTemplate>
+                                            <ContentControl Content="{Binding}" />
+                                        </DataTemplate>
+                                    </ItemsRepeater.ItemTemplate>
+                                    <ItemsRepeater.DataTemplates>
+                                        <!--文件夹-->
+                                        <DataTemplate x:DataType="model:UserDirsInfoItem">
+                                            <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,5,0,5">
+                                                <!--图标-->
+                                                <TextBlock
+                                                    FontFamily="{StaticResource FASolid}"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Foreground="#FDD835"
+                                                    Text="&#xf07b;" />
+                                                <!--名称-->
+                                                <TextBlock Width="150" ClipToBounds="True" TextTrimming="CharacterEllipsis"
+                                                           ToolTip.Tip="{Binding  FolderName}"
+                                                           Text="{Binding FolderName}">
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                        <!--文件-->
+                                        <DataTemplate x:DataType="model:UserFilesInfoItem">
+                                            <StackPanel Spacing="10" Orientation="Horizontal" Margin="0,5,0,5">
+                                                <!--图标-->
+                                                <TextBlock
+                                                    FontFamily="{Binding FileTypeInfo.FontFamilyResource}"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{Binding FileTypeInfo.HexColor}"
+                                                    Text="{Binding FileTypeInfo.IconCode}" />
+                                                <!--名称-->
+                                                <TextBlock  Width="150" ClipToBounds="True" TextTrimming="CharacterEllipsis"
+                                                            ToolTip.Tip="{Binding  FileName}" Text="{Binding FileName}">
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsRepeater.DataTemplates>
+                                </ItemsRepeater>
+                        </ScrollViewer>
+
+
+                    </DockPanel>
+                    <StackPanel Grid.Column="1">
+                        <StackPanel Orientation="Horizontal" Spacing="15">
+                            <!--上级按钮-->
+                            <Button IsVisible="{Binding !IsRoot}" Classes="naked"
+                                    Command="{Binding ReturnUpperCommand}">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
+                                           TextAlignment="Center"
+                                           Foreground="{DynamicResource TextColor3}" Text="&#xf177;返回上级"
+                                           Margin="0,0,0,20" FontFamily="{StaticResource FASolid}" />
+                            </Button>
+
+                            <!--目录名称当前-->
+                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"
+                                       FontSize="17" FontWeight="Bold" Foreground="{DynamicResource TextColor3}"
+                                       Text="{Binding FolderName}"
+                                       Margin="0,0,0,20" />
+                        </StackPanel>
+                        <ScrollViewer Height="420">
+                            <ItemsControl Background="Transparent" ItemsSource="{Binding MoveFolderInfos}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <RadioButton DoubleTapped="InputElement_OnDoubleTapped" Classes="FolderRadio"
+                                                     CommandParameter="{Binding}"
+                                                     Command="{Binding $parent[UserControl].((vm:MoveFilesViewModel)DataContext).SelectedCommand }">
+                                            <RadioButton.Template>
+                                                <ControlTemplate>
+                                                    <!--边框-->
+                                                    <Border x:Name="FolderRadioBorder">
+                                                        <DockPanel HorizontalSpacing="10" VerticalAlignment="Center">
+                                                            <!--选择框圆圈-->
+                                                            <Border x:Name="FolderRadioCheckIcon">
+                                                            </Border>
+                                                            <!--文件夹图标-->
+                                                            <TextBlock Classes="RadioFolderIcon" />
+                                                            <!--文件夹名称-->
+                                                            <TextBlock Text="{Binding FolderName}" />
+                                                            <!--右侧箭头-->
+                                                            <TextBlock x:Name="FolderRadioAngle" Text="&#xf105;" />
+                                                        </DockPanel>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </RadioButton.Template>
+
+                                        </RadioButton>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+
+                    </StackPanel>
+                </Grid>
+
+            </StackPanel>
+            <!--移动按钮-->
+            <tc:DefaultButton Grid.Row="1" Icon="&#xf4de;" HorizontalAlignment="Right"
+                              ActionCommand="{Binding MoveCommand}"
+                              IsLoading="{Binding ButtonStatus.IsLoading}" IsEnabled="{Binding ButtonStatus.IsEnabled}"
+                              Text="{Binding ButtonStatus.Title}" />
+        </Grid>
+
+    </tc:DefaultDialog>
+</UserControl>

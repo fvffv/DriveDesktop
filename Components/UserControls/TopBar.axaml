@@ -1,0 +1,223 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="80"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             x:DataType="vm:TopBarViewModel"
+             xmlns:tc="using:drive_desktop.Components.TemplateControls"
+             x:Class="drive_desktop.Components.UserControls.TopBar">
+    <Design.DataContext>
+        <vm:TopBarViewModel />
+    </Design.DataContext>
+    <UserControl.Styles>
+        <!-- 基础状态-->
+        <Style Selector="Border.ActionPanel">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="RenderTransform" Value="translateX(-30px)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.4" Easing="CubicEaseOut" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.4" Easing="CubicEaseOut" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <!-- 出现状态 -->
+        <Style Selector="Border.ActionPanel.slideIn">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="IsHitTestVisible" Value="True" />
+            <Setter Property="RenderTransform" Value="translateX(0px)" />
+
+        </Style>
+
+        <!--勾选后显示的按钮样式-->
+        <Style Selector="Border.TopTitleButtonBorder">
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+        </Style>
+        <Style Selector="Border.TopTitleButtonBorder TextBlock">
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+        </Style>
+        <Style Selector="Button.TopTitleButton:pointerover /template/ Border.TopTitleButtonBorder">
+            <Setter Property="Background" Value="{TemplateBinding Background}"></Setter>
+        </Style>
+        <Style Selector="Button.TopTitleButton:pointerover /template/ TextBlock">
+            <Setter Property="Foreground" Value="{TemplateBinding Foreground}"></Setter>
+        </Style>
+
+        
+
+        <!--新建文件夹按钮-->
+        <Style Selector="Button#NewFolderButton">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Width="42" Height="42"
+                            Margin="5"
+                            BoxShadow="{DynamicResource AllShadow}"
+                            Background="{DynamicResource SidebarBg}"
+                            BorderBrush="{DynamicResource SideBarBrColor}"
+                            BorderThickness="1"
+                            CornerRadius="14" Transitions="{StaticResource CommonColorTransitions}">
+
+                        <TextBlock Foreground="{DynamicResource SideTextColor}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontFamily="{StaticResource FASolid}"
+                                   Text="&#xf65e;" Transitions="{StaticResource CommonColorTransitions}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button#NewFolderButton:pointerover /template/ Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="Button#NewFolderButton:pointerover /template/ TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        
+        <!--上传-->
+        <Style Selector="Button#UploadButton"> 
+            <Setter Property="Background" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Margin="9" BoxShadow="0 4 12 0 #403B82F6" Height="42" CornerRadius="14"
+                            Padding="20,0" Background="{TemplateBinding Background}">
+                        <DockPanel HorizontalSpacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource FASolid}" FontSize="13"
+                                       Foreground="White" Text="&#xf0ee;" />
+                            <TextBlock VerticalAlignment="Center" Foreground="White" FontWeight="Bold" Text="上传" />
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button#UploadButton:pointerover">
+            <Setter Property="RenderTransform" Value="translateY(-2px)" />
+        </Style>
+        <Style Selector="Button#UploadButton:pressed">
+            <Setter Property="RenderTransform" Value="translateY(1px)" />
+        </Style>
+    </UserControl.Styles>
+    <Border Padding="0,2,20,0" Margin="0,10,10,10" CornerRadius="12"
+            Background="Transparent">
+        <Panel Height="62">
+            <!--当前page-->
+            <TextBlock VerticalAlignment="Center" FontWeight="Bold" FontSize="24" Text="我的文件" />
+            <!--下载移动删除-->
+            <Border BorderThickness="1"
+                    Height="41"
+                    VerticalAlignment="Center"
+                    BoxShadow="{DynamicResource AllShadow}"
+                    BorderBrush="{DynamicResource SideBarBrColor}"
+                    Classes="ActionPanel"
+                    HorizontalAlignment="Left"
+                    Margin="150,0,0,0"
+                    Classes.slideIn="{Binding IsShowBorder}"
+                    Padding="16,5,12,5"
+                    CornerRadius="16"
+
+                    Background="{DynamicResource SidebarBg}">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock FontWeight="600" HorizontalAlignment="Center" FontSize="13"
+                               VerticalAlignment="Center" Foreground="{DynamicResource ThemeColor}"
+                               Text="{Binding SelectedNum,StringFormat='已选择 {0} 项'}" />
+                    <Border BorderThickness="1,0,0,0" BorderBrush="{DynamicResource SideBarBrColor}">
+                        <Border.Transitions>
+                            <Transitions>
+                                <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                            </Transitions>
+                        </Border.Transitions>
+                    </Border>
+
+                    <!--下载按钮-->
+                    <Button ToolTip.Tip="下载勾选文件" Foreground="{DynamicResource ThemeColor}"
+                            Command="{Binding BatchDownloadCommand}"
+                            Background="{DynamicResource SidebarRadioBg}" ToolTip.VerticalOffset="0"
+                            Cursor="Hand"
+                            ToolTip.Placement="Top" Classes="TopTitleButton" Width="30" Height="30">
+                        <Button.Template>
+                            <ControlTemplate>
+                                <Border Classes="TopTitleButtonBorder" CornerRadius="8">
+                                    <TextBlock Foreground="{DynamicResource SideTextColor}"
+                                               FontFamily="{StaticResource FASolid}" Text="&#xf0ed;"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <!--移动按钮-->
+                    <Button Cursor="Hand" ToolTip.Tip="移动勾选文件" Foreground="{DynamicResource ThemeColor}"
+                            Command="{Binding OpenMoveFilesDialogCommand}"
+                            Background="{DynamicResource SidebarRadioBg}" ToolTip.VerticalOffset="0"
+                            ToolTip.Placement="Top" Classes="TopTitleButton" Width="30" Height="30">
+                        <Button.Template>
+                            <ControlTemplate>
+                                <Border Classes="TopTitleButtonBorder" CornerRadius="8">
+                                    <TextBlock Foreground="{DynamicResource SideTextColor}"
+                                               FontFamily="{StaticResource FASolid}" Text="&#xf047;"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <!--删除按钮-->
+                    <Button Cursor="Hand" ToolTip.Tip="删除勾选文件" Foreground="#EF4444"
+                            Command="{Binding RemoveFilesOrFoldersCommand}"
+                            Background="#4df56c6c" ToolTip.VerticalOffset="0"
+                            ToolTip.Placement="Top" Classes="TopTitleButton" Width="30" Height="30">
+                        <Button.Template>
+                            <ControlTemplate>
+                                <Border Classes="TopTitleButtonBorder" CornerRadius="8">
+                                    <TextBlock Foreground="{DynamicResource SideTextColor}"
+                                               FontFamily="{StaticResource FASolid}" Text="&#xf2ed;"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                </StackPanel>
+            </Border>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+                <!--搜索-->
+                <TextBox ClipToBounds="True" Classes="ModernSearchBox"
+                         Padding="0,0,10,0"
+                         PlaceholderText="语义搜索文件..."
+                         IsFocused="{Binding SearchIsfocus,Mode=OneWayToSource}"
+                         Text="{Binding SearchContent}" />
+                
+                <!--新建文件夹-->
+                <Button ClipToBounds="False" x:Name="NewFolderButton" Command="{Binding OpenNewFolderDialogCommand}" />
+
+                <!--上传-->
+                <Button x:Name="UploadButton" Command="{Binding UpdateDialogCommand}"/>
+
+
+                <Border Width="50"
+                        Height="50"
+                        CornerRadius="30"
+                        BorderBrush="{DynamicResource BrColor}"
+                        BorderThickness="1">
+
+                    <Border.Background>
+                        <ImageBrush  Source="{Binding HeadImg}" Stretch="UniformToFill" />
+                    </Border.Background>
+
+                </Border>
+            </StackPanel>
+        </Panel>
+    </Border>
+</UserControl>

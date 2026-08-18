@@ -1,0 +1,58 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:drive_desktop.Components.TemplateControls">
+
+    <Design.PreviewWith>
+        <!--预览视图-->
+        <controls:CircularProgressBar Value="90" Width="80" Height="80">
+            <TextBlock Text="75%" FontWeight="Bold" FontSize="16" />
+        </controls:CircularProgressBar>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|CircularProgressBar">
+        <!--默认属性配置-->
+        <Setter Property="StrokeThickness" Value="6" />
+        <!--底色默认绑定SideBarBrColor-->
+        <Setter Property="TrackBrush" Value="{DynamicResource SideBarBrColor}" />
+        <Setter Property="ProgressBrush" Value="{DynamicResource ThemeColor}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <!--底环-->
+                    <Arc StartAngle="0" 
+                         SweepAngle="360"
+                         Stroke="{TemplateBinding TrackBrush}"
+                         StrokeThickness="{TemplateBinding StrokeThickness}" >
+                        <Arc.Transitions>
+                            <Transitions>
+                                <BrushTransition Property="Stroke" Duration="0:0:0.3" Easing="CubicEaseOut"/>
+                            </Transitions>
+                        </Arc.Transitions>
+                    </Arc>
+
+                    <!--进度环-->
+                    <Arc StartAngle="270"
+                         SweepAngle="{TemplateBinding SweepAngle}"
+                         Stroke="{TemplateBinding ProgressBrush}"
+                         StrokeThickness="{TemplateBinding StrokeThickness}"
+                         StrokeLineCap="Square">
+                        <Arc.Transitions>
+                            <Transitions>
+                                <DoubleTransition Property="SweepAngle" Duration="0:0:0.6" Easing="CubicEaseOut"/>
+                            </Transitions>
+                        </Arc.Transitions>
+                    </Arc>
+
+                    <!--中心自定义内容坑位-->
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

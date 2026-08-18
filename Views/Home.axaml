@@ -1,0 +1,559 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Width="1520"
+        Height="1000"
+        MinWidth="960"
+        MinHeight="600"
+        xmlns:chrome="using:Avalonia.Controls.Chrome"
+        d:DesignWidth="1200"
+        d:DesignHeight="800"
+        WindowStartupLocation="CenterScreen"
+        xmlns:uc="using:drive_desktop.Components.UserControls"
+        x:Class="drive_desktop.Views.Home"
+        x:DataType="vm:HomeViewModel"
+        xmlns:vm="using:drive_desktop.ViewModels"
+        xmlns:model="using:drive_desktop.Models"
+        xmlns:u="https://irihi.tech/ursa"
+        Background="Transparent"
+        xmlns:transitionsAndConverter="clr-namespace:drive_desktop.Components.TransitionsAndConverter"
+        xmlns:templateControls="clr-namespace:drive_desktop.Components.TemplateControls"
+        xmlns:avalonia="clr-namespace:LiveMarkdown.Avalonia;assembly=LiveMarkdown.Avalonia"
+        WindowDecorations="Full"
+        CanResize="True"
+        CanMinimize="True"
+        x:Name="HomeWindow"
+        CanMaximize="True"
+        Title="网盘首页">
+    <Design.DataContext>
+        <vm:HomeViewModel />
+    </Design.DataContext>
+    <Window.Styles>
+        <Style Selector="Border.ContentShow">
+            <Setter Property="Background" Value="{DynamicResource HomeBg}" />
+            <Setter Property="BoxShadow" Value="{DynamicResource TopShadow}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+
+        </Style>
+        <Style Selector="Button.WinButton">
+            <Setter Property="Cursor" Value="Hand"></Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border CornerRadius="50" Transitions="{StaticResource CommonColorTransitions}" Width="28"
+                            Height="28" Background="{DynamicResource HomeBg}">
+                        <TextBlock Transitions="{StaticResource CommonColorTransitions}" HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" Foreground="{DynamicResource SideTextColor}"
+                                   FontFamily="{StaticResource FASolid}" Text="{TemplateBinding Content}" FontSize="12" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+
+        <Style Selector="Button.WinButton:pointerover /template/ Border">
+            <Setter Property="Background" Value="{TemplateBinding Background}"></Setter>
+        </Style>
+        <Style Selector="Button.WinButton:pointerover /template/ TextBlock">
+            <Setter Property="Foreground" Value="{TemplateBinding Foreground}"></Setter>
+        </Style>
+
+
+        <Style Selector="Border.UploadBorder">
+            <Setter Property="Margin" Value="0,80,120,0" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="CornerRadius" Value="24" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="BoxShadow" Value="0 20 50 0 #1A000000" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="ZIndex" Value="90" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="Width" Value="340" />
+            <Setter Property="Padding" Value="24" />
+            <Setter Property="RenderTransform" Value="translate(25px, -25px)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                    <TransformOperationsTransition Property="RenderTransform"
+                                                   Duration="0:0:0.8"
+                                                   Easing="ElasticEaseOut" />
+                    <DoubleTransition Property="Opacity"
+                                      Duration="0:0:0.3"
+                                      Easing="CubicEaseOut" />
+                    <DoubleTransition Property="Height"
+                                      Duration="0:0:0.3"
+                                      Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+
+        </Style>
+       
+        <Style Selector="Border#UploadBorder2">
+            <Setter Property="Background" Value="{DynamicResource HomeBg}" />
+        </Style>
+        <Style Selector="Border#HoverOverlay">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <!-- 此时只需要对数字 (Opacity) 做渐变，极其平滑且无性能损耗 -->
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.UploadBorderShow">
+            <Setter Property="RenderTransform" Value="translate(0px, 0px)" />
+            <Setter Property="IsHitTestVisible" Value="True" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Rectangle#UploadBorder2Rectangle">
+            <Setter Property="Stroke" Value="{DynamicResource SideBarBrColor}"></Setter>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Stroke" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="TextBlock#UploadBorder2Icon">
+            <Setter Property="RenderTransform" Value="translate(0, 0)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform"
+                                                   Duration="0:0:0.3"
+                                                   Easing="CubicEaseOut" />
+
+                </Transitions>
+            </Setter>
+        </Style>
+
+
+        <Style Selector="Border#UploadBorder2:pointerover Rectangle#UploadBorder2Rectangle">
+            <Setter Property="Stroke" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="Border#UploadBorder2:pointerover TextBlock#UploadBorder2Icon">
+            <Setter Property="RenderTransform" Value="translate(0, -5px)" />
+        </Style>
+        <Style Selector="Border#UploadBorder2:pointerover Border#HoverOverlay">
+            <Setter Property="Opacity" Value="0.04" />
+        </Style>
+        <Style Selector="Button.UploadBorderButton">
+            <Setter Property="RenderTransform" Value="translate(0px, 0px)" />
+            <Setter Property="ClipToBounds" Value="False" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="UploadBorderButtonBorder">
+                        <StackPanel Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"
+                                       Foreground="{DynamicResource ThemeColor}" Text="{TemplateBinding Tag}"
+                                       FontFamily="{StaticResource FASolid}" />
+                            <TextBlock Transitions="{StaticResource CommonColorTransitionsTextBlock}"
+                                       x:Name="UploadBorderButtonBorderTitle" FontWeight="600"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       FontSize="14" Text="{TemplateBinding Content}" />
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform"
+                                                   Duration="0:0:0.3"
+                                                   Easing="CubicEaseOut" />
+
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border#UploadBorderButtonBorder">
+            <Setter Property="Background" Value="{DynamicResource HomeBg}" />
+            <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}" />
+            <Setter Property="Width" Value="140" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SideBarBrColor}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+
+        </Style>
+
+        <Style Selector="Button.UploadBorderButton:pointerover /template/ Border#UploadBorderButtonBorder">
+
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="Button.UploadBorderButton:pointerover /template/ TextBlock#UploadBorderButtonBorderTitle">
+
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="Button.UploadBorderButton:pointerover">
+            <Setter Property="RenderTransform" Value="translate(0px, -3px)" />
+        </Style>
+
+
+        <Style Selector="Border.SearchBorder">
+            <Setter Property="Margin" Value="0,100,300,0" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="CornerRadius" Value="24" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SideBarBrColor}" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="BoxShadow" Value="0 20 50 0 #1A000000" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="ZIndex" Value="90" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="Width" Value="400" />
+            <Setter Property="MaxHeight" Value="500" />
+            <Setter Property="Padding" Value="20" />
+            <Setter Property="RenderTransform" Value="translate(25px, -25px)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                    <TransformOperationsTransition Property="RenderTransform"
+                                                   Duration="0:0:0.8"
+                                                   Easing="ElasticEaseOut" />
+                    <DoubleTransition Property="Opacity"
+                                      Duration="0:0:0.3"
+                                      Easing="CubicEaseOut" />
+                    <DoubleTransition Property="Height"
+                                      Duration="0:0:0.3"
+                                      Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+
+        </Style>
+        <Style Selector="Border.SearchBorderShow">
+            <Setter Property="RenderTransform" Value="translate(0px, 0px)" />
+            <Setter Property="IsHitTestVisible" Value="True" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <Style Selector="Border#ShareFileButtonBorder">
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Background" Value="#0f3b82f6" />
+            <Setter Property="BorderBrush" Value="#333b82f6" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+
+
+        </Style>
+
+        <Style Selector="Button#ShareFileButton">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="RenderTransform" Value="translate(0px, 0px)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform"
+                                                   Duration="0:0:0.3"
+                                                   Easing="CubicEaseOut" />
+
+                </Transitions>
+            </Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <!--文件分享链接区-->
+                    <Border x:Name="ShareFileButtonBorder">
+                        <Grid ColumnSpacing="10" ColumnDefinitions="2*,8*,*">
+                            <Border HorizontalAlignment="Center" VerticalAlignment="Center" Width="42" Height="42"
+                                    CornerRadius="13" Background="{DynamicResource ThemeColor}">
+                                <TextBlock FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           FontFamily="{StaticResource FASolid}" Text="&#xf0c1;" Foreground="White" />
+
+                            </Border>
+                            <!--文件信息-->
+                            <Panel Grid.Column="1">
+                                <TextBlock FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                           FontFamily="{StaticResource FASolid}" Text="&#xf0e7;识别到分享提取口令"
+                                           Foreground="{DynamicResource ThemeColor}" />
+                                <TextBlock FontSize="14" FontWeight="Bold" TextTrimming="CharacterEllipsis"
+                                           HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                           Text="{Binding ShareFileName}" />
+
+                            </Panel>
+                            <!--最右边箭头图标-->
+                            <Border x:Name="ShareFileButtonJtBorder" Width="32" Height="32" Grid.Column="2"
+                                    Transitions="{StaticResource
+                             CommonColorTransitions}"
+                                    Background="{DynamicResource HomeBg}" CornerRadius="50"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Transitions="{DynamicResource CommonColorTransitionsTextBlock}"
+                                           x:Name="ShareFileButtonJtIcon" Foreground="{DynamicResource ThemeColor}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           FontFamily="{StaticResource FASolid}" Text="&#xf061;" />
+                            </Border>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <Style Selector="Button#ShareFileButton:pointerover">
+
+            <Setter Property="RenderTransform" Value="translate(0px, -3px)" />
+        </Style>
+        <Style Selector="Button#ShareFileButton:pressed">
+            <Setter Property="RenderTransform" Value="Scale(1,1)" />
+        </Style>
+        <Style Selector="Button#ShareFileButton:pointerover /template/ Border#ShareFileButtonBorder">
+            <Setter Property="Background" Value="#1a3b82f6" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}"></Setter>
+        </Style>
+        <Style Selector="Button#ShareFileButton:pointerover /template/ Border#ShareFileButtonJtBorder">
+            <Setter Property="Background" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="Button#ShareFileButton:pointerover /template/ TextBlock#ShareFileButtonJtIcon">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+
+        <Style Selector="Border.SearchItemBorder">
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="Padding" Value="14,12" />
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+        </Style>
+
+        <Style Selector="Button.SearchItem">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Classes="SearchItemBorder">
+                        <StackPanel Spacing="20" Orientation="Horizontal">
+
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding Tag}" />
+                            <StackPanel Spacing="5">
+                                <TextBlock FontFamily="{DynamicResource ContentControlThemeFontFamily}" MaxWidth="300"
+                                           FontSize="13" FontWeight="Bold" TextTrimming="CharacterEllipsis"
+                                           HorizontalAlignment="Left" VerticalAlignment="Top"
+                                           Text="{TemplateBinding Name}" />
+                                <Panel>
+                                    <TextBlock FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                               FontFamily="{StaticResource FASolid}" Text="&#xf07c;"
+                                               Foreground="{DynamicResource SideTextColor}" />
+                                    <TextBlock FontFamily="{DynamicResource ContentControlThemeFontFamily}"
+                                               Margin="20,0,0,0" FontSize="12" HorizontalAlignment="Left"
+                                               VerticalAlignment="Center" Text="{TemplateBinding Content}"
+                                               Foreground="{DynamicResource SideTextColor}" />
+                                </Panel>
+
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <Style Selector="Button.SearchItem:pointerover /template/ Border.SearchItemBorder">
+            <Setter Property="Background" Value="{DynamicResource SidebarRadioBg}" />
+        </Style>
+        <Style Selector="Button#SeedAiMsgButton">
+            <Setter Property="Background" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Margin="9" BoxShadow="0 4 12 0 #403B82F6" Height="30" Width="30" CornerRadius="10"
+                            Background="{TemplateBinding Background}">
+                        <DockPanel HorizontalSpacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource FASolid}" FontSize="13"
+                                       Foreground="White" Text="&#xf1d8;" />
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button#SeedAiMsgButton:pointerover">
+            <Setter Property="RenderTransform" Value="translateY(-2px)" />
+        </Style>
+        <Style Selector="Button#SeedAiMsgButton:pressed">
+            <Setter Property="RenderTransform" Value="translateY(1px)" />
+        </Style>
+    </Window.Styles>
+    <Panel>
+        <Grid ColumnDefinitions="258,*" RowDefinitions="Auto,*">
+            <uc:Sidebar Grid.RowSpan="2" DataContext="{Binding SidebarVM}" />
+            <!--全局遮罩  用来失去焦点-->
+            <Border Grid.Row="1"
+                    ZIndex="89"
+                    Grid.Column="1"
+                    Background="Transparent"
+                    IsVisible="{Binding UpLoadShow}"
+                    PointerPressed="Mask_PointerPressed" />
+            <Border Grid.Row="1"
+                    ZIndex="89"
+                    Grid.Column="1"
+                    Background="Transparent"
+                    IsVisible="{Binding FastSearchShow}"
+                    PointerPressed="Mask2_PointerPressed" />
+            <!--上传区-->
+            <Border Grid.Row="1" Grid.Column="1" Classes="UploadBorder"
+                    Classes.UploadBorderShow="{Binding UpLoadShow}">
+                <StackPanel>
+                    <Border DragDrop.AllowDrop="True" DragDrop.Drop="UploadBorder_Drop" Cursor="Hand"
+                            x:Name="UploadBorder2" Height="170" CornerRadius="16"
+                            Transitions="{StaticResource CommonColorTransitions}">
+                        <Panel>
+                            <!--虚线边框-->
+                            <Rectangle x:Name="UploadBorder2Rectangle"
+                                       StrokeThickness="2"
+                                       StrokeDashArray="4, 2"
+                                       RadiusX="16"
+                                       RadiusY="16">
+                            </Rectangle>
+                            <Border x:Name="HoverOverlay"
+                                    Background="{DynamicResource ThemeColor}"
+                                    CornerRadius="16"
+                                    IsHitTestVisible="False" />
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock x:Name="UploadBorder2Icon" ClipToBounds="False"
+                                           Margin="0,0,0,15" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource ThemeColor}" FontSize="42"
+                                           FontFamily="{StaticResource FASolid}" Text="&#xf0ee;">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect OffsetX="0"
+                                                          OffsetY="8"
+                                                          BlurRadius="16"
+                                                          Color="#3B82F6"
+                                                          Opacity="0.25" />
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                                <TextBlock Margin="0,0,0,10" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontSize="14" Text="拖入文件或文件夹" FontWeight="700" />
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource SideTextColor}"
+                                           FontSize="12" Text="文件将会上传到当前所在目录哦" FontWeight="500" />
+                            </StackPanel>
+
+                        </Panel>
+                    </Border>
+
+                    <Panel Margin="0,20,0,0">
+                        <Button Classes="UploadBorderButton" Tag="&#xf574;" Content="本地文件"
+                                Command="{Binding SelectFilesCommand}" CommandParameter="{Binding #HomeWindow}" />
+                        <Button HorizontalAlignment="Right" Classes="UploadBorderButton" Tag="&#xf65e;"
+                                Content="本地文件夹" Command="{Binding  SelectFoldersCommand}"
+                                CommandParameter="{Binding #HomeWindow}" />
+                    </Panel>
+
+                    <!--添加到上传任务进度条-->
+                    <Border Height="{Binding ProgressHeight}"
+                            ClipToBounds="True"
+                            x:Name="ProgressContainer">
+                        <Border.Transitions>
+                            <Transitions>
+                                <DoubleTransition Property="Height"
+                                                  Duration="0:0:0.3"
+                                                  Easing="CubicEaseOut" />
+                            </Transitions>
+                        </Border.Transitions>
+                        <ProgressBar Height="5"
+                                     Value="{Binding UploadProgressBarValue}"
+                                     Maximum="{Binding UploadProgressBarMax}"
+                                     Margin="0,20,0,0" />
+                    </Border>
+                </StackPanel>
+            </Border>
+            <!--快捷搜索区-->
+            <Border Grid.Row="1" Grid.Column="1" Classes="SearchBorder"
+                    Classes.SearchBorderShow="{Binding TopBarViewModel.SearchIsfocus}">
+                <DockPanel>
+                    <!--文件分享按钮-->
+                    <Button DockPanel.Dock="Top"
+                            HorizontalAlignment="Stretch"
+                            x:Name="ShareFileButton"
+                            IsVisible="{Binding ShareFileButtonVisible}"
+                            Command="{Binding OpenShareFileCommand}" />
+                    <DockPanel Margin="0,20,0,0" MaxHeight="540" ClipToBounds="True" VerticalSpacing="10">
+                        <TextBlock DockPanel.Dock="Top" FontWeight="Bold" HorizontalAlignment="Left"
+                                   Foreground="{DynamicResource SideTextColor}" FontSize="13"
+                                   Text="搜索结果 (更多结果请在左侧搜索)" />
+                        <Panel>
+                            <u:LoadingContainer
+                                ZIndex="1"
+                                IsLoading="{Binding !IsLoaded}"
+                                LoadingMessage="搜索中..." />
+                            <!--空空如也-->
+                            <StackPanel VerticalAlignment="Center"
+                                        HorizontalAlignment="Center" Spacing="10"
+                                        IsVisible="{Binding !FileSearchSimpleItems.Count}">
+                                <TextBlock TextAlignment="Center" Foreground="{DynamicResource ThemeColor}"
+                                           FontSize="70"
+                                           Text="&#xf49e;" FontFamily="{StaticResource FASolid}" Margin="0,20,0,20" />
+                                <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="16" Text="这里空空如也" />
+                                <TextBlock TextAlignment="Center" Foreground="DarkGray" Text="当前没有搜到任何文件" />
+                            </StackPanel>
+                            <ScrollViewer DockPanel.Dock="Top">
+                                <ItemsControl ItemsSource="{Binding FileSearchSimpleItems}">
+
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="model:FileSearchSimpleItem">
+                                            <Button
+                                                Command="{Binding $parent[Window].((vm:HomeViewModel)DataContext).SearchItemClickCommand}"
+                                                CommandParameter="{Binding}" Margin="0,5,0,5"
+                                                FontFamily="{Binding IconInfo.FontFamilyResource}"
+                                                Foreground="{Binding IconInfo.HexColor}"
+                                                Tag="{Binding IconInfo.IconCode}"
+                                                Content="{Binding Path}" Name="{Binding Name}" Classes="SearchItem" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                            </ScrollViewer>
+                        </Panel>
+
+                    </DockPanel>
+                </DockPanel>
+
+            </Border>
+            <Border Grid.Row="1" Grid.Column="1" Classes="ContentShow">
+                <Carousel SelectedIndex="{Binding PageIndex}">
+                    <Carousel.PageTransition>
+                        <transitionsAndConverter:SequentialFadeTransition Duration="0:0:0.1" />
+                    </Carousel.PageTransition>
+                    <uc:FilePage DataContext="{Binding FilePageViewModel}" />
+                    <uc:SearchPage DataContext="{Binding SearchPageViewModel}" />
+                    <uc:FileTransmission DataContext="{Binding FileTransmissionViewModel}" />
+                    <uc:FileSharePage DataContext="{Binding FileSharePageViewModel}" />
+                    <uc:StatisticsDashboardPage DataContext="{Binding StatisticsDashboardPageViewModel}" />
+                    <uc:SettingPage DataContext="{Binding SettingPageViewModel}" />
+                </Carousel>
+            </Border>
+        </Grid>
+
+     
+        <uc:AiChat DataContext="{Binding AiChatViewModel}" />
+        <uc:CustomViewEdit DataContext="{Binding CustomViewEditViewModel}" />
+        <uc:NewFolderDialog DataContext="{Binding NewFolderDialogViewModel}" />
+        <uc:MoveFilesDialog DataContext="{Binding MoveFilesViewModel}" />
+        <uc:ImageViewDialog DataContext="{Binding ImageViewModel}" />
+        <uc:FilePropertiesDialog DataContext="{Binding FilePropertiesDialogViewModel}" />
+        <uc:TextViewDialog DataContext="{Binding TextViewDialogViewModel }" />
+        <uc:ShareFileDialog DataContext="{Binding ShareFileDialogViewModel}" />
+        <uc:DocumentViewDialog DataContext="{Binding DocumentViewDialogViewModel}" />
+
+        <u:OverlayDialogHost />
+    </Panel>
+
+
+</Window>

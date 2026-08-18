@@ -1,0 +1,680 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             xmlns:tc="using:drive_desktop.Components.TemplateControls"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="1050"
+             xmlns:model="using:drive_desktop.Models"
+             x:DataType="vm:FileSharePageViewModel"
+             x:Class="drive_desktop.Components.UserControls.FileSharePage">
+    <UserControl.DataContext>
+        <vm:FileSharePageViewModel />
+    </UserControl.DataContext>
+    <UserControl.Styles>
+        <Style Selector="TextBlock.Title">
+            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
+        <!-- 基础样式：搜索框 -->
+        <Style Selector="TextBox.ModernSearchBox2">
+            <Setter Property="Width" Value="500" />
+            <Setter Property="Height" Value="42" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SideBarBrColor}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="10,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <!-- 外层过渡动画：控制宽度丝滑展开 -->
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <DoubleTransition Property="Width" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+            <!-- 重写控件模板，剔除默认丑陋的灰色遮罩 -->
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border ClipToBounds="False" x:Name="PART_BorderElement"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BoxShadow="{DynamicResource AllShadow}">
+                        <!-- 内层过渡动画：控制边框颜色和发光阴影 -->
+                        <Border.Transitions>
+                            <Transitions>
+                                <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                                <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                            </Transitions>
+                        </Border.Transitions>
+                        <Grid ColumnDefinitions="Auto,*">
+                            <!-- 搜索图标 -->
+                            <TextBlock Grid.Column="0"
+                                       Text="&#xf002;"
+                                       FontFamily="{StaticResource FASolid}"
+                                       Foreground="{DynamicResource TextColor3}"
+                                       FontSize="14"
+                                       VerticalAlignment="Center"
+                                       Margin="15,0,10,0" />
+
+                            <!-- 输入显示区 -->
+                            <Panel Grid.Column="1" Margin="{TemplateBinding Padding}">
+                                <!-- 水印占位符 -->
+                                <TextBlock x:Name="PART_Watermark"
+                                           Text="{TemplateBinding Watermark}"
+                                           Foreground="{DynamicResource TextColor3}"
+                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                           IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNullOrEmpty}}" />
+                                <!-- 实际输入组件 -->
+                                <TextPresenter x:Name="PART_TextPresenter"
+                                               Text="{TemplateBinding Text}"
+                                               CaretIndex="{TemplateBinding CaretIndex}"
+                                               SelectionStart="{TemplateBinding SelectionStart}"
+                                               SelectionEnd="{TemplateBinding SelectionEnd}"
+                                               TextAlignment="{TemplateBinding TextAlignment}"
+                                               TextWrapping="{TemplateBinding TextWrapping}"
+                                               PasswordChar="{TemplateBinding PasswordChar}"
+                                               SelectionBrush="{DynamicResource ThemeColor}"
+                                               CaretBrush="{DynamicResource TextColor}"
+                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </Panel>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <!-- 鼠标悬停状态 -->
+        <Style Selector="TextBox.ModernSearchBox2:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{DynamicResource IconColor}" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+        </Style>
+
+        <!-- 获得焦点时的状态-->
+        <Style Selector="TextBox.ModernSearchBox2:focus-within">
+            <Setter Property="Width" Value="600" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+        </Style>
+        <Style Selector="TextBox.ModernSearchBox2:focus-within /template/ Border#PART_BorderElement">
+            <!-- 边框变成强调蓝 -->
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="BoxShadow" Value="0 0 0 3 #1A0078D4" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+        </Style>
+
+        <Style Selector="ToggleButton.ShareInfoPrivateGroupTopButton">
+            <Setter Property="IsChecked" Value="True"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="0,7,0,7" />
+            <Setter Property="ClipToBounds" Value="False" />
+            <Setter Property="MaxHeight" Value="72" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="MaxHeight" Duration="0:0:0.5" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="ToggleButton.ShareInfoPrivateGroupTopButton:checked">
+            <Setter Property="MaxHeight" Value="500" />
+        </Style>
+        <Style Selector="ToggleButton.ShareInfoPrivateGroupTopButton:pressed">
+            <Setter Property="RenderTransform" Value="None" />
+        </Style>
+        <Style Selector="TextBlock.ShareInfoPrivateGroupBorderIcon">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontFamily" Value="{StaticResource FASolid}" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <!-- 给 RenderTransform 添加 0.3 秒的丝滑过渡动画 -->
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="ToggleButton.ShareInfoPrivateGroupTopButton:checked TextBlock.ShareInfoPrivateGroupBorderIcon">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+
+        <Style Selector="Border.ShareInfoPrivateGroupBorder">
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SideBarBrColor}" />
+            <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+        </Style>
+
+        <Style Selector="Border.FileTsIconBg">
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Width" Value="45" />
+            <Setter Property="Height" Value="45" />
+        </Style>
+        <Style Selector="TextBlock.FileTsIcon">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="17" />
+        </Style>
+        <Style Selector="TextBlock.FileTsFileName">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="FontWeight" Value="600" />
+        </Style>
+        <Style Selector="Button.ShareInfoPrivateGroupAddButton">
+            <Setter Property="Background" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Margin="9" BoxShadow="0 4 12 0 #403B82F6" CornerRadius="10"
+                            Width="30" Height="30" Background="{TemplateBinding Background}">
+                        <DockPanel HorizontalSpacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource FASolid}" FontSize="13"
+                                       Foreground="White" Text="&#x2b;" />
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.ShareInfoPrivateGroupAddButton:pointerover">
+            <Setter Property="RenderTransform" Value="translateY(-2px)" />
+        </Style>
+        <Style Selector="Button.ShareInfoPrivateGroupAddButton:pressed">
+            <Setter Property="RenderTransform" Value="translateY(1px)" />
+        </Style>
+        <Style Selector="Button.FileHisOpenFolder">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="FileHisOpenFolderBorder" CornerRadius="8" Background="{DynamicResource HomeBg}"
+                            Transitions="{StaticResource CommonColorTransitions}" Width="32" Height="32">
+                        <TextBlock x:Name="FileHisOpenFolderIcon"
+                                   Transitions="{StaticResource CommonColorTransitionsTextBlock}"
+                                   FontFamily="{StaticResource FASolid}"
+                                   Foreground="{DynamicResource SideTextColor}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" Text="&#xf07c;" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.FileHisOpenFolder:pointerover /template/ Border#FileHisOpenFolderBorder">
+            <Setter Property="Background" Value="{DynamicResource SideBarBrColor}" />
+        </Style>
+        <Style
+            Selector="Button.FileHisOpenFolder:pointerover /template/ TextBlock#FileHisOpenFolderIcon">
+            <Setter Property="Foreground" Value="#f59e0b" />
+        </Style>
+        <Style Selector="Border.ShareInfoPrivateGroupBorder2">
+            <Setter Property="ClipToBounds" Value="False" />
+            <Setter Property="Padding" Value="25,12" />
+            <Setter Property="CornerRadius" Value="20,20,0,0"></Setter>
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+        </Style>
+        <Style Selector="Border.ShareInfoPrivateGroupBorder2:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SidebarRadioBg}" />
+        </Style>
+
+        <Style Selector="Border.ShareInfoPrivateGroupStatus">
+            <Setter Property="Width" Value="100" />
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="CornerRadius" Value="6" />
+
+        </Style>
+        <Style Selector="Border.ShareInfoPrivateGroupStatus[Tag=True]">
+            <Setter Property="Background" Value="#1aef4444" />
+        </Style>
+        <Style Selector="Border.ShareInfoPrivateGroupStatus[Tag=False]">
+            <Setter Property="Background" Value="#1a10b981" />
+        </Style>
+        <Style Selector="TextBlock.ShareInfoPrivateGroupStatusIcon">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontFamily" Value="{StaticResource FASolid}" />
+        </Style>
+        <Style Selector="TextBlock.ShareInfoPrivateGroupStatusText">
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <Style Selector="TextBlock.ShareInfoPrivateGroupStatusIcon[Tag=True]">
+            <Setter Property="Foreground" Value="#ef4444" />
+        </Style>
+        <Style Selector="TextBlock.ShareInfoPrivateGroupStatusIcon[Tag=False]">
+            <Setter Property="Foreground" Value="#10b981" />
+        </Style>
+        <Style Selector="TextBlock.ShareInfoPrivateGroupStatusText[Tag=True]">
+            <Setter Property="Foreground" Value="#ef4444" />
+            <Setter Property="Text" Value="已过期" />
+        </Style>
+        <Style Selector="TextBlock.ShareInfoPrivateGroupStatusText[Tag=False]">
+            <Setter Property="Foreground" Value="#10b981" />
+            <Setter Property="Text" Value="生效中" />
+        </Style>
+
+        <Style Selector="TextBlock.ShareInfoPrivateGroupStatusDate[Tag=False]">
+            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
+        </Style>
+        <Style Selector="TextBlock.ShareInfoPrivateGroupStatusDate[Tag=true]">
+            <Setter Property="Foreground" Value="#ef4444" />
+        </Style>
+
+
+        <Style Selector="Border.ShareInfoPrivateItemBorder">
+            <Setter Property="ClipToBounds" Value="True"/>
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.ShareInfoPrivateItemBorder:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SidebarRadioBg}" />
+        </Style>
+        <Style Selector="Button.MenusButton">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="MenusButtonBorder" CornerRadius="8" Background="{DynamicResource HomeBg}"
+                            Transitions="{StaticResource CommonColorTransitions}" Width="32" Height="32">
+                        <TextBlock x:Name="MenusButtonIcon"
+                                   Transitions="{StaticResource CommonColorTransitionsTextBlock}"
+                                   FontFamily="{StaticResource FASolid}"
+                                   Foreground="{DynamicResource SideTextColor}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" Text="{TemplateBinding  Content}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.MenusButton:pointerover /template/ Border#MenusButtonBorder">
+            <Setter Property="Background" Value="{DynamicResource SideBarBrColor}" />
+        </Style>
+        <Style
+            Selector="Button.MenusButton:pointerover /template/ TextBlock#MenusButtonIcon">
+            <Setter Property="Foreground" Value="{TemplateBinding Foreground}" />
+        </Style>
+        <Style Selector="StackPanel.MenusStackPanel">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Spacing" Value="10" />
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.3"
+                                      Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Border.ShareInfoPrivateItemBorder:pointerover StackPanel.MenusStackPanel">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Button#RefreshButton">
+            <Setter Property="ClipToBounds" Value="False"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Width="42" Height="42"
+                            Margin="5"
+                            BoxShadow="{DynamicResource AllShadow}"
+                            Background="{DynamicResource SidebarBg}"
+                            BorderBrush="{DynamicResource SideBarBrColor}"
+                            BorderThickness="1"
+                            CornerRadius="14" Transitions="{StaticResource CommonColorTransitions}">
+
+                        <TextBlock Foreground="{DynamicResource SideTextColor}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontFamily="{StaticResource FASolid}"
+                                   Text="&#xf2f9;" Transitions="{StaticResource CommonColorTransitions}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button#RefreshButton:pointerover /template/ Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="Button#RefreshButton:pointerover /template/ TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+    </UserControl.Styles>
+    <Grid ColumnDefinitions="*,Auto" ClipToBounds="False">
+        <Border Transitions="{StaticResource CommonColorTransitions}" ClipToBounds="False" Padding="30,25"
+                Background="{DynamicResource HomeBg}">
+            <DockPanel ClipToBounds="False">
+                <TextBlock DockPanel.Dock="Top" Text="分享管理" FontSize="24" FontWeight="700" />
+                <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" Text="管理您的外链分享记录、查看状态并配置提取权限" Classes="Title" />
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,20,0,0">
+                    <!--搜索框-->
+                    <TextBox  HorizontalAlignment="Left"  ClipToBounds="False"
+                              Classes="ModernSearchBox2"
+                              PlaceholderText="输入链接 Key、提取码或文件名搜索分享记录..."
+                              Text="{Binding SearchText,Mode=TwoWay}" />
+                    <!--刷新-->
+                    <Button ClipToBounds="False" x:Name="RefreshButton" Command="{Binding RefreshCommand}" />
+
+                </StackPanel>
+               
+                <!--空空如也-->
+                <StackPanel DockPanel.Dock="Top" VerticalAlignment="Center"
+                            HorizontalAlignment="Center" Spacing="10"
+                            IsVisible="{Binding !ShareInfos.Count}">
+                    <TextBlock TextAlignment="Center" Foreground="{DynamicResource ThemeColor}" FontSize="100"
+                               Text="&#xf49e;" FontFamily="{StaticResource FASolid}" Margin="0,40,0,20" />
+                    <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="16" Text="这里空空如也" />
+                    <TextBlock TextAlignment="Center" Foreground="DarkGray" Text="当前没有任何分享记录哦 快去分享文件吧~" />
+                </StackPanel>
+                <!-- 分享链接列表 -->
+                <ScrollViewer Margin="0,20,0,0">
+                    <ItemsRepeater ItemsSource="{Binding ShareInfos}">
+                        <ItemsRepeater.Layout>
+                            <StackLayout />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate x:DataType="model:ShareInfoPrivateGroup">
+                                <!--双状态按钮-->
+                                <ToggleButton Classes="ShareInfoPrivateGroupTopButton">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate>
+                                            <!-- 每一个item的边框 -->
+                                            <Border Classes="ShareInfoPrivateGroupBorder">
+                                                <DockPanel>
+                                                    <!-- 分享文件信息 -->
+                                                    <Border Classes="ShareInfoPrivateGroupBorder2" DockPanel.Dock="Top">
+                                                        <DockPanel DockPanel.Dock="Top" HorizontalSpacing="15"
+                                                                   LastChildFill="False">
+                                                            <!--图标-->
+                                                            <Border DockPanel.Dock="Left" Classes="FileTsIconBg"
+                                                                    Background="{Binding IconInfo.HexColor,Converter={StaticResource ColorToTransparentBrushConverter}}">
+                                                                <TextBlock Classes="FileTsIcon"
+                                                                           FontFamily="{Binding IconInfo.FontFamilyResource}"
+                                                                           Foreground="{Binding IconInfo.HexColor}"
+                                                                           Text="{Binding IconInfo.IconCode}" />
+                                                            </Border>
+                                                            <!--文件名称-->
+                                                            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center"
+                                                                       Classes="FileTsFileName"
+                                                                       Text="{Binding FileName}" />
+                                                            <!--展开收起图标展示-->
+                                                            <TextBlock Classes="ShareInfoPrivateGroupBorderIcon"
+                                                                       DockPanel.Dock="Right"
+                                                                       Text="&#xf077;" />
+
+                                                            <!--新增链接命令-->
+                                                            <Button DockPanel.Dock="Right"
+                                                                    ToolTip.Tip="新增链接"
+                                                                    CommandParameter="{Binding}"
+                                                                    Classes="ShareInfoPrivateGroupAddButton"
+                                                                    Command="{Binding $parent[UserControl].((vm:FileSharePageViewModel)DataContext).OpenShareFileCommand}" />
+                                                            <!--链接数量显示-->
+                                                            <Border DockPanel.Dock="Right" VerticalAlignment="Center"
+                                                                    Background="#1A3B82F6" CornerRadius="10"
+                                                                    Padding="12,6">
+                                                                <StackPanel Spacing="10" Orientation="Horizontal"
+                                                                            HorizontalAlignment="Center"
+                                                                            VerticalAlignment="Center">
+                                                                    <TextBlock HorizontalAlignment="Center"
+                                                                               VerticalAlignment="Center"
+                                                                               FontSize="11"
+                                                                               Foreground="{DynamicResource ThemeColor}"
+                                                                               FontFamily="{StaticResource FASolid}"
+                                                                               Text="&#xf0c1;" />
+                                                                    <TextBlock HorizontalAlignment="Center"
+                                                                               VerticalAlignment="Center"
+                                                                               FontWeight="Bold"
+                                                                               FontSize="11"
+                                                                               Foreground="{DynamicResource ThemeColor}"
+                                                                               Text="{Binding ShareInfoPrivateItems.Count,StringFormat='{}{0} 条链接'}" />
+                                                                </StackPanel>
+                                                            </Border>
+
+
+                                                        </DockPanel>
+                                                    </Border>
+                                                    <!-- 虚线 -->
+                                                    <Rectangle DockPanel.Dock="Top"
+                                                               Stroke="{DynamicResource SideBarBrColor}"
+                                                               StrokeThickness="1"
+                                                               StrokeDashArray="4,2" />
+                                                    <!-- 链接信息 -->
+                                                    <ItemsRepeater ItemsSource="{Binding ShareInfoPrivateItems}">
+                                                        <ItemsRepeater.Layout>
+                                                            <StackLayout />
+                                                        </ItemsRepeater.Layout>
+                                                        <ItemsRepeater.ItemTemplate>
+                                                            <DataTemplate x:DataType="model:ShareInfoPrivateItem">
+                                                                <Border Classes="ShareInfoPrivateItemBorder">
+                                                                    <Panel>
+                                                                        <Rectangle VerticalAlignment="Bottom"
+                                                                                DockPanel.Dock="Top"
+                                                                                Stroke="{DynamicResource SideBarBrColor}"
+                                                                                StrokeThickness="1"
+                                                                                StrokeDashArray="4,2" />
+                                                                        <Border Padding="25,12">
+                                                                            <Grid ColumnDefinitions="3*,3*,2*,2*,3*">
+                                                                                <!--链接key-->
+                                                                                <StackPanel Spacing="5"
+                                                                                    HorizontalAlignment="Left"
+                                                                                    VerticalAlignment="Center">
+                                                                                    <TextBlock
+                                                                                        HorizontalAlignment="Left"
+                                                                                        VerticalAlignment="Center"
+                                                                                        Foreground="{DynamicResource SideTextColor}"
+                                                                                        FontSize="11" Text="链接 Key" />
+                                                                                    <Border Width="150"
+                                                                                        Transitions="{StaticResource CommonColorTransitions}"
+                                                                                        Padding="10,6" CornerRadius="6"
+                                                                                        Background="{DynamicResource HomeBg}">
+                                                                                        <TextBlock
+                                                                                            ToolTip.Tip="{Binding ShareId}"
+                                                                                            TextTrimming="CharacterEllipsis"
+                                                                                            FontSize="12"
+                                                                                            Text="{Binding ShareId}" />
+                                                                                    </Border>
+                                                                                </StackPanel>
+                                                                                <!--结束日期-->
+                                                                                <StackPanel Spacing="5" Grid.Column="1"
+                                                                                    HorizontalAlignment="Left"
+                                                                                    VerticalAlignment="Center">
+                                                                                    <TextBlock
+                                                                                        HorizontalAlignment="Left"
+                                                                                        VerticalAlignment="Center"
+                                                                                        Foreground="{DynamicResource SideTextColor}"
+                                                                                        FontSize="11" Text="结束日期" />
+                                                                                    <StackPanel Spacing="5"
+                                                                                        Orientation="Horizontal">
+                                                                                        <TextBlock
+                                                                                            Tag="{Binding Status}"
+                                                                                            FontSize="12"
+                                                                                            Classes="ShareInfoPrivateGroupStatusDate"
+                                                                                            FontFamily="{StaticResource FASolid}"
+                                                                                            Text="&#xf273;" />
+                                                                                        <TextBlock
+                                                                                            Tag="{Binding Status}"
+                                                                                            TextTrimming="CharacterEllipsis"
+                                                                                            FontSize="12"
+                                                                                            Classes="ShareInfoPrivateGroupStatusDate"
+                                                                                            FontWeight="400"
+                                                                                            Text="{Binding   EndValidity}" />
+                                                                                    </StackPanel>
+
+                                                                                </StackPanel>
+                                                                                <!--提取码-->
+                                                                                <StackPanel Grid.Column="2" Spacing="5"
+                                                                                    HorizontalAlignment="Left"
+                                                                                    VerticalAlignment="Center">
+                                                                                    <TextBlock
+                                                                                        HorizontalAlignment="Left"
+                                                                                        VerticalAlignment="Center"
+                                                                                        Foreground="{DynamicResource SideTextColor}"
+                                                                                        FontSize="10" Text="提取码" />
+                                                                                    <Border MaxWidth="90"
+
+                                                                                        Transitions="{StaticResource CommonColorTransitions}"
+                                                                                        Padding="10,6" CornerRadius="6"
+                                                                                        Background="{DynamicResource HomeBg}">
+                                                                                        <DockPanel
+                                                                                            HorizontalSpacing="5">
+                                                                                            <TextBlock
+                                                                                                DockPanel.Dock="Left"
+                                                                                                FontSize="12"
+                                                                                                VerticalAlignment="Center"
+                                                                                                FontFamily="{StaticResource FASolid}"
+                                                                                                Foreground="#f59e0b"
+                                                                                                Text="{Binding PasswordIcon}" />
+                                                                                            <TextBlock
+                                                                                                TextTrimming="CharacterEllipsis"
+                                                                                                FontSize="12"
+                                                                                                ToolTip.Tip="{Binding Password}"
+                                                                                                VerticalAlignment="Center"
+                                                                                                FontWeight="400"
+                                                                                                Foreground="{DynamicResource SideTextColor}"
+                                                                                                Text="{Binding   Password}" />
+                                                                                        </DockPanel>
+                                                                                    </Border>
+                                                                                </StackPanel>
+                                                                                <!--状态-->
+                                                                                <StackPanel Grid.Column="3" Spacing="5"
+                                                                                    HorizontalAlignment="Left"
+                                                                                    VerticalAlignment="Center">
+                                                                                    <TextBlock
+                                                                                        HorizontalAlignment="Left"
+                                                                                        VerticalAlignment="Center"
+                                                                                        Foreground="{DynamicResource SideTextColor}"
+                                                                                        FontSize="11" Text="状态" />
+                                                                                    <Border Tag="{Binding Status}"
+                                                                                        Classes="ShareInfoPrivateGroupStatus">
+                                                                                        <DockPanel
+                                                                                            HorizontalSpacing="5">
+                                                                                            <TextBlock
+                                                                                                Tag="{Binding Status}"
+                                                                                                DockPanel.Dock="Left"
+                                                                                                Classes="ShareInfoPrivateGroupStatusIcon"
+                                                                                                Text="{Binding StatusIcon}" />
+                                                                                            <TextBlock
+                                                                                                Tag="{Binding Status}"
+                                                                                                Classes="ShareInfoPrivateGroupStatusText" />
+                                                                                        </DockPanel>
+                                                                                    </Border>
+                                                                                </StackPanel>
+                                                                                <!--菜单-->
+                                                                                <StackPanel Classes="MenusStackPanel"
+                                                                                    Grid.Column="4">
+                                                                                    <Button
+                                                                                        HorizontalAlignment="Center"
+                                                                                        ToolTip.Tip="复制链接"
+                                                                                        VerticalAlignment="Center"
+                                                                                        Classes="MenusButton"
+                                                                                        Content="&#xf0c5;"
+                                                                                        Foreground="{DynamicResource ThemeColor}"
+                                                                                        CommandParameter="{Binding}"
+                                                                                        Command="{Binding $parent[UserControl].((vm:FileSharePageViewModel)DataContext).CopyShareIdCommand}"/>
+                                                                                    <Button
+                                                                                        HorizontalAlignment="Center"
+                                                                                        ToolTip.Tip="打开链接"
+                                                                                        VerticalAlignment="Center"
+                                                                                        Classes="MenusButton"
+                                                                                        Content="&#xf08e;"
+                                                                                        Foreground="{DynamicResource ThemeColor}"
+                                                                                        CommandParameter="{Binding}"
+                                                                                        Command="{Binding $parent[UserControl].((vm:FileSharePageViewModel)DataContext).OpenShareIdCommand}"/>
+
+                                                                                    <Button
+                                                                                        HorizontalAlignment="Center"
+                                                                                        ToolTip.Tip="编辑链接"
+                                                                                        VerticalAlignment="Center"
+                                                                                        Classes="MenusButton"
+                                                                                        Content="&#xf304;"
+                                                                                        Foreground="{DynamicResource ThemeColor}"
+                                                                                        CommandParameter="{Binding}" 
+                                                                                        Command="{Binding $parent[UserControl].((vm:FileSharePageViewModel)DataContext).EditShareCommand}"/>
+                                                                                    <Button
+                                                                                        HorizontalAlignment="Center"
+                                                                                        ToolTip.Tip="删除链接"
+                                                                                        VerticalAlignment="Center"
+                                                                                        Classes="MenusButton"
+                                                                                        Content="&#xf127;"
+                                                                                        Foreground="#EF4444"
+                                                                                        CommandParameter="{Binding}" 
+                                                                                        Command="{Binding $parent[UserControl].((vm:FileSharePageViewModel)DataContext).DelShareCommand}"/>
+                                                                                </StackPanel>
+                                                                            </Grid>
+                                                                        </Border>
+                                                                    </Panel>
+
+                                                                </Border>
+
+
+                                                            </DataTemplate>
+                                                        </ItemsRepeater.ItemTemplate>
+                                                    </ItemsRepeater>
+                                                </DockPanel>
+
+                                            </Border>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+
+                                </ToggleButton>
+
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </ScrollViewer>
+
+            </DockPanel>
+        </Border>
+        <Border ClipToBounds="False" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource SideBarBrColor}"
+                Width="300" Grid.Column="1"
+                Padding="25,40" Transitions="{StaticResource CommonColorTransitions}"
+                Background="{DynamicResource SidebarBg}">
+<StackPanel>
+     <TextBlock Margin="0,15,0,0" DockPanel.Dock="Top" FontWeight="Bold" FontSize="18" Text="分享数据概览" />
+                <!--网盘链接统计-->
+                <Border BoxShadow="{DynamicResource AllShadow}" Padding="20" Margin="0,15,0,0" DockPanel.Dock="Top"
+                        Background="{DynamicResource  HomeBg}"
+                        Transitions="{StaticResource CommonColorTransitions}" CornerRadius="10" VerticalAlignment="Top">
+                    <StackPanel ClipToBounds="True">
+                        <tc:CircularProgressBar ProgressBrush="{DynamicResource ThemeColor}" Value="{Binding EffectiveProportion}" Width="100"
+                                                Height="100"
+                                                Maximum="100"
+                                                StrokeThickness="8"
+                                                Classes="probar">
+                            <StackPanel Spacing="5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22"
+                                           FontWeight="Bold" Text="{Binding EffectiveProportion,StringFormat='{}{0}%'}" />
+                            </StackPanel>
+                        </tc:CircularProgressBar>
+                        <TextBlock Margin="0,15,0,0" FontSize="15" Foreground="{DynamicResource SideTextColor}" FontWeight="Bold" HorizontalAlignment="Center" Text="当前有效链接占比"/>
+                        <Panel  Margin="0,15,0,0">
+                            <TextBlock FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="{DynamicResource ThemeColor}" Text="生效中链接"/>
+                            <TextBlock FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="{DynamicResource ThemeColor}" Text="{Binding EffNum,StringFormat='{}{0} 条'}"/>
+                        </Panel>
+                        <Panel  Margin="0,15,0,0">
+                            <TextBlock FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#ef4444" Text="已过期链接"/>
+                            <TextBlock FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#ef4444" Text="{Binding FailNum,StringFormat='{}{0} 条'}"/>
+                        </Panel>
+                    </StackPanel>
+                </Border>
+</StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

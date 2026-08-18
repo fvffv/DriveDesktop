@@ -1,0 +1,132 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             xmlns:model="clr-namespace:drive_desktop.Models"
+             xmlns:avalonia="clr-namespace:LiveMarkdown.Avalonia;assembly=LiveMarkdown.Avalonia"
+             xmlns:templateControls="clr-namespace:drive_desktop.Components.TemplateControls"
+             x:DataType="vm:AiChatViewModel"
+             x:Class="drive_desktop.Components.UserControls.AiChat">
+    <Design.DataContext>
+        <vm:AiChatViewModel />
+    </Design.DataContext>
+    <!-- AI悬浮对话-->
+        <Canvas x:Name="AiAssistantCanvas" ZIndex="88">
+            <StackPanel x:Name="AiAssistantHost"
+                        Canvas.Right="40"
+                        Canvas.Bottom="40"
+                        Spacing="10">
+                <!-- 对话框初始收起 -->
+                <Border x:Name="AiChatPanel"
+                        IsVisible="False"
+                        ClipToBounds="False"
+                        BoxShadow="{DynamicResource AllShadow}"
+                        Background="{DynamicResource SidebarBg}"
+                        Width="380"
+                        Height="0"
+                        Opacity="0"
+                        BorderThickness="1"
+                        BorderBrush="{DynamicResource SideBarBrColor}"
+                        CornerRadius="28">
+                    <Border.Transitions>
+                        <Transitions>
+                            <DoubleTransition Property="Height" Duration="0:0:0.25" Easing="CubicEaseOut" />
+                            <DoubleTransition Property="Opacity" Duration="0:0:0.2" Easing="CubicEaseOut" />
+                            <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                            <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                        </Transitions>
+                    </Border.Transitions>
+                    <Grid RowDefinitions="*,8*,*">
+                        <!--顶部标题栏-->
+                        <Border Padding="25,20">
+                            <Panel>
+                                <!--顶部图标-->
+                                <Border HorizontalAlignment="Left" Background="#1a0078d4" Width="32" Height="32"
+                                        CornerRadius="10">
+                                    <TextBlock FontFamily="{StaticResource FASolid}" Text="&#xf544;"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <!--顶部标题-->
+                                <TextBlock FontWeight="Bold" Margin="45,0,0,0" Text="AI 智能助手"
+                                           HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            </Panel>
+                        </Border>
+                        <!--中间对话框-->
+                        <Border Padding="25,20" Transitions="{StaticResource CommonColorTransitions}" Grid.Row="1"
+                                Background="{DynamicResource HomeBg}" BorderThickness="0,1,0,1"
+                                BorderBrush="{DynamicResource SideBarBrColor}">
+                            <ScrollViewer x:Name="AiChatScrollViewer"
+                                          VerticalScrollBarVisibility="Hidden"
+                                          ScrollChanged="AiChatScrollViewer_ScrollChanged">
+                                <ItemsControl  ItemsSource="{Binding AiChats}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <ContentControl ClipToBounds="False" Content="{Binding}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.DataTemplates>
+                                        <!--ai对话模板-->
+                                        <DataTemplate x:DataType="model:AiChatAiMsg">
+                                            <StackPanel  Spacing="5"  HorizontalAlignment="Left">
+                                                <Border Transitions="{StaticResource CommonColorTransitions}" MaxWidth="280" Padding="18,14" Background="{DynamicResource SidebarBg}" BorderBrush="{DynamicResource SideBarBrColor}" BorderThickness="1" CornerRadius="20,20,20,4">
+                                                    <avalonia:MarkdownRenderer  MarkdownBuilder="{Binding Content}" x:Name="MarkdownRenderer" />
+                                                </Border>
+                                                <TextBlock  FontSize="12" FontWeight="Bold" Foreground="{DynamicResource SideTextColor}" HorizontalAlignment="Left"  Text="{Binding Time}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                        <!--用户对话模板-->
+                                        <DataTemplate x:DataType="model:AiChatUserMsg">
+                                            <StackPanel Spacing="5" HorizontalAlignment="Right">
+                                                <Border Transitions="{StaticResource CommonColorTransitions}" MaxWidth="280" Padding="18,14" Background="{DynamicResource ThemeColor}" BorderBrush="{DynamicResource SideBarBrColor}" BorderThickness="1" CornerRadius="20,20,4,20">
+                                                    <TextBlock Foreground="White" Text="{Binding Content}" TextWrapping="Wrap"/>
+                                                </Border>
+                                                <TextBlock FontSize="12" FontWeight="Bold" Foreground="{DynamicResource SideTextColor}" HorizontalAlignment="Right" Text="{Binding Time}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.DataTemplates>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+                        <!--发送框-->
+                        <Border Grid.Row="2" Padding="20,0,20,0">
+                            <Panel>
+                                <templateControls:DefaultInput Background="{DynamicResource HomeBg}"
+                                                               
+                                                               CornerRadius="16"
+                                                               HorizontalAlignment="Stretch"
+                                                               IconFontSize="20"
+                                                               Watermark="输入你想让 AI 帮你完成的任务..."
+                                                               Height="40"
+                                                               Text="{Binding UserInput,Mode=TwoWay}"
+                                                               IsEnabled="{Binding !IsSending}"
+                                                               KeyDown="AiInput_KeyDown"
+                                                               Transitions="{StaticResource CommonColorTransitions}"
+                                                               IsShowIcon="False" />
+                                <Button HorizontalAlignment="Right"
+                                        x:Name="SeedAiMsgButton"
+                                        Command="{Binding SeedAiChatCommand}" />
+                            </Panel>
+                        </Border>
+                    </Grid>
+                </Border>
+                <!-- 悬浮按钮 -->
+                <Border x:Name="AiFloatingButton"
+                        Cursor="Hand"
+                        BoxShadow="0 10 25 0 #660078D4"
+                        HorizontalAlignment="Right"
+                        Background="{DynamicResource ThemeColor}"
+                        Width="60"
+                        Height="60"
+                        CornerRadius="50"
+                        PointerPressed="AiFloatingButton_PointerPressed"
+                        PointerMoved="AiFloatingButton_PointerMoved"
+                        PointerReleased="AiFloatingButton_PointerReleased"
+                        PointerCaptureLost="AiFloatingButton_PointerCaptureLost">
+                    <TextBlock  FontFamily="{StaticResource FASolid}" FontSize="25" Text="&#xf544;"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
+                </Border>
+            </StackPanel>
+        </Canvas>
+</UserControl>

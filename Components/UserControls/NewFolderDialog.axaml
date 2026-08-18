@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             xmlns:tc="using:drive_desktop.Components.TemplateControls"
+             xmlns:uc="using:drive_desktop.Components.UserControls"
+             x:DataType="vm:NewFolderDialogViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="drive_desktop.Components.UserControls.NewFolderDialog">
+
+    <UserControl.DataContext>
+        <vm:NewFolderDialogViewModel />
+    </UserControl.DataContext>
+    <tc:DefaultDialog IsOpen="{Binding IsShowNewFolderDialog}">
+        <StackPanel Spacing="25">
+            <Panel>
+                <TextBlock FontWeight="Bold" Text="{Binding Title}" FontSize="18" />
+                <Button Classes="naked" HorizontalAlignment="Right" Command="{Binding CloseCommand}">
+                    <TextBlock Classes="close" FontFamily="{StaticResource FASolid}" FontSize="18" Text="&#xf00d;" />
+                </Button>
+            </Panel>
+            <tc:DefaultInput Height="40" IsShowIcon="False" BorderColor="{DynamicResource BrColor}"
+                             Watermark="请输入名称" Text="{Binding FolderOrFileName,Mode=TwoWay}" />
+            <tc:DefaultButton IsEnabled="{Binding ButtonStatus.IsEnabled}" IsLoading="{Binding ButtonStatus.IsLoading}"
+                              Icon="&#xf274;" Height="40" HorizontalAlignment="Right"
+                              ActionCommand="{Binding SubmitCommand}"
+                              Text="{Binding ButtonStatus.Title}" />
+        </StackPanel>
+    </tc:DefaultDialog>
+</UserControl>

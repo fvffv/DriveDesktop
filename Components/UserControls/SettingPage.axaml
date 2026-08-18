@@ -1,0 +1,615 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             xmlns:templateControls="clr-namespace:drive_desktop.Components.TemplateControls"
+             x:DataType="vm:SettingPageViewModel"
+             x:Class="drive_desktop.Components.UserControls.SettingPage">
+    <UserControl.DataContext>
+        <vm:SettingPageViewModel />
+    </UserControl.DataContext>
+    <UserControl.Styles>
+        <Style Selector="TextBlock.Title">
+            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
+        <Style Selector="templateControls|DefaultInput.DownloadLocationInput /template/ TextBox#PART_TextBox">
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="IsTabStop" Value="False" />
+        </Style>
+
+        <Style Selector="Border.CardBorder">
+            <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="CornerRadius" Value="24" />
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+        </Style>
+
+        <Style Selector="TextBlock.KpiWatermark">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="FontFamily" Value="{StaticResource FASolid}" />
+            <Setter Property="Margin" Value="0,0,-5,-30" />
+            <Setter Property="FontSize" Value="150" />
+            <Setter Property="Opacity" Value="0.03" />
+            <Setter Property="RenderTransform"
+                    Value="rotate(-15deg) scale(1)" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.CardInfoContentBorder">
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="24" />
+        </Style>
+        <Style Selector="Border.CardBorder:pointerover TextBlock.KpiWatermark">
+            <Setter Property="Opacity"
+                    Value="0.06" />
+            <Setter Property="RenderTransform"
+                    Value="scale(1.1)" />
+        </Style>
+
+        <Style Selector="Button.UpdateHead">
+            <Setter Property="Opacity" Value="0.6"></Setter>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="ClipToBounds" Value="False" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="UpdateHeadBorder" BoxShadow="{DynamicResource AllShadow}"
+                            BorderBrush="{DynamicResource SideBarBrColor}"
+                            BorderThickness="1" Background="{DynamicResource TextColor2}"
+                            Transitions="{StaticResource CommonColorTransitions}" Width="34" Height="34"
+                            CornerRadius="50">
+                        <TextBlock Transitions="{StaticResource CommonColorTransitionsTextBlock}"
+                                   x:Name="UpdateHeadIcon" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontFamily="{StaticResource FASolid}" Text="&#xf030;" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+            <Setter Property="RenderTransform"
+                    Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.UpdateHead:pointerover">
+            <Setter Property="RenderTransform"
+                    Value="scale(1.1)" />
+        </Style>
+        <Style Selector="Button.UpdateHead:pressed">
+            <Setter Property="RenderTransform"
+                    Value="scale(1.0)" />
+        </Style>
+        <Style Selector="Button.UpdateHead:pointerover /template/ Border#UpdateHeadBorder">
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="Background" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="Button.UpdateHead:pointerover /template/ TextBlock#UpdateHeadIcon">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+
+
+        <!-- nickname-input 基础样式 -->
+        <Style Selector="TextBox.nickname-input">
+            <Setter Property="Width" Value="240" />
+            <Setter Property="FontSize" Value="28" />
+            <Setter Property="FontWeight" Value="ExtraBold" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColor3}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Padding" Value="12,4" />
+            <Setter Property="Margin" Value="-12,0,0,0" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="LetterSpacing" Value="-0.5" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <!-- 控制 Fluent TextBox 模板中的实际边框 -->
+        <Style Selector="TextBox.nicknameInput /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background"
+                                     Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                    <BrushTransition Property="BorderBrush"
+                                     Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                    <BoxShadowsTransition Property="BoxShadow"
+                                          Duration="0:0:0.3"
+                                          Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <!-- 鼠标悬浮 -->
+        <Style Selector="TextBox.nicknameInput:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="{DynamicResource SidebarRadioBg}" />
+        </Style>
+
+        <!-- 获得焦点 -->
+        <Style Selector="TextBox.nicknameInput:focus-within /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="{DynamicResource HomeBg}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="BoxShadow" Value="0 4 15 0 #0D000000" />
+        </Style>
+
+
+        <Style Selector="Button#SaveNameButton">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="RenderTransform" Value="translateX(-10px) scale(1.0)" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <TextBlock Foreground="{DynamicResource ThemeColor}" FontSize="25"
+                               FontFamily="{StaticResource FASolid}" Text="&#xf0c7;" />
+                </ControlTemplate>
+            </Setter>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="StackPanel#EditNameStackPanel">
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="StackPanel#EditNameStackPanel:pointerover Button#SaveNameButton">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="translateX(0px)" />
+        </Style>
+        <Style Selector="Button#SaveNameButton:pointerover">
+            <Setter Property="RenderTransform" Value="scale(1.1)" />
+        </Style>
+        <Style Selector="Button#SaveNameButton:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.9)" />
+        </Style>
+        <Style Selector="TextBlock.UserInfoTitle">
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style Selector="Border.asd">
+            <Setter Property="Width" Value="500" />
+            <Setter Property="Height" Value="500" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.asd:pointerover">
+            <Setter Property="Background" Value="GreenYellow" />
+        </Style>
+        <Style Selector="TextBlock.CardTitleIcon">
+            <Setter Property="FontSize" Value="20"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontFamily" Value="{StaticResource FASolid}" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+
+        <Style Selector="Button.DirectoryButton">
+            <Setter Property="Height" Value="46" />
+            <Setter Property="MinWidth" Value="120" />
+            <Setter Property="Padding" Value="20,0" />
+            <Setter Property="CornerRadius" Value="12" />
+
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="Foreground"
+                    Value="{DynamicResource TextColor3}" />
+            <Setter Property="BorderBrush"
+                    Value="{DynamicResource SideBarBrColor}" />
+            <Setter Property="BorderThickness" Value="1" />
+
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="ClipToBounds" Value="False" />
+
+            <Setter Property="HorizontalContentAlignment"
+                    Value="Center" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center" />
+
+
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="DirectoryButtonBorder"
+                            ClipToBounds="False"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+
+                        <Border.Transitions>
+                            <Transitions>
+                                <BrushTransition
+                                    Property="Background"
+                                    Duration="0:0:0.3"
+                                    Easing="CubicEaseOut" />
+
+                                <BrushTransition
+                                    Property="BorderBrush"
+                                    Duration="0:0:0.3"
+                                    Easing="CubicEaseOut" />
+
+                            </Transitions>
+                        </Border.Transitions>
+
+                        <ContentPresenter
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <Style Selector="Button.DirectoryButton:pointerover">
+            <Setter Property="Foreground"
+                    Value="{DynamicResource ThemeColor}" />
+        </Style>
+
+        <!-- 鼠标悬浮时改变模板中的实际 Border -->
+        <Style Selector="Button.DirectoryButton:pointerover
+                 /template/ Border#DirectoryButtonBorder">
+            <Setter Property="Background" Value="#0D0078D4" />
+            <Setter Property="BorderBrush"
+                    Value="{DynamicResource ThemeColor}" />
+        </Style>
+
+
+        <Style Selector="Button.DirectoryButton:pressed
+                 /template/ Border#DirectoryButtonBorder">
+            <Setter Property="Background" Value="#260078D4" />
+
+        </Style>
+
+        <!--更新密码-->
+        <Style Selector="Button#UpdatePwButton"> 
+            <Setter Property="Background" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Margin="9" BoxShadow="0 4 12 0 #403B82F6" Height="42" CornerRadius="14"
+                            Padding="20,0" Background="{TemplateBinding Background}">
+                        <DockPanel HorizontalSpacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource FASolid}" FontSize="13"
+                                       Foreground="White" Text="&#xf084;" />
+                            <TextBlock VerticalAlignment="Center" Foreground="White" FontWeight="Bold" Text="更新密码" />
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button#UpdatePwButton:pointerover">
+            <Setter Property="RenderTransform" Value="translateY(-2px)" />
+        </Style>
+        <Style Selector="Button#UpdatePwButton:pressed">
+            <Setter Property="RenderTransform" Value="translateY(1px)" />
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer>
+        <Border ClipToBounds="False" Padding="30,25">
+            <DockPanel LastChildFill="False" ClipToBounds="False">
+                <TextBlock DockPanel.Dock="Top" Text="设置与偏好" FontSize="24" FontWeight="700" />
+                <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" Text="管理您的应用偏好、传输网络及账户安全状态" Classes="Title" />
+                <!--头像昵称展示-->
+                <Border Margin="0,25,0,0" DockPanel.Dock="Top" Classes="CardBorder">
+                    <Border Classes="CardInfoContentBorder">
+                        <Panel>
+                            <DockPanel Margin="24" LastChildFill="False">
+                                <!--头像-->
+                                <Panel ClipToBounds="False" DockPanel.Dock="Left">
+                                    <Border VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Width="110"
+                                            Height="110"
+                                            Background="{DynamicResource SidebarBg}"
+                                            CornerRadius="500"
+                                            ClipToBounds="True">
+                                        <Image Source="{Binding UserInfoService.UserHead}"
+                                               Stretch="UniformToFill" />
+                                    </Border>
+                                    <!--头像上传按钮-->
+                                    <Button Command="{Binding SelectHeadImgCommand}" CommandParameter="{Binding $parent[Window]}" Classes="UpdateHead" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+                                </Panel>
+                                <!--名称和账号基本信息-->
+                                <StackPanel Spacing="10" Margin="20,0,0,0" DockPanel.Dock="Left">
+                                    <StackPanel x:Name="EditNameStackPanel" Spacing="15" Orientation="Horizontal">
+                                        <TextBox FontSize="28"
+                                                 FontWeight="Bold"
+                                                 Text="{Binding UserInfoService.ShowUserInfo.Nickname, Mode=TwoWay}"
+                                                 Classes="nicknameInput" />
+                                        <!--保存名称-->
+                                        <Button x:Name="SaveNameButton"
+                                                Command="{Binding SaveNameCommand}" />
+                                    </StackPanel>
+                                    <!--登录账号  uid 注册日期-->
+                                    <StackPanel Spacing="25" Margin="10,0,0,0" Orientation="Horizontal">
+                                        <StackPanel Spacing="5">
+                                            <TextBlock Classes="UserInfoTitle" Text="登录账号" />
+                                            <Panel>
+                                                <TextBlock VerticalAlignment="Center" Text="&#xf007;"
+                                                           FontFamily="{StaticResource FASolid}"
+                                                           FontSize="13" Foreground="{DynamicResource ThemeColor}" />
+                                                <TextBlock VerticalAlignment="Center" Margin="15,0,0,0"
+                                                           Classes="UserInfoTitle"
+                                                            Foreground="{DynamicResource TextColor}"
+                                                            Text="{Binding UserInfoService.ShowUserInfo.Email}" />
+                                            </Panel>
+                                        </StackPanel>
+                                        <StackPanel Spacing="5">
+                                            <TextBlock Classes="UserInfoTitle" Text="用户UID" />
+                                            <Panel>
+                                                <TextBlock VerticalAlignment="Center" Text="&#xf577;"
+                                                           FontFamily="{StaticResource FASolid}"
+                                                           FontSize="13" Foreground="{DynamicResource ThemeColor}" />
+                                                <TextBlock VerticalAlignment="Center" Margin="17,0,0,0"
+                                                           Classes="UserInfoTitle"
+                                                            Foreground="{DynamicResource TextColor}"
+                                                            Text="{Binding UserInfoService.ShowUserInfo.UserId}" />
+                                            </Panel>
+                                        </StackPanel>
+                                        <StackPanel Spacing="5">
+                                            <TextBlock Classes="UserInfoTitle" Text="注册日期" />
+                                            <Panel>
+                                                <TextBlock VerticalAlignment="Center" Text="&#xf274;"
+                                                           FontFamily="{StaticResource FASolid}"
+                                                           FontSize="13" Foreground="{DynamicResource ThemeColor}" />
+                                                <TextBlock VerticalAlignment="Center" Margin="15,0,0,0"
+                                                           Classes="UserInfoTitle"
+                                                            Foreground="{DynamicResource TextColor}"
+                                                            Text="{Binding UserInfoService.ShowUserInfo.CreatedAt,
+                                                                           StringFormat='{}{0:yyyy-MM-dd}'}" />
+                                            </Panel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+
+                            </DockPanel>
+                            <!--背景图标-->
+                            <TextBlock Classes="KpiWatermark" Text="&#xf2c2;" />
+                        </Panel>
+                    </Border>
+
+                </Border>
+                <Grid ColumnSpacing="30" Margin="0,30,0,0" DockPanel.Dock="Top" ColumnDefinitions="*,*">
+                    <DockPanel VerticalSpacing="30" LastChildFill="False">
+                        <!--高级功能与网络-->
+                        <Border DockPanel.Dock="Top" Classes="CardBorder">
+                            <Border CornerRadius="24" ClipToBounds="True">
+                                <Panel>
+                                    <StackPanel Margin="35">
+                                        <StackPanel Spacing="10" Orientation="Horizontal">
+                                            <TextBlock Classes="CardTitleIcon" Text="&#xf6ff;" />
+                                            <TextBlock FontWeight="Bold" FontSize="18" VerticalAlignment="Center"
+                                                       Text="高级功能与网络" />
+                                        </StackPanel>
+                                        <!--直连模式开关-->
+                                        <StackPanel Margin="0,40,0,0">
+                                            <TextBlock FontWeight="Bold" FontSize="15" VerticalAlignment="Center"
+                                                       Text="直连模式" />
+                                            <Panel>
+                                                <TextBlock HorizontalAlignment="Left"
+                                                           Foreground="{DynamicResource SideTextColor}" FontSize="13"
+                                                           VerticalAlignment="Center" Text="开启后将可通过文件 GUID 直接进行下载您的文件。" />
+                                                <ToggleSwitch Width="50"
+                                                              HorizontalAlignment="Right"
+                                                              IsChecked="{Binding IsDirectLinkEnabled, Mode=TwoWay}" />
+                                            </Panel>
+                                        </StackPanel>
+                                        <Rectangle Margin="0,10"
+                                                   Stroke="{DynamicResource SideBarBrColor}"
+                                                   StrokeThickness="1"
+                                                   StrokeDashArray="4,2" />
+                                        <!--WebDav开关-->
+                                        <StackPanel Margin="0,10,0,0">
+                                            <TextBlock FontWeight="Bold" FontSize="15" VerticalAlignment="Center"
+                                                       Text="WebDAV 访问协议" />
+                                            <Panel>
+                                                <TextBlock HorizontalAlignment="Left"
+                                                           Foreground="{DynamicResource SideTextColor}" FontSize="13"
+                                                           VerticalAlignment="Center"
+                                                           Text="允许使用第三方本地客户端通过 WebDAV 协议挂载和管理网盘文件。" />
+                                                <ToggleSwitch Width="50"
+                                                              HorizontalAlignment="Right"
+                                                              IsChecked="{Binding IsWebDavEnabled, Mode=TwoWay}" />
+                                            </Panel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <!--背景图标-->
+                                    <TextBlock Classes="KpiWatermark" Text="&#xf6ff;" />
+                                </Panel>
+                            </Border>
+
+                        </Border>
+                        <!--传输与储存偏好-->
+                        <Border DockPanel.Dock="Top" Classes="CardBorder">
+                            <Border CornerRadius="24" ClipToBounds="True">
+                                <Panel>
+                                    <StackPanel Margin="35">
+                                        <StackPanel Spacing="10" Orientation="Horizontal">
+                                            <TextBlock Classes="CardTitleIcon" Text="&#xf0a0;" />
+                                            <TextBlock FontWeight="Bold" FontSize="18" VerticalAlignment="Center"
+                                                       Text="传输与储存偏好" />
+                                        </StackPanel>
+                                        <TextBlock Margin="0,40,0,0" FontWeight="Bold" FontSize="13"
+                                                   Foreground="{DynamicResource SideTextColor}"
+                                                   VerticalAlignment="Center"
+                                                   Text="默认文件下载位置" />
+                                        <Grid ColumnSpacing="20" Margin="0,10,0,0" ColumnDefinitions="*,Auto">
+                                            <!--地址输入框-->
+                                            <templateControls:DefaultInput Classes="DownloadLocationInput"
+                                                                           Background="{DynamicResource HomeBg}"
+                                                                           CornerRadius="16"
+                                                                           HorizontalAlignment="Stretch"
+                                                                           IconFontSize="20"
+                                                                           Watermark="文件下面目录..."
+                                                                           Text="{Binding DownloadLocation}"
+                                                                           Transitions="{StaticResource CommonColorTransitions}"
+                                                                           IsShowIcon="False" />
+                                            <Button Grid.Column="1"
+                                                    Classes="DirectoryButton"
+                                                    Command="{Binding SelectDownloadDirectoryCommand}"
+                                                    CommandParameter="{Binding $parent[Window]}">
+                                                <StackPanel Orientation="Horizontal"
+                                                            Spacing="8">
+                                                    <TextBlock VerticalAlignment="Center"
+                                                               Transitions="{StaticResource CommonColorTransitionsTextBlock}"
+                                                               FontFamily="{StaticResource FASolid}"
+                                                               FontSize="14"
+                                                               Text="&#xf07c;" />
+
+                                                    <TextBlock
+                                                        Transitions="{StaticResource CommonColorTransitionsTextBlock}"
+                                                        VerticalAlignment="Center"
+                                                        Text="选择目录" />
+                                                </StackPanel>
+                                            </Button>
+
+                                        </Grid>
+                                        <Grid Margin="0,20,0,0" ColumnSpacing="10" RowSpacing="10"
+                                              ColumnDefinitions="*,*" RowDefinitions="*,*">
+                                            <TextBlock FontWeight="Bold" FontSize="13"
+                                                       Foreground="{DynamicResource SideTextColor}"
+                                                       VerticalAlignment="Center"
+                                                       Text="同时下载任务数" />
+                                            <!--同时下载数量-->
+                                            <templateControls:DefaultInput Grid.Row="1" Grid.Column="0"
+                                                                           Background="{DynamicResource HomeBg}"
+                                                                           CornerRadius="16"
+                                                                           HorizontalAlignment="Stretch"
+                                                                           IconFontSize="20"
+                                                                           Watermark="同时下载数量"
+                                                                           Text="{Binding DownloadTaskCount, Mode=TwoWay}"
+                                                                           Transitions="{StaticResource CommonColorTransitions}"
+                                                                           IsShowIcon="False" />
+
+                                            <TextBlock Grid.Row="0" Grid.Column="1" FontWeight="Bold" FontSize="13"
+                                                       Foreground="{DynamicResource SideTextColor}"
+                                                       VerticalAlignment="Center"
+                                                       Text="同时上传任务数" />
+                                            <!--同时上传数量-->
+                                            <templateControls:DefaultInput Grid.Row="1" Grid.Column="1"
+                                                                           Background="{DynamicResource HomeBg}"
+                                                                           CornerRadius="16"
+                                                                           HorizontalAlignment="Stretch"
+                                                                           IconFontSize="20"
+                                                                           Watermark="同时上传数量"
+                                                                           Text="{Binding UploadTaskCount, Mode=TwoWay}"
+                                                                           Transitions="{StaticResource CommonColorTransitions}"
+                                                                           IsShowIcon="False" />
+                                        </Grid>
+
+                                    </StackPanel>
+                                    <!--背景图标-->
+                                    <TextBlock Classes="KpiWatermark" Text="&#xf0a0;" />
+                                </Panel>
+                            </Border>
+
+                        </Border>
+
+                    </DockPanel>
+                    <!--密码更新-->
+                    <Border VerticalAlignment="Top" Grid.Column="1" Classes="CardBorder">
+                        <Border CornerRadius="24" ClipToBounds="True">
+                            <Panel>
+                                <StackPanel Margin="35">
+                                    <StackPanel Spacing="10" Orientation="Horizontal">
+                                        <TextBlock Classes="CardTitleIcon" Text="&#xf505;" />
+                                        <TextBlock FontWeight="Bold" FontSize="18" VerticalAlignment="Center"
+                                                   Text="账户安全与密码" />
+                                    </StackPanel>
+                                    
+                                   
+                                    <TextBlock Margin="0,40,0,0"  FontWeight="Bold" FontSize="13"
+                                               Foreground="{DynamicResource SideTextColor}"
+                                               VerticalAlignment="Center"
+                                               Text="当前登录密码" />
+                                    <!--当前密码-->
+                                    <templateControls:DefaultInput  Margin="0,10,0,0"
+                                                                     Background="{DynamicResource HomeBg}"
+                                                                    CornerRadius="16"
+                                                                    HorizontalAlignment="Stretch"
+                                                                     IconFontSize="20"
+                                                                     Watermark="输入当前密码以验证身份"
+                                                                     Text="{Binding CurrentPassword, Mode=TwoWay}"
+                                                                     PasswordChar="●"
+                                                                    Transitions="{StaticResource CommonColorTransitions}"
+                                                                    IsShowIcon="False" />
+                                    <TextBlock Margin="0,20,0,0"  FontWeight="Bold" FontSize="13"
+                                               Foreground="{DynamicResource SideTextColor}"
+                                               VerticalAlignment="Center"
+                                               Text="新密码" />
+                                    <!--新密码-->
+                                    <templateControls:DefaultInput  Margin="0,10,0,0"
+                                                                    Background="{DynamicResource HomeBg}"
+                                                                    CornerRadius="16"
+                                                                    HorizontalAlignment="Stretch"
+                                                                     IconFontSize="20"
+                                                                     Watermark="请至少包含8位字母与数字"
+                                                                     Text="{Binding NewPassword, Mode=TwoWay}"
+                                                                     PasswordChar="●"
+                                                                    Transitions="{StaticResource CommonColorTransitions}"
+                                                                    IsShowIcon="False" />
+                                    <TextBlock Margin="0,20,0,0"  FontWeight="Bold" FontSize="13"
+                                               Foreground="{DynamicResource SideTextColor}"
+                                               VerticalAlignment="Center"
+                                               Text="确认新密码" />
+                                    <!--确认密码-->
+                                    <templateControls:DefaultInput  Margin="0,10,0,0"
+                                                                    Background="{DynamicResource HomeBg}"
+                                                                    CornerRadius="16"
+                                                                    HorizontalAlignment="Stretch"
+                                                                     IconFontSize="20"
+                                                                     Watermark="请在此输入新密码"
+                                                                     Text="{Binding ConfirmPassword, Mode=TwoWay}"
+                                                                     PasswordChar="●"
+                                                                    Transitions="{StaticResource CommonColorTransitions}"
+                                                                    IsShowIcon="False" />
+                                    <Button Margin="0,20,0,0"
+                                            HorizontalAlignment="Right"
+                                            x:Name="UpdatePwButton"
+                                            Command="{Binding UpdatePasswordCommand}"/>
+                                </StackPanel>
+                                <!--背景图标-->
+                                <TextBlock Classes="KpiWatermark" Text="&#xf505;" />
+                            </Panel>
+                        </Border>
+                    </Border>
+                </Grid>
+            </DockPanel>
+        </Border>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,43 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:drive_desktop.Components.TemplateControls"
+        xmlns:u="https://irihi.tech/ursa">
+    <Design.PreviewWith>
+        <controls:DefaultButton />
+    </Design.PreviewWith>
+    
+    <Style Selector="controls|DefaultButton">
+        <Setter Property="Background" Value="{DynamicResource ThemeColor}" />
+        <Setter Property="Height" Value="50" />
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Theme" Value="{DynamicResource SolidIconButton}"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <u:IconButton x:Name="PART_InnerButton"  CornerRadius="6" Width="{TemplateBinding Width}"
+                              
+                              Height="{TemplateBinding Height}"
+                              Content="{TemplateBinding Text}"
+                              Background="{TemplateBinding Background}"
+                              Foreground="{TemplateBinding Foreground}"
+                              FontWeight="Bold"
+                              BorderBrush="{DynamicResource ThemeColor}"
+                              BorderThickness="1"
+                              Theme="{TemplateBinding Theme}"
+                              IsLoading="{TemplateBinding IsLoading}"
+                              Command="{TemplateBinding ActionCommand}" HorizontalAlignment="Stretch"
+                              CommandParameter="{TemplateBinding ActionCommandParameter}">
+                    <u:IconButton.Icon>
+                        <TextBlock FontFamily="{StaticResource FASolid}"
+                                   Text="{Binding Icon, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:DefaultButton}}"
+                                   Margin="0,3,0,0" />
+                    </u:IconButton.Icon>
+                </u:IconButton>
+
+
+            </ControlTemplate>
+        </Setter>
+       
+    </Style>
+
+
+</Styles>

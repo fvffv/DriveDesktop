@@ -1,0 +1,940 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="850"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             x:DataType="vm:FileTransmissionViewModel"
+             xmlns:tc="using:drive_desktop.Components.TemplateControls"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             Background="{DynamicResource HomeBg}"
+             xmlns:model="using:drive_desktop.Models"
+             xmlns:transitionsAndConverter="clr-namespace:drive_desktop.Components.TransitionsAndConverter"
+             x:Class="drive_desktop.Components.UserControls.FileTransmission">
+    <UserControl.DataContext>
+        <vm:FileTransmissionViewModel />
+    </UserControl.DataContext>
+    <UserControl.Styles>
+        <Style Selector="Border.card">
+            <Setter Property="MinWidth" Value="190"></Setter>
+            <Setter Property="CornerRadius" Value="24" />
+            <Setter Property="Padding" Value="25" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+            <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}" />
+        </Style>
+        <Style Selector="TextBlock.Title">
+            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style Selector="tc|CircularProgressBar.probar">
+            <Setter Property="Width" Value="70" />
+            <Setter Property="Height" Value="70" />
+        </Style>
+
+
+        <Style Selector="RadioButton.RadioButtonTitleButton">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="GroupName" Value="RadioButtonTitleButton" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <StackPanel>
+                        <!--内部标题和数量展示-->
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock x:Name="RadioButtonTitleButtonTitle"
+                                       Foreground="{DynamicResource SideTextColor}" Margin="0,0,5,0" FontSize="16"
+                                       FontWeight="600" Text="{TemplateBinding Content}"
+                                       Transitions="{StaticResource CommonColorTransitionsTextBlock}" />
+                            <Border VerticalAlignment="Bottom" Padding="8,2" Background="{TemplateBinding Background}"
+                                    CornerRadius="50"
+                                    Transitions="{StaticResource CommonColorTransitions}">
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="600"
+                                           Foreground="{TemplateBinding Foreground}" FontSize="12"
+                                           Text="{TemplateBinding RadioButton.Tag}" />
+                            </Border>
+                        </StackPanel>
+                        <Border x:Name="RadioButtonTitleButtonSelectedGraphic" Margin="0,5,0,0" CornerRadius="50"
+                                Background="{DynamicResource HomeBg}"
+                                Transitions="{StaticResource CommonColorTransitions}" Height="2" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <Style Selector="RadioButton.RadioButtonTitleButton:checked /template/ TextBlock#RadioButtonTitleButtonTitle">
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
+        </Style>
+        <Style
+            Selector="RadioButton.RadioButtonTitleButton:checked /template/ Border#RadioButtonTitleButtonSelectedGraphic">
+            <Setter Property="Background" Value="{DynamicResource ThemeColor}" />
+        </Style>
+
+        <Style Selector="Border.FileTmBoder">
+            <Setter Property="ClipToBounds" Value="False" />
+            <Setter Property="Margin" Value="0,5" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="Padding" Value="20,15" />
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}" />
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+        </Style>
+        <Style Selector="Border.FileTmBoder:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SidebarRadioBg}" />
+        </Style>
+        <Style Selector="Border.FileTsIconBg">
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Width" Value="45" />
+            <Setter Property="Height" Value="45" />
+        </Style>
+        <Style Selector="TextBlock.FileTsIcon">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="17" />
+        </Style>
+        <Style Selector="TextBlock.FileTsFileName">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="FontWeight" Value="600" />
+        </Style>
+        <Style Selector="TextBlock.FileTsFilePath">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
+        </Style>
+        <Style Selector="TextBlock.FileTsPercentage">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="600" />
+        </Style>
+        <Style Selector="TextBlock.FileTsPercentage2">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="600" />
+        </Style>
+        <Style Selector="ProgressBar.FileTsPrggressBar">
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+            <Setter Property="Background" Value="{DynamicResource HomeBg}" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Height" Value="6" />
+        </Style>
+
+        <Style Selector="CheckBox.FileTsPauseContinue">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="FileTsPauseContinueBorder" CornerRadius="8" Background="{DynamicResource HomeBg}"
+                            Transitions="{StaticResource CommonColorTransitions}" Width="32" Height="32">
+                        <TextBlock x:Name="FileTsPauseContinueIcon"
+                                   Transitions="{StaticResource CommonColorTransitionsTextBlock}"
+                                   FontFamily="{StaticResource FASolid}"
+                                   Foreground="{DynamicResource SideTextColor}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" Text="&#xf04c;" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="CheckBox.FileTsPauseContinue:pointerover /template/ Border#FileTsPauseContinueBorder">
+            <Setter Property="Background" Value="{DynamicResource SideBarBrColor}" />
+        </Style>
+        <Style
+            Selector="CheckBox.FileTsPauseContinue[IsChecked=False]:pointerover /template/ TextBlock#FileTsPauseContinueIcon">
+            <Setter Property="Foreground" Value="#f59e0b" />
+        </Style>
+
+        <Style Selector="CheckBox.FileTsPauseContinue:checked /template/ TextBlock#FileTsPauseContinueIcon">
+            <Setter Property="Text" Value="&#xf04b;" />
+        </Style>
+        <Style
+            Selector="CheckBox.FileTsPauseContinue[IsChecked=True]:pointerover /template/ TextBlock#FileTsPauseContinueIcon">
+            <Setter Property="Foreground" Value="#10b981" />
+        </Style>
+
+        <Style Selector="Button.FileTsDelButton">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="FileTsDelButtonBorder" CornerRadius="8" Background="{DynamicResource HomeBg}"
+                            Transitions="{StaticResource CommonColorTransitions}" Width="32" Height="32">
+                        <TextBlock x:Name="FileTsDelButtonIcon"
+                                   Transitions="{StaticResource CommonColorTransitionsTextBlock}"
+                                   FontFamily="{StaticResource FASolid}"
+                                   Foreground="{DynamicResource SideTextColor}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" Text="&#xf00d;" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.FileTsDelButton:pointerover /template/ Border#FileTsDelButtonBorder">
+            <Setter Property="Background" Value="{DynamicResource SideBarBrColor}" />
+        </Style>
+        <Style Selector="Button.FileTsDelButton:pointerover /template/ TextBlock#FileTsDelButtonIcon">
+            <Setter Property="Foreground" Value="#ef4444" />
+        </Style>
+
+
+        <!--文件历史按钮-->
+        <Style Selector="Button.FileHisOpenFolder">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="FileHisOpenFolderBorder" CornerRadius="8" Background="{DynamicResource HomeBg}"
+                            Transitions="{StaticResource CommonColorTransitions}" Width="32" Height="32">
+                        <TextBlock x:Name="FileHisOpenFolderIcon"
+                                   Transitions="{StaticResource CommonColorTransitionsTextBlock}"
+                                   FontFamily="{StaticResource FASolid}"
+                                   Foreground="{DynamicResource SideTextColor}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" Text="&#xf07c;" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.FileHisOpenFolder:pointerover /template/ Border#FileHisOpenFolderBorder">
+            <Setter Property="Background" Value="{DynamicResource SideBarBrColor}" />
+        </Style>
+        <Style
+            Selector="Button.FileHisOpenFolder:pointerover /template/ TextBlock#FileHisOpenFolderIcon">
+            <Setter Property="Foreground" Value="#f59e0b" />
+        </Style>
+
+
+        <Style Selector="Button.FileHisDelButton">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="FileHisDelButtonBorder" CornerRadius="8" Background="{DynamicResource HomeBg}"
+                            Transitions="{StaticResource CommonColorTransitions}" Width="32" Height="32">
+                        <TextBlock x:Name="FileHisDelButtonIcon"
+                                   Transitions="{StaticResource CommonColorTransitionsTextBlock}"
+                                   FontFamily="{StaticResource FASolid}"
+                                   Foreground="{DynamicResource SideTextColor}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" Text="&#xf2ed;" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.FileHisDelButton:pointerover /template/ Border#FileHisDelButtonBorder">
+            <Setter Property="Background" Value="{DynamicResource SideBarBrColor}" />
+        </Style>
+        <Style Selector="Button.FileHisDelButton:pointerover /template/ TextBlock#FileHisDelButtonIcon">
+            <Setter Property="Foreground" Value="#ef4444" />
+        </Style>
+    </UserControl.Styles>
+
+
+    <Grid ColumnDefinitions="*,Auto" ClipToBounds="False">
+        <Border ClipToBounds="False" Padding="30,25" Background="{DynamicResource HomeBg}"
+                Transitions="{StaticResource CommonColorTransitions}">
+            <DockPanel ClipToBounds="False">
+                <TextBlock DockPanel.Dock="Top" Text="传输管理" FontSize="24" FontWeight="700" />
+                <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" Text="Welcome back, 您将在这里管理您的传输任务" Classes="Title" />
+
+                <!--四个卡片-->
+                <Grid DockPanel.Dock="Top" Margin="0,30,0,0" ColumnSpacing="20" HorizontalAlignment="Stretch"
+                      ColumnDefinitions="*,*,*,*"
+                      Height="170">
+                    <Border Classes="card">
+                        <Grid ColumnDefinitions="*,*">
+                            <!--左边一列-->
+                            <StackPanel VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Left">
+                                <TextBlock Margin="0,0,0,10" Classes="Title" Text="正在传输" />
+                                <TextBlock Margin="0,0,0,10" FontSize="28" FontWeight="700"
+                                           Text="{Binding FileTransmissionService.RemainingTsTaskNum}" />
+                                <StackPanel Margin="0,0,0,10" Orientation="Horizontal" Spacing="5">
+                                    <TextBlock FontFamily="{StaticResource FASolid}" FontSize="12" Text="&#xf062;"
+                                               Foreground="{DynamicResource ThemeColor}" />
+                                    <TextBlock VerticalAlignment="Center"
+                                               Text="{Binding TotalUploadTraffic,Converter='{StaticResource FileSizeConv}',StringFormat='{}{0}/s'}"
+                                               FontWeight="700"
+                                               FontSize="12"
+                                               Foreground="{DynamicResource ThemeColor}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock FontFamily="{StaticResource FASolid}" FontSize="12" Text="&#xf063;"
+                                               Foreground="{DynamicResource ThemeColor}" />
+                                    <TextBlock VerticalAlignment="Center"
+                                               Text="{Binding TotalDownloadTraffic ,Converter='{StaticResource FileSizeConv}',StringFormat='{}{0}/s'}"
+                                               FontWeight="700"
+                                               FontSize="12"
+                                               Foreground="{DynamicResource ThemeColor}" />
+                                </StackPanel>
+                            </StackPanel>
+                            <!--圆环进度条-->
+                            <tc:CircularProgressBar Grid.Column="1" ProgressBrush="{DynamicResource ThemeColor}"
+                                                    Maximum="{Binding FileTransmissionService.TotalTsTaskNum}"
+                                                    Value="{Binding FileTransmissionService.OverTsTaskNum}"
+                                                    Classes="probar">
+                                <TextBlock FontSize="20" Foreground="{DynamicResource ThemeColor}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           FontFamily="{StaticResource FASolid}" Text="&#xf0e7;" />
+                            </tc:CircularProgressBar>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="1" Classes="card">
+                        <Grid ColumnDefinitions="*,*">
+                            <!--左边一列-->
+                            <StackPanel VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Left">
+                                <TextBlock Margin="0,0,0,10" Classes="Title" Text="已暂停" />
+                                <TextBlock Margin="0,0,0,10" FontSize="28" FontWeight="700"
+                                           Text="{Binding FileTransmissionService.TotalPauseNum}" />
+                                <TextBlock VerticalAlignment="Center" FontWeight="700" FontSize="12"
+                                           Foreground="{DynamicResource SideTextColor}">
+                                    <Span>等待恢复</Span>
+                                    <LineBreak />
+                                    <LineBreak />
+                                    <Span>队列中</Span>
+                                </TextBlock>
+                            </StackPanel>
+                            <!--圆环进度条-->
+                            <tc:CircularProgressBar Value="{Binding FileTransmissionService.TotalPauseNum}"
+                                                    Maximum="{Binding FileTransmissionService.TotalTsTaskNum}"
+                                                    Grid.Column="1" ProgressBrush="#f59e0b"
+                                                    Classes="probar">
+                                <TextBlock FontSize="20" Foreground="#f59e0b"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           FontFamily="{StaticResource FASolid}" Text="&#xf04c;" />
+                            </tc:CircularProgressBar>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="2" Classes="card">
+                        <Grid ColumnDefinitions="*,*">
+                            <!--左边一列-->
+                            <StackPanel VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Left">
+                                <TextBlock Margin="0,0,0,10" Classes="Title" Text="今日完成" />
+                                <TextBlock Margin="0,0,0,10" FontSize="28" FontWeight="700"
+                                           Text="{Binding FileTransmissionService.OverTsTaskDayNum}" />
+                                <StackPanel Margin="0,0,0,10" Orientation="Horizontal" Spacing="5">
+                                    <TextBlock FontFamily="{StaticResource FASolid}" FontSize="12" Text="&#xf00c;"
+                                               Foreground="#10b981" />
+                                    <TextBlock VerticalAlignment="Center" Text="成功任务数" FontWeight="700" FontSize="12"
+                                               Foreground="#10b981" />
+                                </StackPanel>
+
+                            </StackPanel>
+                            <!--圆环进度条-->
+                            <tc:CircularProgressBar Grid.Column="1" ProgressBrush="#10b981" Value="100"
+                                                    Maximum="100"
+                                                    Classes="probar">
+                                <TextBlock FontSize="20" Foreground="#10b981"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           FontFamily="{StaticResource FASolid}" Text="&#xf560;" />
+                            </tc:CircularProgressBar>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="3" Classes="card">
+                        <Grid ColumnDefinitions="*,*">
+                            <!--左边一列-->
+                            <StackPanel VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Left">
+                                <TextBlock Margin="0,0,0,10" Classes="Title" Text="失败任务" />
+                                <TextBlock Margin="0,0,0,10" FontSize="28" FontWeight="700" Text="0" />
+                                <StackPanel Margin="0,0,0,10" Orientation="Horizontal" Spacing="5">
+                                    <TextBlock FontFamily="{StaticResource FASolid}" FontSize="12" Text="&#xf06a;"
+                                               Foreground="#ef4444" />
+                                    <TextBlock VerticalAlignment="Center" Text="网络超时" FontWeight="700" FontSize="12"
+                                               Foreground="#ef4444" />
+                                </StackPanel>
+                            </StackPanel>
+                            <!--圆环进度条-->
+                            <tc:CircularProgressBar Grid.Column="1" ProgressBrush="#ef4444" Value="50"
+                                                    Classes="probar">
+                                <TextBlock FontSize="20" Foreground="#ef4444"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           FontFamily="{StaticResource FASolid}" Text="&#xf00d;" />
+                            </tc:CircularProgressBar>
+                        </Grid>
+                    </Border>
+
+                </Grid>
+
+                <!--传输管理区域标题-->
+                <Border DockPanel.Dock="Top" Margin="0,25,0,0" Transitions="{StaticResource CommonColorTransitions}"
+                        BorderThickness="0,0,0,2" BorderBrush="{DynamicResource SideBarBrColor}">
+                    <DockPanel LastChildFill="False" HorizontalSpacing="25">
+                        <RadioButton Command="{Binding SwitchPageCommand}" x:Name="DownloadingButton" IsChecked="True"
+                                     DockPanel.Dock="Left" Content="正在下载"
+                                     Tag="{Binding FileTransmissionService.FileDownloadInfos.Count}"
+                                     CommandParameter="0"
+                                     Background="#1a3b82f6" Foreground="{DynamicResource ThemeColor}"
+                                     Classes="RadioButtonTitleButton" />
+                        <RadioButton Command="{Binding SwitchPageCommand}" CommandParameter="1"
+                                     x:Name="UploadingButton" DockPanel.Dock="Left" Content="正在上传"
+                                     Tag="{Binding FileTransmissionService.FileUploadInfos.Count}"
+                                     Foreground="#8b5cf6"
+                                     Background="#1a8b5cf6"
+                                     Classes="RadioButtonTitleButton" />
+                        <RadioButton Command="{Binding SwitchPageCommand}" CommandParameter="2" x:Name="HistoryButton"
+                                     DockPanel.Dock="Left" Content="传输历史"
+                                     Tag="{Binding FileTransmissionService.FileHistoryInfos.Count}"
+                                     Foreground="#10b981"
+                                     Background="#1a10b981"
+                                     Classes="RadioButtonTitleButton" />
+                        <!--全部开始暂停-->
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="15">
+                            <!--全部开始-->
+                            <Button Cursor="Hand" IsVisible="{Binding !#HistoryButton.IsChecked}"
+                                    Command="{Binding DownloadPauseOrResumeAllCommand}" CommandParameter="1">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Panel>
+                                            <TextBlock VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource ThemeColor}"
+                                                       FontFamily="{StaticResource FASolid}" Text="&#xf04b;" />
+                                            <TextBlock VerticalAlignment="Center" Margin="15,0,0,0"
+                                                       Foreground="{DynamicResource ThemeColor}" Text="全部开始" />
+                                        </Panel>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <TextBlock IsVisible="{Binding !#HistoryButton.IsChecked}" Margin="0,0,0,3"
+                                       VerticalAlignment="Center" FontSize="18"
+                                       Foreground="{DynamicResource SideTextColor}" Text="|" />
+                            <Button Cursor="Hand" IsVisible="{Binding !#HistoryButton.IsChecked}"
+                                    Command="{Binding DownloadPauseOrResumeAllCommand}" CommandParameter="0">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Panel>
+                                            <TextBlock VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource ThemeColor}"
+                                                       FontFamily="{StaticResource FASolid}" Text="&#xf04c;" />
+                                            <TextBlock VerticalAlignment="Center" Margin="15,0,0,0"
+                                                       Foreground="{DynamicResource ThemeColor}" Text="全部暂停" />
+                                        </Panel>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <StackPanel Spacing="10" Orientation="Horizontal"
+                                        IsVisible="{Binding #HistoryButton.IsChecked}">
+                                <Button Cursor="Hand" Command="{Binding RefreshHisCommand}">
+                                    <Button.Template>
+                                        <ControlTemplate>
+                                            <Panel>
+                                                <TextBlock VerticalAlignment="Center"
+                                                           Foreground="{DynamicResource ThemeColor}"
+                                                           FontFamily="{StaticResource FASolid}" Text="&#xf021;" />
+                                                <TextBlock VerticalAlignment="Center" Margin="15,0,0,0"
+                                                           Foreground="{DynamicResource ThemeColor}" Text="刷新历史记录" />
+                                            </Panel>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                                <TextBlock
+                                    VerticalAlignment="Center" FontSize="18"
+                                    Foreground="{DynamicResource SideTextColor}" Text="|" />
+                                <Button Cursor="Hand" Command="{Binding DelHisAllCommand}">
+                                    <Button.Template>
+                                        <ControlTemplate>
+                                            <Panel>
+                                                <TextBlock VerticalAlignment="Center" Foreground="#ef4444"
+                                                           FontFamily="{StaticResource FASolid}" Text="&#xf2ed;" />
+                                                <TextBlock VerticalAlignment="Center" Margin="15,0,0,0"
+                                                           Foreground="#ef4444" Text="清空所有记录" />
+                                            </Panel>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+                <!--传输管理内容-->
+                <Carousel ClipToBounds="False" Margin="0,10,0,0" VerticalAlignment="Stretch"
+                          SelectedIndex="{Binding SelectPage}">
+                    <Carousel.PageTransition>
+                        <transitionsAndConverter:SequentialFadeTransition Duration="0:0:0.1" />
+                    </Carousel.PageTransition>
+                    <!--下载-->
+                    <Panel ClipToBounds="False">
+                        <ScrollViewer ClipToBounds="False">
+                            <ItemsRepeater ClipToBounds="False"
+                                           ItemsSource="{Binding FileTransmissionService.FileDownloadInfos}">
+                                <ItemsRepeater.Layout>
+                                    <StackLayout />
+                                </ItemsRepeater.Layout>
+                                <ItemsRepeater.ItemTemplate>
+                                    <DataTemplate x:DataType="model:FileDownloadInfo">
+                                        <!--外层边框-->
+                                        <Border ClipToBounds="False" Classes="FileTmBoder">
+                                            <Grid ColumnSpacing="10" ColumnDefinitions="46,230,*,100,70">
+                                                <!--图标-->
+                                                <Border Classes="FileTsIconBg"
+                                                        Background="{Binding IconInfo.HexColor,Converter={StaticResource ColorToTransparentBrushConverter}}">
+                                                    <TextBlock Classes="FileTsIcon"
+                                                               FontFamily="{Binding IconInfo.FontFamilyResource}"
+                                                               Foreground="{Binding IconInfo.HexColor}"
+                                                               Text="{Binding IconInfo.IconCode}" />
+                                                </Border>
+
+                                                <!--文件名信息-->
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="5">
+                                                    <TextBlock Classes="FileTsFileName" Text="{Binding Name}" />
+                                                    <TextBlock TextTrimming="CharacterEllipsis"
+                                                               ToolTip.Tip="{Binding Path}" Classes="FileTsFilePath"
+                                                               Text="{Binding Path,StringFormat='下载到: {0}'}" />
+                                                </StackPanel>
+                                                <!--进度-->
+                                                <StackPanel Margin="10,0" Grid.Column="2" VerticalAlignment="Center"
+                                                            Spacing="5">
+                                                    <Panel>
+                                                        <TextBlock Classes="FileTsPercentage"
+                                                                   Foreground="{Binding IconInfo.HexColor}"
+                                                                   Text="{Binding ProgressPercentage,StringFormat='{}{0:0.0}%'}" />
+                                                        <TextBlock Classes="FileTsPercentage2">
+                                                            <TextBlock.Text>
+                                                                <!-- StringFormat="{}{0} / {1}" 中的 {} 是 XAML 的转义符，必不可少 -->
+                                                                <MultiBinding StringFormat="{}{0} / {1}">
+                                                                    <Binding Path="CurrentSizeBytes"
+                                                                             Converter="{StaticResource FileSizeConv}" />
+                                                                    <Binding Path="TotalSizeBytes"
+                                                                             Converter="{StaticResource FileSizeConv}" />
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </Panel>
+                                                    <!--进度条-->
+                                                    <ProgressBar Classes="FileTsPrggressBar"
+                                                                 Foreground="{Binding IconInfo.HexColor}" MinWidth="0"
+                                                                 Value="{Binding ProgressPercentage}"
+                                                                 Maximum="100">
+                                                        <ProgressBar.Transitions>
+                                                            <Transitions>
+                                                                <DoubleTransition Property="Value" Duration="0:0:0.3"
+                                                                        Easing="CubicEaseOut" />
+                                                            </Transitions>
+                                                        </ProgressBar.Transitions>
+                                                    </ProgressBar>
+                                                </StackPanel>
+                                                <!--速度显示-->
+                                                <StackPanel Margin="10,0" Grid.Column="3" HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center">
+                                                    <TextBlock Classes="FileTsFileName"
+                                                               Text="{Binding BytesPerSecondSpeed,Converter={StaticResource FileSizeConv},StringFormat='{}{0}/s'}"
+                                                               Foreground="{Binding IconInfo.HexColor}" />
+                                                    <TextBlock TextAlignment="Right" Classes="FileTsFilePath"
+                                                               Text="{Binding Time,StringFormat='约 {0}'}" />
+                                                </StackPanel>
+                                                <!--操作按钮-->
+                                                <StackPanel Spacing="10" Orientation="Horizontal" Grid.Column="4">
+                                                    <!--暂停继续-->
+                                                    <CheckBox IsChecked="{Binding IsPause, Mode=OneWay}"
+                                                              HorizontalAlignment="Left"
+                                                              VerticalAlignment="Center"
+                                                              Classes="FileTsPauseContinue"
+                                                              CommandParameter="{Binding}"
+                                                              Command="{Binding $parent[UserControl].((vm:FileTransmissionViewModel)DataContext).PauseOrResumeCommand}" />
+                                                    <!--删除-->
+                                                    <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                            CommandParameter="{Binding}"
+                                                            Command="{Binding $parent[UserControl].((vm:FileTransmissionViewModel)DataContext).CancelCommand}"
+                                                            Classes="FileTsDelButton" />
+                                                </StackPanel>
+                                            </Grid>
+
+
+                                        </Border>
+                                    </DataTemplate>
+
+                                </ItemsRepeater.ItemTemplate>
+                            </ItemsRepeater>
+                        </ScrollViewer>
+                        <!--空空如也-->
+                        <StackPanel VerticalAlignment="Center"
+                                    HorizontalAlignment="Center" Spacing="10"
+                                    IsVisible="{Binding FileTransmissionService.IsConditionMetDownload}">
+                            <TextBlock TextAlignment="Center" Foreground="{DynamicResource ThemeColor}" FontSize="100"
+                                       Text="&#xf49e;" FontFamily="{StaticResource FASolid}" Margin="0,40,0,20" />
+                            <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="16" Text="这里空空如也" />
+                            <TextBlock TextAlignment="Center" Foreground="DarkGray" Text="当前没有任何上传任务哦~" />
+                        </StackPanel>
+                    </Panel>
+                    <!--上传-->
+                    <Panel>
+                        <ScrollViewer>
+                            <ItemsRepeater ItemsSource="{Binding FileTransmissionService.FileUploadInfos}">
+                                <ItemsRepeater.Layout>
+                                    <StackLayout />
+                                </ItemsRepeater.Layout>
+                                <ItemsRepeater.ItemTemplate>
+                                    <DataTemplate x:DataType="model:FileUploadInfo">
+                                        <!--外层边框-->
+                                        <Border Classes="FileTmBoder">
+                                            <Grid ColumnSpacing="10" ColumnDefinitions="46,230,*,100,70">
+                                                <!--图标-->
+                                                <Border Classes="FileTsIconBg"
+                                                        Background="{Binding IconInfo.HexColor,Converter={StaticResource ColorToTransparentBrushConverter}}">
+                                                    <TextBlock Classes="FileTsIcon"
+                                                               FontFamily="{Binding IconInfo.FontFamilyResource}"
+                                                               Foreground="{Binding IconInfo.HexColor}"
+                                                               Text="{Binding IconInfo.IconCode}" />
+                                                </Border>
+
+                                                <!--文件名信息-->
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="5">
+                                                    <TextBlock Classes="FileTsFileName" Text="{Binding Name}" />
+                                                    <TextBlock TextTrimming="CharacterEllipsis"
+                                                               ToolTip.Tip="{Binding UploadFolderPath}"
+                                                               Classes="FileTsFilePath"
+                                                               Text="{Binding UploadFolderPath,StringFormat='上传到: {0}'}" />
+                                                </StackPanel>
+                                                <!--进度-->
+                                                <StackPanel Margin="10,0" Grid.Column="2" VerticalAlignment="Center"
+                                                            Spacing="5">
+                                                    <Panel>
+                                                        <TextBlock Classes="FileTsPercentage"
+                                                                   Foreground="{Binding IconInfo.HexColor}"
+                                                                   Text="{Binding ProgressPercentage,StringFormat='{}{0:0.0}%'}" />
+                                                        <TextBlock Classes="FileTsPercentage2">
+                                                            <TextBlock.Text>
+                                                                <!-- StringFormat="{}{0} / {1}" 中的 {} 是 XAML 的转义符，必不可少 -->
+                                                                <MultiBinding StringFormat="{}{0} / {1}">
+                                                                    <Binding Path="CurrentSizeBytes"
+                                                                             Converter="{StaticResource FileSizeConv}" />
+                                                                    <Binding Path="TotalSizeBytes"
+                                                                             Converter="{StaticResource FileSizeConv}" />
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </Panel>
+                                                    <!--进度条-->
+                                                    <ProgressBar Classes="FileTsPrggressBar"
+                                                                 Foreground="{Binding IconInfo.HexColor}" MinWidth="0"
+                                                                 Value="{Binding ProgressPercentage}"
+                                                                 Maximum="100">
+                                                        <ProgressBar.Transitions>
+                                                            <Transitions>
+                                                                <DoubleTransition Property="Value" Duration="0:0:0.3"
+                                                                        Easing="CubicEaseOut" />
+                                                            </Transitions>
+                                                        </ProgressBar.Transitions>
+                                                    </ProgressBar>
+                                                </StackPanel>
+                                                <!--速度显示-->
+                                                <StackPanel Margin="10,0" Grid.Column="3" HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center">
+                                                    <TextBlock Classes="FileTsFileName"
+                                                               Text="{Binding BytesPerSecondSpeed,Converter={StaticResource FileSizeConv},StringFormat='{}{0}/s'}"
+                                                               Foreground="{Binding IconInfo.HexColor}" />
+                                                    <TextBlock TextAlignment="Right" Classes="FileTsFilePath"
+                                                               Text="{Binding Time,StringFormat='约 {0}'}" />
+                                                </StackPanel>
+                                                <!--操作按钮-->
+                                                <StackPanel Spacing="10" Orientation="Horizontal" Grid.Column="4">
+                                                    <!--暂停继续-->
+                                                    <CheckBox IsChecked="{Binding IsPause, Mode=OneWay}"
+                                                              HorizontalAlignment="Left"
+                                                              VerticalAlignment="Center"
+                                                              Classes="FileTsPauseContinue"
+                                                              CommandParameter="{Binding}"
+                                                              Command="{Binding $parent[UserControl].((vm:FileTransmissionViewModel)DataContext).PauseOrResumeCommand}" />
+                                                    <!--删除-->
+                                                    <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                            CommandParameter="{Binding}"
+                                                            Command="{Binding $parent[UserControl].((vm:FileTransmissionViewModel)DataContext).CancelCommand}"
+                                                            Classes="FileTsDelButton" />
+                                                </StackPanel>
+                                            </Grid>
+
+
+                                        </Border>
+                                    </DataTemplate>
+
+                                </ItemsRepeater.ItemTemplate>
+                            </ItemsRepeater>
+                        </ScrollViewer>
+                        <!--空空如也-->
+                        <StackPanel VerticalAlignment="Center"
+                                    HorizontalAlignment="Center" Spacing="10"
+                                    IsVisible="{Binding FileTransmissionService.IsConditionMetUpload}">
+                            <TextBlock TextAlignment="Center" Foreground="{DynamicResource ThemeColor}" FontSize="100"
+                                       Text="&#xf49e;" FontFamily="{StaticResource FASolid}" Margin="0,40,0,20" />
+                            <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="16" Text="这里空空如也" />
+                            <TextBlock TextAlignment="Center" Foreground="DarkGray" Text="当前没有任何上传任务哦~" />
+                        </StackPanel>
+                    </Panel>
+                    <!--传输历史-->
+                    <Panel ClipToBounds="False">
+                        <tc:LoadMoreScrollViewer ClipToBounds="False" VerticalScrollBarVisibility="Auto"
+                                                 IsLoadMoreEnabled="True" LoadMoreThreshold="50"
+                                                 LoadMoreCommand="{Binding LoadNextTsPageCommand}">
+                            <ItemsRepeater ClipToBounds="False"
+                                           ItemsSource="{Binding FileTransmissionService.FileHistoryInfos}">
+                                <ItemsRepeater.Layout>
+                                    <StackLayout />
+                                </ItemsRepeater.Layout>
+                                <ItemsRepeater.ItemTemplate>
+                                    <DataTemplate>
+                                        <ContentControl ClipToBounds="False" Content="{Binding}" />
+                                    </DataTemplate>
+                                </ItemsRepeater.ItemTemplate>
+                                <ItemsRepeater.DataTemplates>
+                                    <DataTemplate x:DataType="model:FileHisUpInfo">
+                                        <!--外层边框-->
+                                        <Border Classes="FileTmBoder">
+                                            <Grid ClipToBounds="False" ColumnSpacing="10"
+                                                  ColumnDefinitions="46,280,*,100,70">
+                                                <!--图标-->
+                                                <Border Classes="FileTsIconBg"
+                                                        Background="{Binding IconInfo.HexColor,Converter={StaticResource ColorToTransparentBrushConverter}}">
+                                                    <TextBlock Classes="FileTsIcon"
+                                                               FontFamily="{Binding IconInfo.FontFamilyResource}"
+                                                               Foreground="{Binding IconInfo.HexColor}"
+                                                               Text="{Binding IconInfo.IconCode}" />
+                                                </Border>
+
+                                                <!--文件名信息-->
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="5">
+                                                    <TextBlock Classes="FileTsFileName" Text="{Binding Name}" />
+                                                    <TextBlock TextTrimming="CharacterEllipsis"
+                                                               ToolTip.Tip="{Binding UploadFolderPath}"
+                                                               Classes="FileTsFilePath">
+                                                        <TextBlock.Text>
+                                                            <!-- StringFormat="{}{0} / {1}" 中的 {} 是 XAML 的转义符，必不可少 -->
+                                                            <MultiBinding StringFormat="{}上传到: {0}, 完成时间: {1}">
+                                                                <Binding Path="UploadFolderPath" />
+                                                                <Binding Path="EndTime" />
+                                                            </MultiBinding>
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                                <!--文件大小显示-->
+                                                <StackPanel Margin="10,0" Grid.Column="3" HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center">
+                                                    <TextBlock Classes="FileTsFileName"
+                                                               Text="{Binding TotalSizeBytes,Converter={StaticResource FileSizeConv},StringFormat='{}{0}'}"
+                                                               Foreground="{Binding IconInfo.HexColor}" />
+                                                </StackPanel>
+                                                <!--操作按钮-->
+                                                <StackPanel Spacing="10" Orientation="Horizontal" Grid.Column="4">
+                                                    <!--打开文件夹-->
+                                                    <Button HorizontalAlignment="Left"
+                                                            VerticalAlignment="Center"
+                                                            Classes="FileHisOpenFolder"
+                                                            CommandParameter="{Binding}"
+                                                            Command="{Binding $parent[UserControl].((vm:FileTransmissionViewModel)DataContext).OpenFileLocalCommand}" />
+                                                    <!--删除-->
+                                                    <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                            CommandParameter="{Binding}"
+                                                            Command="{Binding $parent[UserControl].((vm:FileTransmissionViewModel)DataContext).DelTsInfoCommand}"
+                                                            Classes="FileHisDelButton" />
+                                                </StackPanel>
+                                            </Grid>
+
+
+                                        </Border>
+                                    </DataTemplate>
+                                    <DataTemplate x:DataType="model:FileHisDownInfo">
+                                        <!--外层边框-->
+                                        <Border Classes="FileTmBoder">
+                                            <Grid ClipToBounds="False" ColumnSpacing="10"
+                                                  ColumnDefinitions="46,280,*,100,70">
+                                                <!--图标-->
+                                                <Border Classes="FileTsIconBg"
+                                                        Background="{Binding IconInfo.HexColor,Converter={StaticResource ColorToTransparentBrushConverter}}">
+                                                    <TextBlock Classes="FileTsIcon"
+                                                               FontFamily="{Binding IconInfo.FontFamilyResource}"
+                                                               Foreground="{Binding IconInfo.HexColor}"
+                                                               Text="{Binding IconInfo.IconCode}" />
+                                                </Border>
+
+                                                <!--文件名信息-->
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="5">
+                                                    <TextBlock Classes="FileTsFileName" Text="{Binding Name}" />
+                                                    <TextBlock TextTrimming="CharacterEllipsis"
+                                                               ToolTip.Tip="{Binding Path}"
+                                                               Classes="FileTsFilePath">
+                                                        <TextBlock.Text>
+                                                            <!-- StringFormat="{}{0} / {1}" 中的 {} 是 XAML 的转义符，必不可少 -->
+                                                            <MultiBinding StringFormat="{}下载到: {0}, 完成时间: {1}">
+                                                                <Binding Path="Path" />
+                                                                <Binding Path="EndTime" />
+                                                            </MultiBinding>
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                                <!--失败原因放在中间空白区域-->
+                                                <TextBlock Grid.Column="2"
+                                                           Margin="10,0"
+                                                           VerticalAlignment="Center"
+                                                           IsVisible="{Binding HasFailure}"
+                                                           Foreground="#ef4444"
+                                                           TextWrapping="Wrap"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           ToolTip.Tip="{Binding ReasonFailure}"
+                                                           Text="{Binding ReasonFailure, StringFormat='{}失败原因: {0}'}" />
+                                                <!--文件大小显示-->
+                                                <StackPanel Margin="10,0" Grid.Column="3" HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center">
+                                                    <TextBlock Classes="FileTsFileName"
+                                                               Text="{Binding TotalSizeBytes,Converter={StaticResource FileSizeConv},StringFormat='{}{0}'}"
+                                                               Foreground="{Binding IconInfo.HexColor}" />
+                                                </StackPanel>
+                                                <!--操作按钮-->
+                                                <StackPanel Spacing="10" Orientation="Horizontal" Grid.Column="4">
+                                                    <!--打开文件夹-->
+                                                    <Button HorizontalAlignment="Left"
+                                                            VerticalAlignment="Center"
+                                                            Classes="FileHisOpenFolder"
+                                                            CommandParameter="{Binding}"
+                                                            Command="{Binding $parent[UserControl].((vm:FileTransmissionViewModel)DataContext).OpenFileLocalCommand}" />
+                                                    <!--删除-->
+                                                    <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                            CommandParameter="{Binding}"
+                                                            Command="{Binding $parent[UserControl].((vm:FileTransmissionViewModel)DataContext).DelTsInfoCommand}"
+                                                            Classes="FileHisDelButton" />
+                                                </StackPanel>
+                                            </Grid>
+
+
+                                        </Border>
+                                    </DataTemplate>
+
+                                </ItemsRepeater.DataTemplates>
+
+
+                            </ItemsRepeater>
+                        </tc:LoadMoreScrollViewer>
+                        <!--空空如也-->
+                        <StackPanel VerticalAlignment="Center"
+                                    HorizontalAlignment="Center" Spacing="10"
+                                    IsVisible="{Binding FileTransmissionService.IsConditionMetHis}">
+                            <TextBlock TextAlignment="Center" Foreground="{DynamicResource ThemeColor}" FontSize="100"
+                                       Text="&#xf49e;" FontFamily="{StaticResource FASolid}" Margin="0,40,0,20" />
+                            <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="16" Text="这里空空如也" />
+                            <TextBlock TextAlignment="Center" Foreground="DarkGray" Text="当前没有任何记录哦~" />
+                        </StackPanel>
+                    </Panel>
+                </Carousel>
+
+
+            </DockPanel>
+
+        </Border>
+
+        <Border ClipToBounds="False" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource SideBarBrColor}"
+                Width="300" Grid.Column="1"
+                Padding="25,40" Transitions="{StaticResource CommonColorTransitions}"
+                Background="{DynamicResource SidebarBg}">
+            <DockPanel ClipToBounds="False">
+                <TextBlock Margin="0,0,0,15" DockPanel.Dock="Top" FontWeight="Bold" FontSize="18" Text="实时网络监控" />
+                <Panel VerticalAlignment="Top" DockPanel.Dock="Top">
+                    <TextBlock FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Left"
+                               Foreground="{DynamicResource SideTextColor}"
+                               Text="{Binding TotalDownloadTraffic,Converter='{StaticResource FileSizeConv}',StringFormat='{}总下载: {0}/s'}" />
+                    <TextBlock FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Right"
+                               Foreground="{DynamicResource SideTextColor}"
+                               Text="{Binding TotalUploadTraffic,Converter='{StaticResource FileSizeConv}',StringFormat='{}总上传: {0}/s'}" />
+                </Panel>
+                <!--图表-->
+                <Border BoxShadow="{DynamicResource AllShadow}" Margin="0,15,0,0" DockPanel.Dock="Top" Height="120" CornerRadius="10" VerticalAlignment="Top">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="50%,0%"
+                                             EndPoint="50%,100%">
+                            <GradientStop Offset="0" Color="#333B82F6" />
+                            <GradientStop Offset="1" Color="#003B82F6" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <lvc:CartesianChart AnimationsSpeed="0:0:0.25">
+                        <lvc:CartesianChart.XAxes>
+                            <lvc:XamlAxis IsVisible="False"
+                                          MinLimit="{Binding XMin}"
+                                          MaxLimit="{Binding XMax}" />
+                        </lvc:CartesianChart.XAxes>
+
+                        <lvc:CartesianChart.YAxes>
+                            <lvc:XamlAxis IsVisible="False"
+                                          ShowSeparatorLines="False"
+                                          MinLimit="0"
+                                          MaxLimit="{Binding YMax}" />
+                        </lvc:CartesianChart.YAxes>
+
+                        <lvc:CartesianChart.Series>
+                            <lvc:XamlLineSeries Values="{Binding UpValues}"
+                                                Fill="{x:Null}"
+                                                GeometrySize="0"
+                                                LineSmoothness="0.4" />
+
+                            <lvc:XamlLineSeries Values="{Binding DownValues}"
+                                                Fill="{x:Null}"
+                                                GeometrySize="0"
+                                                LineSmoothness="0.4" />
+                        </lvc:CartesianChart.Series>
+                    </lvc:CartesianChart>
+                </Border>
+                <TextBlock Margin="0,15,0,0" DockPanel.Dock="Top" FontWeight="Bold" FontSize="18" Text="云盘空间" />
+                <!--网盘容量-->
+                <Border BoxShadow="{DynamicResource AllShadow}" Padding="20" Margin="0,15,0,0" DockPanel.Dock="Top"
+                        Background="{DynamicResource  HomeBg}"
+                        Transitions="{StaticResource CommonColorTransitions}" CornerRadius="10" VerticalAlignment="Top">
+                    <StackPanel ClipToBounds="True">
+                        <tc:CircularProgressBar ProgressBrush="#8B5CF6" Value="{Binding UsedSpaceInBytes}" Width="100"
+                                                Height="100"
+                                                Maximum="{Binding TotalSpaceInBytes}"
+                                                StrokeThickness="8"
+                                                Classes="probar">
+                            <StackPanel Spacing="5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22"
+                                           FontWeight="Bold" Text="{Binding SpacePercentage,StringFormat='{}{0}%'}" />
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10"
+                                           Foreground="{DynamicResource SideTextColor}" Text="已使用" />
+                            </StackPanel>
+                        </tc:CircularProgressBar>
+                        <TextBlock Margin="0,15,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="15" FontWeight="Bold">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} / {1}">
+                                    <Binding Path="UsedSpaceInBytes"
+                                             Converter="{StaticResource FileSizeConv}" />
+                                    <Binding Path="TotalSpaceInBytes"
+                                             Converter="{StaticResource FileSizeConv}" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock Margin="0,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="12" Foreground="{DynamicResource SideTextColor}"
+                                   Text="{Binding FreeSpaceInBytes,Converter='{StaticResource FileSizeConv}',StringFormat='还剩 {0} 可用空间'}" />
+                    </StackPanel>
+                </Border>
+                <TextBlock Margin="0,15,0,0" DockPanel.Dock="Top" FontWeight="Bold" FontSize="18" Text="本地磁盘空间" />
+                <!--本地磁盘容量-->
+                <Border  BoxShadow="{DynamicResource AllShadow}" ClipToBounds="False" Padding="20"  Margin="0,15,0,0" DockPanel.Dock="Top"
+                        Background="{DynamicResource  HomeBg}"
+                        Transitions="{StaticResource CommonColorTransitions}" CornerRadius="10" VerticalAlignment="Top">
+                    <StackPanel ClipToBounds="True">
+                        <tc:CircularProgressBar ProgressBrush="#F59E0B" Value="{Binding LocalUsedSpaceInBytes}" Width="100"
+                                                Height="100"
+                                                Maximum="{Binding LocalTotalSpaceInBytes}"
+                                                StrokeThickness="8"
+                                                Classes="probar">
+                            <StackPanel Spacing="5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22"
+                                           FontWeight="Bold" Text="{Binding LocalSpacePercentage,StringFormat='{}{0}%'}" />
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10"
+                                           Foreground="{DynamicResource SideTextColor}" Text="已使用" />
+                            </StackPanel>
+                        </tc:CircularProgressBar>
+                        <TextBlock Margin="0,15,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="15" FontWeight="Bold">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} / {1}">
+                                    <Binding Path="LocalUsedSpaceInBytes"
+                                             Converter="{StaticResource FileSizeConv}" />
+                                    <Binding Path="LocalTotalSpaceInBytes"
+                                             Converter="{StaticResource FileSizeConv}" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock Margin="0,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="12" Foreground="{DynamicResource SideTextColor}"
+                                   Text="{Binding LocalFreeSpaceInBytes,Converter='{StaticResource FileSizeConv}',StringFormat='还剩 {0} 可用空间'}" />
+                    </StackPanel>
+                </Border>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

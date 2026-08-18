@@ -1,0 +1,75 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:drive_desktop.Components.TemplateControls">
+
+    <Design.PreviewWith>
+        <controls:DefaultToggleButton Title="类型" IconText="&#xf0b0;" />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|DefaultToggleButton">
+        <Setter Property="ClipToBounds" Value="False"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="{DynamicResource HomeBg}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SideBarBrColor}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="16,8"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border x:Name="CommonConditionsBorder"
+                        Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        BorderBrush="{TemplateBinding BorderBrush}">
+                    <Border.Transitions>
+                        <Transitions>
+                            <BrushTransition Property="Background"
+                                             Duration="0:0:0.3" Easing="CubicEaseOut"/>
+                            <BrushTransition Property="BorderBrush"
+                                             Duration="0:0:0.3" Easing="CubicEaseOut"/>
+                        </Transitions>
+                    </Border.Transitions>
+                    <StackPanel Spacing="5"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center"
+                                   FontFamily="{StaticResource FASolid}"
+                                   FontSize="{TemplateBinding IconFontSize}"
+                                   Foreground="{DynamicResource SideTextColor}"
+                                   Text="{TemplateBinding IconText}"/>
+                        <TextBlock x:Name="CommonConditionsTitle" VerticalAlignment="Center"
+                                   FontWeight="Normal"
+                                   Foreground="{DynamicResource SideTextColor}"
+                                   FontSize="{TemplateBinding TitleFontSize}"
+                                   Text="{TemplateBinding Title}"/>
+                    </StackPanel>
+
+           
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="controls|DefaultToggleButton TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextColor3}"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Foreground" Duration="0:0:0.12"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="controls|DefaultToggleButton:checked /template/ Border#CommonConditionsBorder">
+        <Setter Property="Background" Value="#1A0078D4"/>
+        <Setter Property="BorderBrush" Value="#470078D4"/>
+    </Style>
+
+    <Style Selector="controls|DefaultToggleButton:checked /template/ Border#CommonConditionsBorder TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeColor}"/>
+    </Style>
+    <Style Selector="controls|DefaultToggleButton:checked /template/ TextBlock#CommonConditionsTitle">
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+</Styles>

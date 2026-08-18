@@ -1,0 +1,127 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:tc="using:drive_desktop.Components.TemplateControls"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             x:DataType="vm:CustomViewEditViewModel"
+             xmlns:models="using:drive_desktop.Models"
+             x:Class="drive_desktop.Components.UserControls.CustomViewEdit">
+    <Design.DataContext>
+        <vm:CustomViewEditViewModel  />
+    </Design.DataContext>
+    <UserControl.Styles>
+
+        <Style Selector="TextBlock.close">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="{DynamicResource IconColor}" />
+
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Foreground" Duration="0:0:0.2" />
+
+                </Transitions>
+            </Setter>
+
+
+        </Style>
+        <Style Selector="TextBlock.close:pointerover">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+
+        <Style Selector="RadioButton.selectType:checked">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+
+        <Style Selector="RadioButton.selectType:pointerover /template/ ContentPresenter">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+
+        <Style Selector="RadioButton.selectType:checked:pointerover /template/ ContentPresenter">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="RadioButton.iconSelect">
+            <Setter Property="GroupName" Value="iconSelect" />
+            <Setter Property="FontFamily" Value="{StaticResource FASolid}"></Setter>
+        </Style>
+        <Style Selector="Border.iconBorder">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BrColor}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.2" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="RadioButton.iconSelect:pointerover Border.iconBorder">
+            <Setter Property="Background" Value="#250078d4" />
+
+        </Style>
+        <Style Selector="RadioButton.iconSelect:checked Border.iconBorder">
+            <Setter Property="Background" Value="#250078d4" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+        </Style>
+    </UserControl.Styles>
+
+
+    <tc:DefaultDialog IsOpen="{Binding IsShowCustomViewEdit}">
+
+        <StackPanel Spacing="15">
+            <Panel>
+                <TextBlock FontWeight="Bold" IsVisible="{Binding !IsEdit}" Text="添加侧边栏视图" FontSize="18" />
+                <TextBlock FontWeight="Bold" IsVisible="{Binding IsEdit}" Text="编辑侧边栏视图" FontSize="18" />
+                <Button Classes="naked" HorizontalAlignment="Right" Command="{Binding CloseCustomViewCommand}">
+                    <TextBlock Classes="close" FontFamily="{StaticResource FASolid}" FontSize="18" Text="&#xf00d;" />
+                </Button>
+            </Panel>
+            <TextBlock Text="视图名称" />
+            <tc:DefaultInput Height="40" IsShowIcon="False" BorderColor="{DynamicResource BrColor}"
+                             Watermark="例如: 我的PDF报表" Text="{Binding TempCustomView.Name,Mode=TwoWay}" />
+            <TextBlock Text="视图类型" />
+            <Panel>
+                <RadioButton Classes="selectType" GroupName="customType" HorizontalAlignment="Left"
+                             Content="文件类型/关键字过滤" Command="{Binding ViewTypeChangedCommand}" CommandParameter="0"
+                             IsChecked="{Binding TypeSelect}" />
+                <RadioButton Classes="selectType" GroupName="customType" HorizontalAlignment="Right" Content="文件夹快捷跳转"
+                             IsChecked="{Binding !TypeSelect}"
+                             Command="{Binding ViewTypeChangedCommand}" CommandParameter="1" />
+            </Panel>
+            <TextBlock Text="{Binding Title}" />
+            <tc:DefaultInput Height="40" IsShowIcon="False" BorderColor="{DynamicResource BrColor}"
+                             Watermark="{Binding InputTitle}" Text="{Binding KeywordString}" />
+            <TextBlock Text="选择图标" />
+            <ItemsControl ItemsSource="{Binding CustomViewIconList}">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="8" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="models:CustomViewIcon">
+                        <RadioButton Classes="naked iconSelect"
+                                     IsChecked="{Binding IsChecked}"
+                                     Margin="0,0,16,16">
+                            <Border Width="40" Height="40" Classes="iconBorder" Padding="10" BorderThickness="1"
+                                    CornerRadius="8">
+                                <TextBlock Text="{Binding Icon}" Foreground="{Binding Color}" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Border>
+                        </RadioButton>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+
+            </ItemsControl>
+            <tc:DefaultButton IsLoading="{Binding SaveButtonStatus.IsLoading}"
+                              IsEnabled="{Binding SaveButtonStatus.IsEnabled}" Icon="&#xf274;"
+                              Text="{Binding SaveButtonStatus.Title}" HorizontalAlignment="Right"
+                              
+                              ActionCommand="{Binding SaveCustomViewCommand}" />
+        </StackPanel>
+    </tc:DefaultDialog>
+
+</UserControl>

@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:conv="using:drive_desktop.Components.TransitionsAndConverter"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             xmlns:tc="using:drive_desktop.Components.TemplateControls"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:FilePropertiesDialogViewModel"
+             x:Class="drive_desktop.Components.UserControls.FilePropertiesDialog">
+
+    <UserControl.DataContext>
+        <vm:FilePropertiesDialogViewModel />
+    </UserControl.DataContext>
+
+    <UserControl.Styles>
+        <Style Selector="TextBlock.propertiesTitle">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColor3}" />
+        </Style>
+    </UserControl.Styles>
+    <tc:DefaultDialog MinWidth="400" IsOpen="{Binding IsShowFilePropertiesDialog}">
+        <StackPanel Spacing="10">
+            <Panel>
+                <TextBlock FontWeight="Bold" Text="属性详情" FontSize="18" />
+                <Button Classes="naked" HorizontalAlignment="Right" Command="{Binding CloseCommand}">
+                    <TextBlock Classes="close" FontFamily="{StaticResource FASolid}" FontSize="18" Text="&#xf00d;" />
+                </Button>
+            </Panel>
+            <!--图标和名称-->
+            <Panel>
+                <TextBlock IsVisible="{Binding #ThumbnailImage.Source, Converter={x:Static ObjectConverters.IsNull}}"
+                           HorizontalAlignment="Center" FontSize="50"
+                           Foreground="{Binding ItemInfo.FileTypeInfo.HexColor}" FontFamily="{Binding ItemInfo.FileTypeInfo.FontFamilyResource}"
+                           Text="{Binding ItemInfo.FileTypeInfo.IconCode}" />
+                <Border IsVisible="{Binding ItemInfo.FileTypeInfo.IsImg}" Width="100" Height="100" ClipToBounds="True"
+                        CornerRadius="6">
+                    <Image x:Name="ThumbnailImage"
+                           Stretch="Uniform"
+                           asyncImageLoader:ImageLoader.Source="{Binding ItemInfo.ImageUrl}" />
+                </Border>
+            </Panel>
+
+            <TextBlock HorizontalAlignment="Center" FontSize="18" FontWeight="Bold" Text="{Binding ItemInfo.FileName}"
+                       Margin="0,0,0,20" />
+
+            <Grid RowSpacing="15" ColumnDefinitions="25*,75*" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto">
+                <TextBlock Classes="propertiesTitle" Grid.Row="0" Text="类型:" />
+                <SelectableTextBlock Classes="propertiesTitle" Grid.Row="0" Text="{Binding ItemInfo.FileTypeInfo.TypeName}"
+                           Grid.Column="1" />
+                <TextBlock Classes="propertiesTitle" Grid.Row="1" Text="大小:" />
+                <SelectableTextBlock Classes="propertiesTitle" Grid.Row="1"
+                                     Text="{Binding ItemInfo.FileSizeInBytes,Converter={StaticResource FileSizeConv}}"
+                                     Grid.Column="1" />
+                <TextBlock Classes="propertiesTitle" Grid.Row="2" Text="位置:" />
+                <SelectableTextBlock Classes="propertiesTitle" Grid.Row="2" Text="{Binding Path}" Grid.Column="1" />
+                <TextBlock Classes="propertiesTitle" Grid.Row="3" Text="创建时间:" />
+                <SelectableTextBlock Classes="propertiesTitle" Grid.Row="3" Text="{Binding ItemInfo.CreationTime}"
+                                     Grid.Column="1" />
+                <TextBlock Classes="propertiesTitle" Grid.Row="4" Text="修改时间:" />
+                <SelectableTextBlock Classes="propertiesTitle" Grid.Row="4" Text="{Binding ItemInfo.LastModifiedTime}"
+                                     Grid.Column="1" />
+                <TextBlock Classes="propertiesTitle" Grid.Row="5" Text="GUID:" />
+                <SelectableTextBlock Classes="propertiesTitle" Grid.Row="5" Text="{Binding ItemInfo.Id}" Grid.Column="1" />
+                <TextBlock Classes="propertiesTitle" Grid.Row="6" Text="HASH256:" />
+                <SelectableTextBlock HorizontalAlignment="Left" MaxWidth="300" TextWrapping="Wrap" Classes="propertiesTitle"
+                                     Grid.Row="6" Text="{Binding ItemInfo.FileHash}" Grid.Column="1" />
+            </Grid>
+        </StackPanel>
+    </tc:DefaultDialog>
+</UserControl>

@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="36" d:DesignHeight="36"
+             Width="36"
+             Height="36"
+           
+             xmlns:vm="using:drive_desktop.ViewModels"
+             x:DataType="vm:ThemeSwitchViewModel"
+             x:Class="drive_desktop.Components.UserControls.ThemeSwitch">
+    <Design.DataContext>
+        <vm:ThemeSwitchViewModel />
+    </Design.DataContext>
+    <UserControl.Styles>
+        <!--月亮特效-->
+        <Style Selector="TextBlock.moon">
+            <Setter Property="Foreground" Value="#9CA3AF" />
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Foreground" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <!--太阳-->
+        <Style Selector="TextBlock.sun">
+            <Setter Property="Foreground" Value="#9CA3AF" />
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Foreground" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Panel.ControlBg"/>
+        <!--背景-->
+        <Style Selector="Border.ThemeBg">
+            <Setter Property="Background" Value="#ededde" />
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2"  />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Panel.ControlBg:pointerover Border.ThemeBg">
+            <Setter Property="Opacity" Value="0.5"/>
+        </Style>
+        <Style Selector="Panel.ControlBg:pointerover TextBlock.moon">
+            <Setter Property="Foreground" Value="#1F2937" />
+        </Style>
+        <Style Selector="Panel.ControlBg:pointerover TextBlock.sun">
+            <Setter Property="Foreground" Value="#F9FAFB" />
+        </Style>
+    </UserControl.Styles>
+
+    <Button Classes="naked" Command="{Binding switchThemeCommand}">
+        <Panel Classes="ControlBg" >
+            <Border Classes="ThemeBg" CornerRadius="50" Width="36" Height="36"/>
+            <!--太阳-->
+            <TextBlock  Classes="sun" IsVisible="{Binding !IsLight}" FontFamily="{StaticResource FASolid}" FontSize="25"
+                       Text="&#xf185;" />
+            <!--月亮-->
+            <TextBlock Classes="moon" IsVisible="{Binding IsLight}" FontFamily="{StaticResource FASolid}" FontSize="25"
+                       Text="&#xf186;" />
+        </Panel>
+    </Button>
+</UserControl>

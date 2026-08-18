@@ -1,0 +1,115 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             xmlns:tc="using:drive_desktop.Components.TemplateControls"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:transitionsAndConverter="clr-namespace:drive_desktop.Components.TransitionsAndConverter"
+             x:DataType="vm:ShareFileDialogViewModel"
+             x:Class="drive_desktop.Components.UserControls.ShareFileDialog">
+    <UserControl.DataContext>
+        <vm:ShareFileDialogViewModel />
+    </UserControl.DataContext>
+    <UserControl.Styles>
+        <Style Selector="StackPanel.simifenxiangPanel">
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Height" Duration="0:0:0.15" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="StackPanel.IsChecked">
+            <Setter Property="Height" Value="75" />
+        </Style>
+    </UserControl.Styles>
+    <!--{Binding IsShowShareFileDialog}-->
+    <tc:DefaultDialog  IsOpen="{Binding IsShowShareFileDialog}">
+
+        <StackPanel Spacing="25">
+            <Panel>
+                <TextBlock FontWeight="Bold" Text="{Binding Title}" FontSize="18" />
+                <Button Classes="naked" HorizontalAlignment="Right" Command="{Binding CloseCommand}">
+                    <TextBlock Classes="close" FontFamily="{StaticResource FASolid}" FontSize="18" Text="&#xf00d;" />
+                </Button>
+            </Panel>
+            <Carousel SelectedIndex="{Binding SelectedIndex}">
+                <Carousel.PageTransition>
+                    <transitionsAndConverter:SequentialFadeTransition Duration="0:0:0.2" />
+                </Carousel.PageTransition>
+                <!--填表界面-->
+                <StackPanel Spacing="25">
+                    <!--图标和名称-->
+                    <StackPanel Spacing="10" Orientation="Horizontal">
+                        <TextBlock Foreground="{DynamicResource TextColor3}" VerticalAlignment="Center"
+                                   FontFamily="{StaticResource FASolid}" Text="&#xf0c1;" />
+                        <TextBlock Foreground="{DynamicResource TextColor3}" VerticalAlignment="Center"
+                                   FontWeight="Bold" Text="{Binding FileName}" />
+                    </StackPanel>
+                    <!--日期选择-->
+                    <StackPanel Spacing="10">
+                        <TextBlock Foreground="{DynamicResource TextColor3}" Text="有效期设置" />
+                        <u:DateRangePicker Classes="FlatRangePicker" HorizontalAlignment="Left"
+                                           Width="360"
+                                           SelectedStartDate="{Binding FileShareData.BeginValidity,Mode=TwoWay}"
+                                           SelectedEndDate="{Binding FileShareData.EndValidity,Mode=TwoWay}"
+                                           DisplayFormat="yyyy-MM-dd" />
+                    </StackPanel>
+                    <!--私密分享-->
+                    <StackPanel Classes="simifenxiangPanel" Classes.IsChecked="{Binding #Simi.IsChecked}"
+                                ClipToBounds="True">
+                        <Panel>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center"
+                                       Foreground="{DynamicResource TextColor3}" Text="私密分享 (提取码)" />
+                            <ToggleSwitch x:Name="Simi" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                          IsChecked="{Binding IsNeedPs}"
+                                          OnContent="" OffContent="" />
+                        </Panel>
+                        <tc:DefaultInput Height="40" Watermark="请输入提取码(留空将自动生成)"
+                                         Text="{Binding FileShareData.Password,Mode=TwoWay}" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="10">
+                        <TextBlock Foreground="{DynamicResource TextColor3}" Text="留言 / 简介 (选填)" />
+                        <tc:DefaultInput MaxWidth="400" Height="100" AcceptsReturn="True"
+                                         Watermark="给接收者留句言或者介绍一下文件内容..."
+                                         Text="{Binding FileShareData.Introduction,Mode=TwoWay}"/>
+                    </StackPanel>
+                    <tc:DefaultButton IsEnabled="{Binding CreateButtonStatus.IsEnabled}" IsLoading="{Binding CreateButtonStatus.IsLoading}" Icon="&#xf0c1;" HorizontalAlignment="Right" Height="40" Text="{Binding CreateButtonStatus.Title}" ActionCommand="{Binding CreateFileShareCommand}" />
+                </StackPanel>
+                <!--完成界面-->
+                <StackPanel HorizontalAlignment="Center">
+                    <StackPanel.Styles>
+                        <Style Selector="TextBlock">
+                            <Setter Property="TextAlignment" Value="Center"></Setter>
+                        </Style>
+                    </StackPanel.Styles>
+                    <TextBlock Margin="0,0,0,15" FontSize="48" Foreground="#67C23A"
+                               FontFamily="{StaticResource FASolid}" Text="&#xf058;">
+                    </TextBlock>
+                    <TextBlock Margin="0,0,0,10" FontWeight="Bold" FontSize="18"
+                               Foreground="{DynamicResource TextColor3}" Text="分享链接已生成" />
+                    <TextBlock FontSize="13" Foreground="{DynamicResource TextColor3}" Text="{Binding FileName}" />
+                    <u:QRCode
+                        HorizontalAlignment="Center"
+                        Width="200"
+                        Height="200"
+                        CornerRadius="0"
+                        Data="{Binding ShareUrl}"
+                        ErrorCorrection="Medium"
+                        SymbolCornerRatio="0" />
+                    <TextBlock Margin="0,0,0,40" FontSize="13" Foreground="{DynamicResource TextColor3}" Text="扫码直接访问" />
+                    <SelectableTextBlock Margin="0,0,0,40" TextAlignment="Center" FontSize="13"
+                                         Foreground="{DynamicResource TextColor3}" Text="{Binding ShareUrl,StringFormat='链接: {0}'}" />
+
+                    <tc:DefaultButton Height="40" Icon="&#xf0c5;" Text="复制链接及提取码" ActionCommand="{Binding CopyFileShareUrlCommand}" />
+                </StackPanel>
+            </Carousel>
+
+        </StackPanel>
+
+
+    </tc:DefaultDialog>
+</UserControl>

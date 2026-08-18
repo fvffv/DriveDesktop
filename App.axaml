@@ -1,0 +1,586 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="drive_desktop.App"
+             xmlns:semi="https://irihi.tech/semi"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:transitionsAndConverter="clr-namespace:drive_desktop.Components.TransitionsAndConverter"
+
+             RequestedThemeVariant="Light">
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+    <Application.Resources>
+
+        <ResourceDictionary>
+            <transitionsAndConverter:FileSizeConverter x:Key="FileSizeConv" />
+            <transitionsAndConverter:ColorToTransparentBrushConverter x:Key="ColorToTransparentBrushConverter" />
+            <transitionsAndConverter:EmptyStringToNullableUlongConverter x:Key="EmptyStringToNullableUlongConverter" />
+            <FontFamily x:Key="FABrands">avares://drive-desktop/Assets/ViewAssets/Font Awesome 6 Brands-Regular-400.otf#Font Awesome 6 Brands Regular</FontFamily>
+            <FontFamily x:Key="FASolid">avares://drive-desktop/Assets/ViewAssets/Font Awesome 6 Free-Solid-900.otf#Font Awesome 6 Free Solid</FontFamily>
+            <FontFamily x:Key="FARegular">avares://drive-desktop/Assets/ViewAssets/Font Awesome 6 Free-Regular-400.otf#Font Awesome 6 Free Regular</FontFamily>
+            <Transitions x:Key="CommonColorTransitions">
+                <BrushTransition Property="{x:Static Border.BackgroundProperty}" Duration="0:0:0.3"
+                                 Easing="CubicEaseOut" />
+                <BrushTransition Property="{x:Static Border.BorderBrushProperty}" Duration="0:0:0.3"
+                                 Easing="CubicEaseOut" />
+
+            </Transitions>
+            <Transitions x:Key="CommonColorTransitionsTextBlock">
+                <BrushTransition Property="{x:Static TextBlock.ForegroundProperty}" Duration="0:0:0.3"
+                                 Easing="CubicEaseOut" />
+            </Transitions>
+
+            <ResourceDictionary.ThemeDictionaries>
+
+                <!-- 亮色主题 -->
+                <ResourceDictionary x:Key="Light">
+                    <BoxShadows x:Key="AllShadow">0 10 30 0 #08000000</BoxShadows>
+                    <Color x:Key="HoverBg">#0f000000</Color>
+                    <Color x:Key="StrongBg">#190078d4</Color>
+                    <Color x:Key="BorderSoft">#14000000</Color>
+                    <Color x:Key="TextBoxBg">#F5F5F7</Color>
+                    <Color x:Key="MenuColorBg">#ecf5ff</Color>
+                    <Color x:Key="TextColor">Black</Color>
+                    <Color x:Key="TextColor2">White</Color>
+                    <Color x:Key="TextColor3">#606266</Color>
+                    <Color x:Key="TextColor4">#67696D</Color>
+                    <Color x:Key="SideTextColor">#8D9095</Color>
+                    <Color x:Key="BrColor">#dcdfe6</Color>
+                    <Color x:Key="SideBarBrColor">#eef0f5</Color>
+                    <Color x:Key="SidebarBg">#FFFFFF</Color>
+                    <Color x:Key="SidebarRadioBg">#f8fafc</Color>
+                    <Color x:Key="SidebarRadioBgCheck">#EBF2FE</Color>
+                    <Color x:Key="SidebarRadioTextHover">#1a1c23</Color>
+                    <Color x:Key="HomeBg">#F4F6F9</Color>
+                    <Color x:Key="IconColor">#5C5F66</Color>
+                    <Color x:Key="IconColor2">#5C5F66</Color>
+                    <Color x:Key="RadioButtonHoverBg">#0c000000</Color>
+                    <Color x:Key="RadioButtonCheckBg">#10000000</Color>
+                    <Color x:Key="CheckButtonCheckBg">#18000000</Color>
+                    <Color x:Key="ThemeColor">#3b82f6</Color>
+                    <Color x:Key="ThemeColor2">White</Color>
+                    <Color x:Key="DelColor">#F56C6C</Color>
+                    <Color x:Key="ImgViewButtonBg">#666062</Color>
+                    <BoxShadows x:Key="SidebarShadow">6 0 16 -4 #14000000</BoxShadows>
+                    <BoxShadows x:Key="TopShadow">0 4 12 -2 #0D000000, 0 2 6 -1 #08000000</BoxShadows>
+                    <SolidColorBrush x:Key="LoginPanelBackgroundBrush" Color="#F9FAFC" />
+
+                </ResourceDictionary>
+                <!-- 暗色主题 -->
+                <ResourceDictionary x:Key="Dark">
+                    <BoxShadows x:Key="AllShadow">0 10 30 0 #40000000</BoxShadows>
+                    <Color x:Key="HoverBg">#0fffffff</Color>
+                    <Color x:Key="StrongBg">#23409eff</Color>
+                    <Color x:Key="BorderSoft">#14ffffff</Color>
+                    <Color x:Key="TextBoxBg">#0F1724</Color>
+                    <Color x:Key="MenuColorBg">#26409EFF</Color>
+                    <Color x:Key="TextColor">White</Color>
+                    <Color x:Key="TextColor2">#131B2E</Color>
+                    <Color x:Key="TextColor3">#CFD3DC</Color>
+                    <Color x:Key="SideTextColor">#94a3b8</Color>
+                    <Color x:Key="SideBarBrColor">#334155</Color>
+                    <Color x:Key="SidebarRadioBg">#334155</Color>
+                    <Color x:Key="SidebarRadioTextHover">#f8fafc</Color>
+                    <Color x:Key="SidebarRadioBgCheck">#21324E</Color>
+                    <Color x:Key="BrColor">#374151</Color>
+                    <Color x:Key="SidebarBg">#1E293B</Color>
+                    <Color x:Key="HomeBg">#131B2E</Color>
+                    <Color x:Key="IconColor">#9CA3AF</Color>
+                    <Color x:Key="IconColor2">#FFFFFF</Color>
+                    <Color x:Key="RadioButtonHoverBg">#0cffffff</Color>
+                    <Color x:Key="RadioButtonCheckBg">#14ffffff</Color>
+                    <Color x:Key="CheckButtonCheckBg">#20ffffff</Color>
+                    <Color x:Key="ThemeColor">#3b82f6</Color>
+                    <Color x:Key="DelColor">#F56C6C</Color>
+                    <Color x:Key="ThemeColor2">#182235</Color>
+                    <Color x:Key="ImgViewButtonBg">#dccfd3</Color>
+                    <BoxShadows x:Key="SidebarShadow">8 0 13 -3 #59000000</BoxShadows>
+                    <BoxShadows x:Key="TopShadow">0 4 20 -2 #40000000, 0 2 8 -1 #26000000</BoxShadows>
+                    <SolidColorBrush x:Key="LoginPanelBackgroundBrush" Color="#131B2E" />
+                </ResourceDictionary>
+
+            </ResourceDictionary.ThemeDictionaries>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://LiveMarkdown.Avalonia/Defaults.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+    <Application.Styles>
+        <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+        <StyleInclude Source="avares://LiveMarkdown.Avalonia/Styles.axaml" />
+        <!--设置默认字体-->
+        <Style Selector="Window">
+            <Setter Property="FontFamily" Value="Microsoft YaHei UI,Simsun,苹方-简,宋体-简" />
+        </Style>
+
+
+        <semi:SemiTheme Locale="zh-CN" />
+        <semi:UrsaSemiTheme Locale="zh-CN" />
+        <FluentTheme />
+
+        <Style Selector="Border.Br">
+            <Setter Property="Background" Value="{DynamicResource BrColor}" />
+            <Setter Property="Height" Value="0.5" />
+            <Setter Property="Margin" Value="0,10,0,10" />
+
+        </Style>
+        <Style Selector="TextBlock.default-shadow">
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black"
+                                      OffsetX="2"
+                                      OffsetY="2"
+                                      BlurRadius="4"
+                                      Opacity="0.5" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--清空默认样按钮-->
+        <Style Selector="Button.naked">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <ContentPresenter Content="{TemplateBinding Content}" />
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <!--清空默认样式文本框-->
+        <Style Selector="TextBox.naked">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+
+
+        </Style>
+        <Style Selector="TextBox.naked:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+
+        </Style>
+        <Style Selector="TextBox.naked:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="TextBox.naked2">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+
+
+        </Style>
+        <Style Selector="TextBox.naked2:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+
+        </Style>
+        <Style Selector="TextBox.naked2:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <!--清空默认单选框样式-->
+        <Style Selector="RadioButton.naked">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6">
+
+                        <ContentPresenter x:Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <!--清空DateRangePicker默认边框-->
+        <Style Selector=":is(u|DateRangePickerBase).FlatRangePicker /template/ TextBox#PART_StartTextBox">
+            <Setter Property="Theme" Value="{DynamicResource LooklessTextBox}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <Style Selector=":is(u|DateRangePickerBase).FlatRangePicker /template/ TextBox#PART_EndTextBox">
+            <Setter Property="Theme" Value="{DynamicResource LooklessTextBox}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <!--文件卡片基础与悬停动画-->
+        <Style Selector="Border.FileCard">
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SideBarBrColor}" />
+            <Setter Property="Margin" Value="2,5" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="20" />
+
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+            <Setter Property="BoxShadow" Value="0 4 6 -1 #05000000, 0 2 4 -1 #05000000" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" Easing="CubicEaseOut" />
+                    <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Border.FileCard:pointerover">
+            <Setter Property="RenderTransform" Value="translateY(-3px)" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="BoxShadow" Value="0 10 40 -10 #1A000000" />
+        </Style>
+        <Style Selector="Border.FileCard.selected">
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="Background" Value="#080078D4" />
+            <Setter Property="BoxShadow" Value="0 0 0 1 #0078D4" />
+        </Style>
+
+
+        <!--中间大图标的缩放动画-->
+        <Style Selector="TextBlock.IconLarge">
+            <Setter Property="FontSize" Value="48" />
+            <Setter Property="Margin" Value="0,0,0,15" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Effect">
+                <DropShadowEffect BlurRadius="12" Opacity="0.08" OffsetX="0" OffsetY="6" Color="Black" />
+            </Setter>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Border.FileCard:pointerover TextBlock.IconLarge">
+            <Setter Property="RenderTransform" Value="scale(1.05)" />
+        </Style>
+
+
+        <!--勾选框动画-->
+        <Style Selector="CheckBox.CardCheckbox">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Margin" Value="12" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="CheckBg"
+                            Width="18" Height="18"
+                            CornerRadius="6"
+                            BorderThickness="2"
+                            BorderBrush="{DynamicResource BrColor}"
+                            Background="{DynamicResource SidebarBg}">
+                        <Border.Transitions>
+                            <Transitions>
+                                <BrushTransition Property="Background" Duration="0:0:0.2" />
+                                <BrushTransition Property="BorderBrush" Duration="0:0:0.2" />
+                            </Transitions>
+                        </Border.Transitions>
+                        <!-- 内部的白色对勾，默认透明度为0 -->
+                        <TextBlock x:Name="CheckIcon"
+                                   Text="&#xf00c;"
+                                   FontFamily="{StaticResource FASolid}"
+                                   FontSize="10"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Opacity="0">
+                            <TextBlock.Transitions>
+                                <Transitions>
+                                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                                </Transitions>
+                            </TextBlock.Transitions>
+                        </TextBlock>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+
+        <Style Selector="Border.FileCard:pointerover CheckBox.CardCheckbox">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <!--选中一直保持显示-->
+        <Style Selector="CheckBox.CardCheckbox:checked">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <Style Selector="CheckBox.CardCheckbox:checked /template/ Border#CheckBg">
+            <Setter Property="Background" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="CheckBox.CardCheckbox:checked /template/ TextBlock#CheckIcon">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+
+        <!--右上角更多按钮-->
+        <Style Selector="Button.CardMore">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Margin" Value="12" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColor3}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                    <BrushTransition Property="Foreground" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" Padding="4">
+                        <TextBlock Text="&#xf142;" FontFamily="{StaticResource FASolid}" FontSize="14"
+                                   Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <Style Selector="Border.FileCard:pointerover Button.CardMore">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Button.CardMore:pointerover">
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
+        </Style>
+
+        <!--fileitem的菜单按钮-->
+        <Style Selector="Button.FileItemMenu">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Margin" Value="10"></Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="FileItemMenuBorder" CornerRadius="5" Width="23" Height="23"
+                            Background="{DynamicResource SidebarBg}" BorderBrush="{DynamicResource BrColor}"
+                            BorderThickness="1">
+                        <TextBlock x:Name="FileItemMenuIcon" Foreground="DarkGray" TextAlignment="Center"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" Text="&#xf142;"
+                                   FontFamily="{StaticResource FASolid}">
+                        </TextBlock>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.1" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="TextBlock#FileItemMenuIcon">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Foreground" Duration="0:0:0.1" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.FileItemMenu:pointerover /template/ TextBlock#FileItemMenuIcon">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="Border.FileItemBorder:pointerover Button.FileItemMenu">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Button.el-dropdown-item">
+            <Setter Property="Foreground" Value="{DynamicResource TextColor3}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="20,10" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="4">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center">
+                            <ContentPresenter.Transitions>
+                                <Transitions>
+                                    <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+                                </Transitions>
+                            </ContentPresenter.Transitions>
+                        </ContentPresenter>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <Style Selector="Button.el-dropdown-item:pointerover">
+            <Setter Property="Background" Value="{DynamicResource MenuColorBg}" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+
+        <Style Selector="Button.el-dropdown-item:disabled">
+            <Setter Property="Foreground" Value="#C0C4CC" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="FlyoutPresenter.el-dropdown-menu">
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CheckButtonCheckBg}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="RenderTransformOrigin" Value="50%,0%" />
+
+            <Style.Animations>
+                <Animation Duration="0:0:0.2" Easing="CubicEaseOut" FillMode="Forward">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0" />
+                        <Setter Property="ScaleTransform.ScaleY" Value="0.95" />
+                        <Setter Property="ScaleTransform.ScaleX" Value="0.95" />
+                        <Setter Property="TranslateTransform.Y" Value="-10" />
+                    </KeyFrame>
+
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="1" />
+                        <Setter Property="ScaleTransform.ScaleY" Value="1" />
+                        <Setter Property="ScaleTransform.ScaleX" Value="1" />
+                        <Setter Property="TranslateTransform.Y" Value="0" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+        <!-- 基础样式：搜索框 -->
+        <Style Selector="TextBox.ModernSearchBox">
+            <Setter Property="Width" Value="220" />
+            <Setter Property="Height" Value="42" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SideBarBrColor}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="10,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <!-- 外层过渡动画：控制宽度丝滑展开 -->
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <DoubleTransition Property="Width" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+            <!-- 重写控件模板，剔除默认丑陋的灰色遮罩 -->
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border ClipToBounds="False" x:Name="PART_BorderElement"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BoxShadow="0 4 6 -1 #05000000, 0 2 4 -1 #05000000">
+                        <!-- 内层过渡动画：控制边框颜色和发光阴影 -->
+                        <Border.Transitions>
+                            <Transitions>
+                                <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                                <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                            </Transitions>
+                        </Border.Transitions>
+                        <Grid ColumnDefinitions="Auto,*">
+                            <!-- 搜索图标 -->
+                            <TextBlock Grid.Column="0"
+                                       Text="&#xf002;"
+                                       FontFamily="{StaticResource FASolid}"
+                                       Foreground="{DynamicResource TextColor3}"
+                                       FontSize="14"
+                                       VerticalAlignment="Center"
+                                       Margin="15,0,10,0" />
+
+                            <!-- 输入显示区 -->
+                            <Panel ClipToBounds="True"  Grid.Column="1" Margin="{TemplateBinding Padding}">
+                                <!-- 水印占位符 -->
+                                <TextBlock x:Name="PART_Watermark"
+                                           Text="{TemplateBinding Watermark}"
+                                           Foreground="{DynamicResource TextColor3}"
+                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                           IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNullOrEmpty}}" />
+                                <!-- 实际输入组件 -->
+                                <TextPresenter  x:Name="PART_TextPresenter"
+                                               Text="{TemplateBinding Text}"
+                                               CaretIndex="{TemplateBinding CaretIndex}"
+                                               SelectionStart="{TemplateBinding SelectionStart}"
+                                               SelectionEnd="{TemplateBinding SelectionEnd}"
+                                               TextAlignment="{TemplateBinding TextAlignment}"
+                                               TextWrapping="{TemplateBinding TextWrapping}"
+                                               PasswordChar="{TemplateBinding PasswordChar}"
+                                               SelectionBrush="{DynamicResource ThemeColor}"
+                                               CaretBrush="{DynamicResource TextColor}"
+                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </Panel>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <!-- 鼠标悬停状态 -->
+        <Style Selector="TextBox.ModernSearchBox:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{DynamicResource IconColor}" />
+        </Style>
+
+        <!-- 获得焦点时的状态-->
+        <Style Selector="TextBox.ModernSearchBox:focus-within">
+            <Setter Property="Width" Value="300" />
+        </Style>
+        <Style Selector="TextBox.ModernSearchBox:focus-within /template/ Border#PART_BorderElement">
+            <!-- 边框变成强调蓝 -->
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="BoxShadow" Value="0 0 0 3 #1A0078D4" />
+        </Style>
+        <!--空空如也动画-->
+        <Style Selector="StackPanel.bounceEffect">
+            <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+            <Setter Property="RenderTransform">
+                <ScaleTransform ScaleX="0.5" ScaleY="0.5" />
+            </Setter>
+            <Style.Animations>
+                <Animation Duration="0:0:0.5" Easing="BounceEaseOut">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="ScaleTransform.ScaleX" Value="0.5" />
+                        <Setter Property="ScaleTransform.ScaleY" Value="0.5" />
+                    </KeyFrame>
+                    <KeyFrame Cue="50%">
+                        <Setter Property="ScaleTransform.ScaleX" Value="0.8" />
+                        <Setter Property="ScaleTransform.ScaleY" Value="0.8" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="ScaleTransform.ScaleX" Value="1" />
+                        <Setter Property="ScaleTransform.ScaleY" Value="1" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+        <StyleInclude Source="/Components/TemplateControls/DefaultInput.axaml" />
+        <StyleInclude Source="/Components/TemplateControls/DefaultButton.axaml" />
+        <StyleInclude Source="/Components/TemplateControls/DefaultDialog.axaml" />
+        <StyleInclude Source="/Components/TemplateControls/DefaultToggleButton.axaml" />
+        <StyleInclude Source="/Components/TemplateControls/CircularProgressBar.axaml" />
+    </Application.Styles>
+
+</Application>

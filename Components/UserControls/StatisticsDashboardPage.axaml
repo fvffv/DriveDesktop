@@ -1,0 +1,349 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             xmlns:model="using:drive_desktop.Models"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             x:DataType="vm:StatisticsDashboardPageViewModel"
+             x:Class="drive_desktop.Components.UserControls.StatisticsDashboardPage">
+    <UserControl.Styles>
+        <Style Selector="TextBlock.Title">
+            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style Selector="Border.CardInfo">
+            <Setter Property="CornerRadius" Value="24" />
+            <Setter Property="Height" Value="180" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="RenderTransform" Value="translate(0px, 0px)" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                    <BoxShadowsTransition Property="BoxShadow"
+                                          Duration="0:0:0.3" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+            <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}" />
+        </Style>
+        <Style Selector="Border.CardInfo:pointerover">
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="BoxShadow" Value="0 15 35 0 #143B82F6" />
+            <Setter Property="RenderTransform" Value="translate(0px, -4px)" />
+        </Style>
+        <Style Selector="TextBlock.KpiWatermark">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="FontFamily" Value="{StaticResource FASolid}" />
+            <Setter Property="Margin" Value="0,0,-15,-20" />
+            <Setter Property="FontSize" Value="110" />
+            <Setter Property="Opacity" Value="0.03" />
+            <Setter Property="RenderTransform"
+                    Value="rotate(-15deg) scale(1)" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.CardInfoContentBorder">
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="24" />
+        </Style>
+        <Style Selector="Border.CardInfoIcon">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Width" Value="46" />
+            <Setter Property="Height" Value="46" />
+        </Style>
+
+        <Style Selector="Border.CardInfo:pointerover TextBlock.KpiWatermark">
+            <Setter Property="Opacity"
+                    Value="0.06" />
+            <Setter Property="RenderTransform"
+                    Value="rotate(-5deg) scale(1.1)" />
+        </Style>
+        <Style Selector="Border.CardBorder">
+            <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="CornerRadius" Value="24" />
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+        </Style>
+        
+        <Style Selector="TextBlock.KpiWatermark2">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="FontFamily" Value="{StaticResource FASolid}" />
+            <Setter Property="Margin" Value="0,0,-15,-20" />
+            <Setter Property="FontSize" Value="210" />
+            <Setter Property="Opacity" Value="0.03" />
+            <Setter Property="RenderTransform"
+                    Value="rotate(-15deg) scale(1)" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        
+        <Style Selector="Button#RefreshButton">
+            <Setter Property="ClipToBounds" Value="False"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Width="42" Height="42"
+                            Margin="5"
+                            BoxShadow="{DynamicResource AllShadow}"
+                            Background="{DynamicResource SidebarBg}"
+                            BorderBrush="{DynamicResource SideBarBrColor}"
+                            BorderThickness="1"
+                            CornerRadius="14" Transitions="{StaticResource CommonColorTransitions}">
+
+                        <TextBlock Foreground="{DynamicResource SideTextColor}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontFamily="{StaticResource FASolid}"
+                                   Text="&#xf2f9;" Transitions="{StaticResource CommonColorTransitions}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button#RefreshButton:pointerover /template/ Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="Button#RefreshButton:pointerover /template/ TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer>
+        <Border ClipToBounds="False" Padding="30,25">
+            <DockPanel LastChildFill="False" ClipToBounds="False">
+                <TextBlock DockPanel.Dock="Top" Text="数据看板" FontSize="24" FontWeight="700" />
+                <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" Text="Welcome back! 这里是您的网盘全局资源使用概览。" Classes="Title" />
+                <!--四个卡片-->
+                <Grid ColumnSpacing="15" Margin="0,15,0,0" ClipToBounds="False" DockPanel.Dock="Top"
+                      ColumnDefinitions="*,*,*,*">
+                    <Border Classes="CardInfo" HorizontalAlignment="Stretch">
+                        <Border Classes="CardInfoContentBorder">
+                            <Panel>
+                                <StackPanel Margin="24" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                    <!--图标-->
+                                    <Border Background="#1a3b82f6" Classes="CardInfoIcon">
+                                        <TextBlock Foreground="{DynamicResource ThemeColor}"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" FontSize="22"
+                                                   FontFamily="{StaticResource FASolid}"
+                                                   Text="&#xf233;" />
+                                    </Border>
+
+                                    <!--标题-->
+                                    <TextBlock Margin="0,20,0,0" FontWeight="Bold" FontSize="14"
+                                               Foreground="{DynamicResource SideTextColor}" Text="总容量配额" />
+                                    <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                                        <TextBlock FontWeight="Bold"
+                                                   FontSize="30"
+                                                   Text="{Binding SummaryData.TotalSpaceBytes,
+                                                                  Converter={StaticResource FileSizeConv},
+                                                                  ConverterParameter=Value}" />
+                                        <TextBlock Margin="7,0,0,5"
+                                                   VerticalAlignment="Bottom"
+                                                   Foreground="{DynamicResource SideTextColor}"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Text="{Binding SummaryData.TotalSpaceBytes,
+                                                                  Converter={StaticResource FileSizeConv},
+                                                                  ConverterParameter=Unit}" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!--背景图标-->
+                                <TextBlock Classes="KpiWatermark" Text="&#xf233;" />
+
+                            </Panel>
+                        </Border>
+                    </Border>
+                    <Border Grid.Column="1" Classes="CardInfo" HorizontalAlignment="Stretch">
+                        <Border Classes="CardInfoContentBorder">
+                            <Panel>
+                                <StackPanel  Margin="24" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                    <!--图标-->
+                                    <Border Background="#1a8b5cf6" Classes="CardInfoIcon">
+                                        <TextBlock Foreground="#8b5cf6" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" FontSize="22"
+                                                   FontFamily="{StaticResource FASolid}"
+                                                   Text="&#xf0a0;" />
+                                    </Border>
+
+                                    <!--标题-->
+                                    <TextBlock Margin="0,20,0,0" FontWeight="Bold" FontSize="14"
+                                               Foreground="{DynamicResource SideTextColor}" Text="已用容量" />
+                                    <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                                        <TextBlock FontWeight="Bold"
+                                                   FontSize="30"
+                                                   Text="{Binding SummaryData.UsedSpaceBytes,
+                                                                  Converter={StaticResource FileSizeConv},
+                                                                  ConverterParameter=Value}" />
+                                        <TextBlock Margin="7,0,0,5"
+                                                   VerticalAlignment="Bottom"
+                                                   Foreground="{DynamicResource SideTextColor}"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"
+                                                   Text="{Binding SummaryData.UsedSpaceBytes,
+                                                                  Converter={StaticResource FileSizeConv},
+                                                                  ConverterParameter=Unit}" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!--背景图标-->
+                                <TextBlock Classes="KpiWatermark" Text="&#xf0a0;" />
+
+                            </Panel>
+                        </Border>
+                    </Border>
+                    <Border Grid.Column="2" Classes="CardInfo" HorizontalAlignment="Stretch">
+                        <Border Classes="CardInfoContentBorder">
+                            <Panel>
+                                <StackPanel Margin="24" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                    <!--图标-->
+                                    <Border Background="#1a06b6d4" Classes="CardInfoIcon">
+                                        <TextBlock Foreground="#06b6d4" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" FontSize="22"
+                                                   FontFamily="{StaticResource FASolid}"
+                                                   Text="&#xf15c;" />
+                                    </Border>
+
+                                    <!--标题-->
+                                    <TextBlock Margin="0,20,0,0" FontWeight="Bold" FontSize="14"
+                                               Foreground="{DynamicResource SideTextColor}" Text="总文件数" />
+                                    <TextBlock Margin="0,10,0,0"
+                                               FontWeight="Bold"
+                                               FontSize="30"
+                                               Text="{Binding SummaryData.FileCount}" />
+                                </StackPanel>
+
+                                <!--背景图标-->
+                                <TextBlock Classes="KpiWatermark" Text="&#xf15c;" />
+
+                            </Panel>
+                        </Border>
+                    </Border>
+                    <Border Grid.Column="3" Classes="CardInfo" HorizontalAlignment="Stretch">
+                        <Border Classes="CardInfoContentBorder">
+                            <Panel>
+                                <StackPanel Margin="24" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                    <!--图标-->
+                                    <Border Background="#1af59e0b" Classes="CardInfoIcon">
+                                        <TextBlock Foreground="#f59e0b" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" FontSize="22"
+                                                   FontFamily="{StaticResource FASolid}"
+                                                   Text="&#xf1e0;" />
+                                    </Border>
+
+                                    <!--标题-->
+                                    <TextBlock Margin="0,20,0,0" FontWeight="Bold" FontSize="14"
+                                               Foreground="{DynamicResource SideTextColor}" Text="活跃分享" />
+                                    <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                                        <TextBlock FontWeight="Bold"
+                                                   FontSize="30"
+                                                   Text="{Binding SummaryData.ShareCount}" />
+                                        <TextBlock Margin="7,0,0,5" VerticalAlignment="Bottom"
+                                                   Foreground="{DynamicResource SideTextColor}" FontWeight="Bold"
+                                                   FontSize="14" Text="个" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!--背景图标-->
+                                <TextBlock Classes="KpiWatermark" Text="&#xf1e0;" />
+
+                            </Panel>
+                        </Border>
+                    </Border>
+                </Grid>
+               
+                <Grid ColumnSpacing="15" Margin="0,25,0,0" Height="400" DockPanel.Dock="Top" ClipToBounds="False"
+                      ColumnDefinitions="7*,3*">
+                    <!--上传活跃度趋势-->
+                    <Border Classes="CardBorder" >
+                        <DockPanel Margin="24">
+                            <TextBlock DockPanel.Dock="Top" FontSize="16" FontWeight="Bold" Text="上传活跃度趋势" />
+                            <lvc:CartesianChart>
+                                <lvc:CartesianChart.XAxes>
+                                    <lvc:XamlAxis Labels="{Binding TrendLabels}"
+                                                  ShowSeparatorLines="False" />
+                                </lvc:CartesianChart.XAxes>
+                                <lvc:CartesianChart.YAxes>
+                                    <lvc:XamlAxis MinLimit="0" />
+                                </lvc:CartesianChart.YAxes>
+                                <lvc:CartesianChart.Series>
+                                    <lvc:XamlLineSeries Values="{Binding TrendValues}"
+                                                        SeriesName="上传文件数"
+                                                        GeometrySize="6"
+                                                        LineSmoothness="0.65" />
+                                </lvc:CartesianChart.Series>
+                            </lvc:CartesianChart>
+                        </DockPanel>
+
+                    </Border>
+                    <!--空间分类占比-->
+                    <Border Grid.Column="1" Classes="CardBorder" >
+                        <DockPanel Margin="24">
+                            <TextBlock DockPanel.Dock="Top" FontSize="16" FontWeight="Bold" Text="空间分类占比" />
+                            <lvc:PieChart SeriesSource="{Binding SpaceCategories}"
+                                          LegendPosition="Bottom">
+                                <lvc:PieChart.SeriesTemplate>
+                                    <DataTemplate x:DataType="model:SpaceCategoryData">
+                                        <lvc:XamlPieSeries
+                                            SeriesName="{Binding Name}"
+                                            Values="{Binding Values}"
+                                            ToolTipLabelFormatter="{Binding $parent[UserControl].((vm:StatisticsDashboardPageViewModel)DataContext).TopFileToolTipFormatter}"
+                                            Fill="{Binding Fill}"
+                                            MaxRadialColumnWidth="32"/>
+                                    </DataTemplate>
+                                </lvc:PieChart.SeriesTemplate>
+                            </lvc:PieChart>
+                        </DockPanel>
+                     
+                    </Border>
+                </Grid>
+                <Border Margin="0,25,0,0"  Classes="CardBorder" DockPanel.Dock="Top">
+                    <Panel ClipToBounds="True">
+                        <TextBlock Classes="KpiWatermark2"  Text="&#xf080;"/>
+                        <DockPanel Margin="24">
+                            <TextBlock DockPanel.Dock="Top" FontSize="16" FontWeight="Bold" Text="空间占用 Top 5 大文件" />
+                            <lvc:CartesianChart Height="300">
+                                <lvc:CartesianChart.XAxes>
+                                    <lvc:XamlAxis MinLimit="0"/>
+                                </lvc:CartesianChart.XAxes>
+
+                                <lvc:CartesianChart.YAxes>
+                                    <lvc:XamlAxis Labels="{Binding TopFileLabels}"
+                                                  IsInverted="True"
+                                                  ShowSeparatorLines="False"/>
+                                </lvc:CartesianChart.YAxes>
+
+                                <lvc:CartesianChart.Series>
+                                    <lvc:XamlRowSeries
+                                        Values="{Binding TopFileValues}"
+                                        SeriesName="占用空间"
+                                        YToolTipLabelFormatter="{Binding TopFileToolTipFormatter}"
+                                        MaxBarWidth="28"/>
+                                </lvc:CartesianChart.Series>
+                            </lvc:CartesianChart>
+                        </DockPanel>
+                    </Panel>
+                   
+                </Border>
+            </DockPanel>
+        </Border>
+    </ScrollViewer>
+</UserControl>

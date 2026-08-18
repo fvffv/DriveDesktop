@@ -1,0 +1,83 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="38"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             x:DataType="vm:SearchViewModel"
+             x:Class="drive_desktop.Components.UserControls.Search">
+    <Design.DataContext>
+        <vm:SearchViewModel />
+    </Design.DataContext>
+    <UserControl.Styles>
+        <!--搜索按钮-->
+        <Style Selector="Button.SeachButton">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" Easing="CubicEaseOut"/>
+                </Transitions>
+            </Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border CornerRadius="6" BoxShadow="0 2 6 0 #4da855f7">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                <GradientStop Offset="0" Color="#409eff" />
+                                <GradientStop Offset="1" Color="#a855f7" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <ContentPresenter x:Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Padding="10,0"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.SeachButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        <Style Selector="Button.SeachButton:disabled /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="White" /> 
+        </Style>
+        
+        <Style Selector="Button.SeachButton:disabled">
+            <Setter Property="Opacity" Value="0.5"/>
+        </Style>
+        <Style Selector="Button.SeachButton:pointerover">
+            <Setter Property="RenderTransform" Value="translateY(-2px)"/>
+        </Style>
+
+        <Style Selector="Button.SeachButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+
+        <Style Selector="Button.SeachButton:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.95)"/>
+        </Style>
+
+        <Style Selector="Button.SeachButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+    </UserControl.Styles>
+
+    <Border Padding="10,0,10,0" CornerRadius="6" Background="{DynamicResource RadioButtonCheckBg}">
+        <Grid ColumnDefinitions="Auto,*,Auto" >
+            <TextBlock Text="&#xf002; " VerticalAlignment="Center" FontFamily="{StaticResource FASolid}"/>
+            <TextBox VerticalAlignment="Center" Grid.Column="1" Classes="naked" PlaceholderText="语义搜索文件..." Text="{Binding SearchText,Mode=TwoWay}"/>
+            
+            <Button IsEnabled="{Binding ButtonEnabled}" Grid.Column="2" Classes="SeachButton" Height="29" Cursor="Hand" >
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <TextBlock FontWeight="Bold" Foreground="White" Text="搜索"/>
+                    <TextBlock VerticalAlignment="Center" Foreground="White" FontFamily="{StaticResource FASolid}" Text="&#xf6e8;"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+    </Border>
+</UserControl>

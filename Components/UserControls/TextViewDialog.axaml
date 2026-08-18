@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="+1200" d:DesignHeight="850"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             xmlns:tc="using:drive_desktop.Components.TemplateControls"
+             xmlns:md="clr-namespace:LiveMarkdown.Avalonia;assembly=LiveMarkdown.Avalonia"
+             x:DataType="vm:TextViewDialogViewModel"
+             x:Class="drive_desktop.Components.UserControls.TextViewDialog">
+    <UserControl.DataContext>
+        <vm:TextViewDialogViewModel />
+    </UserControl.DataContext>
+    <!--{Binding IsShowTextViewDialog}-->
+    <tc:DefaultDialog IsOpen="{Binding IsShowTextViewDialog}">
+        <StackPanel Width="1000" Spacing="5">
+            <Panel>
+                <TextBlock FontWeight="Bold" Text="{Binding Title, StringFormat='文本预览: {0}'}" FontSize="18" />
+                <Button Classes="naked" HorizontalAlignment="Right" Command="{Binding CloseCommand}">
+                    <TextBlock Classes="close" FontFamily="{StaticResource FASolid}" FontSize="18" Text="&#xf00d;" />
+                </Button>
+            </Panel>
+            <ToggleSwitch IsVisible="{Binding IsView}" IsChecked="{Binding !ShowMode,Mode=TwoWay}" HorizontalAlignment="Right" OnContent="预览" OffContent="代码" />
+            <Border MaxHeight="500" BorderBrush="{DynamicResource BrColor}" BorderThickness="1">
+                    <Panel>
+                        <!--代码预览-->
+                        <tc:TextMateCodeViewer IsVisible="{Binding ShowMode}"  Document="{Binding FileContentDocument}"
+                                               FileName="{Binding Title}" />
+                        <ScrollViewer  IsVisible="{Binding !ShowMode}">
+                            <!--md预览-->
+                            <md:MarkdownRenderer  MarkdownBuilder="{Binding MdText}" x:Name="MarkdownRenderer" />
+                        </ScrollViewer>
+                    </Panel>
+            </Border>
+
+        </StackPanel>
+    </tc:DefaultDialog>
+</UserControl>

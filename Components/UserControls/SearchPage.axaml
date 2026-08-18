@@ -1,0 +1,576 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="450"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             x:DataType="vm:SearchPageViewModel"
+             xmlns:tc="using:drive_desktop.Components.TemplateControls"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:model="using:drive_desktop.Models"
+
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             x:Class="drive_desktop.Components.UserControls.SearchPage">
+    <Design.DataContext>
+        <vm:SearchPageViewModel />
+    </Design.DataContext>
+    <UserControl.Styles>
+        <Style Selector="Border.SearchPageBorder">
+            <Setter Property="CornerRadius" Value="24" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}" />
+            <Setter Property="Padding" Value="30" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="Height" Value="350" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background"
+                                     Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <DoubleTransition Property="Height" Duration="0:0:0.5" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.SearchPageBorder2">
+            <Setter Property="Height" Value="150" />
+        </Style>
+        <!--搜索按钮-->
+        <Style Selector="Button.SeachButton">
+            <Setter Property="ClipToBounds" Value="False" />
+            <Setter Property="Height" Value="45" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border CornerRadius="6" BoxShadow="0 2 6 0 #4DA855F7">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                <GradientStop Offset="0" Color="#409eff" />
+                                <GradientStop Offset="1" Color="#a855f7" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <ContentPresenter x:Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Padding="10,0" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.SeachButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        <Style Selector="Button.SeachButton:disabled /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+
+        <Style Selector="Button.SeachButton:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="Button.SeachButton:pointerover">
+            <Setter Property="RenderTransform" Value="translateY(-2px)" />
+        </Style>
+
+        <Style Selector="Button.SeachButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+
+        <Style Selector="Button.SeachButton:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.95)" />
+        </Style>
+
+        <Style Selector="Button.SeachButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        <!--高级搜索按钮-->
+        <Style Selector="ToggleButton.AdvancedSearch">
+            <Setter Property="ClipToBounds" Value="False" />
+            <Setter Property="Cursor" Value="Hand" />
+
+
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="Transparent" x:Name="AdvancedSearchBorder"
+                            Padding="16,8" CornerRadius="50" BorderThickness="1"
+                            Transitions="{DynamicResource CommonColorTransitions}"
+                            BorderBrush="{DynamicResource SideBarBrColor}">
+                        <StackPanel Spacing="5" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource FASolid}" Text="&#xf1de;" />
+                            <TextBlock VerticalAlignment="Center" FontWeight="Bold" FontSize="13" Text="高级筛选" />
+                            <TextBlock x:Name="AdvancedSearchAngle" VerticalAlignment="Center"
+                                       FontFamily="{StaticResource FASolid}" Text="&#xf106;" />
+                        </StackPanel>
+
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <!--选中状态的边框变化-->
+        <Style Selector="ToggleButton.AdvancedSearch:checked /template/ Border#AdvancedSearchBorder">
+            <Setter Property="Background" Value="#1a0078d4" />
+            <Setter Property="BorderBrush" Value="#470078d4" />
+        </Style>
+        <Style Selector="ToggleButton.AdvancedSearch:checked /template/ Border#AdvancedSearchBorder TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+
+        </Style>
+        <Style Selector="ToggleButton.AdvancedSearch:checked /template/ TextBlock#AdvancedSearchAngle">
+            <Setter Property="Text" Value="&#xf107;" />
+
+        </Style>
+
+        <Style Selector="Border.FineScreeningBorder">
+            <Setter Property="Height" Value="70" />
+            <Setter Property="Padding" Value="10,5,10,5" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="BoxShadow" Value="{DynamicResource TopShadow}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BrColor}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+
+        </Style>
+
+
+        <Style Selector="Border.SearchResultsBorder">
+            <Setter Property="Margin" Value="10,10,10,0" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="CornerRadius" Value="24" />
+            <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+        </Style>
+
+    </UserControl.Styles>
+    <DockPanel Margin="20,30">
+        <Border Classes="SearchPageBorder" DockPanel.Dock="Top"
+                Classes.SearchPageBorder2="{Binding !#AdvancedSearchButton.IsChecked}">
+            <StackPanel Spacing="10" VerticalAlignment="Top">
+                <Grid ColumnSpacing="10" ColumnDefinitions="*,Auto">
+                    <!--搜索框-->
+                    <tc:DefaultInput Background="{DynamicResource HomeBg}" CornerRadius="16"
+                                     BorderColor="{DynamicResource SideBarBrColor}" MinWidth="100"
+                                     HorizontalAlignment="Stretch" IconFontSize="20"
+                                     Watermark="输入文件名、扩展名或关键字搜索全局文件..."
+                                     Text="{Binding SearchInfo.Keyword,Mode=TwoWay}"
+                                     Transitions="{StaticResource CommonColorTransitions}"
+                                     IconColor="{DynamicResource ThemeColor}" IsShowIcon="True" IconText="&#xf002;" />
+                    <!--搜索按钮-->
+                    <Button Grid.Column="1" Classes="SeachButton" Width="100" Cursor="Hand"
+                            Command="{Binding  SearchFileCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock FontWeight="Bold" Foreground="White" FontSize="18" Text="搜索" />
+                            <TextBlock VerticalAlignment="Center" Foreground="White" FontSize="18"
+                                       FontFamily="{StaticResource FASolid}" Text="&#xf6e8;" />
+                        </StackPanel>
+                    </Button>
+
+                </Grid>
+                <!--常用条件-->
+                <DockPanel LastChildFill="False" HorizontalSpacing="10" Margin="0,7">
+
+                    <tc:DefaultToggleButton IconText="&#xf15c;" Title="文档" TitleFontSize="13" IconFontSize="13"
+                                            VerticalAlignment="Center"
+                                            CornerRadius="50" IsChecked="{Binding FastDoc,Mode=TwoWay}" />
+                    <tc:DefaultToggleButton VerticalAlignment="Center" IconText="&#xf03e;" Title="图片"
+                                            TitleFontSize="13" IconFontSize="13"
+                                            CornerRadius="50" IsChecked="{Binding FastImg,Mode=TwoWay}" />
+                    <tc:DefaultToggleButton VerticalAlignment="Center" IconText="&#xf1c6;" Title="压缩包"
+                                            TitleFontSize="13" IconFontSize="13"
+                                            CornerRadius="50" IsChecked="{Binding FastZip,Mode=TwoWay}" />
+                    <tc:DefaultToggleButton VerticalAlignment="Center" IconText="&#xf017;" Title="最近 7 天"
+                                            TitleFontSize="13" IconFontSize="13"
+                                            CornerRadius="50" IsChecked="{Binding FastDay7,Mode=TwoWay}" />
+                    <!--精细搜索按钮-->
+                    <ToggleButton DockPanel.Dock="Right" x:Name="AdvancedSearchButton" Classes="AdvancedSearch"
+                                  IsChecked="{Binding IsAdvancedSearch}"
+                                  Grid.Column="2" />
+                </DockPanel>
+                <!--精细-->
+                <StackPanel x:Name="FineScreeningArea">
+                    <Border Margin="0,0,0,20" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource SideBarBrColor}" />
+                    <UniformGrid RowSpacing="10" Columns="3" ColumnSpacing="10">
+                        <!--类型-->
+                        <Border Classes="FineScreeningBorder">
+                            <StackPanel Spacing="5">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource ThemeColor}"
+                                               FontSize="12"
+                                               FontFamily="{StaticResource FASolid}" Text="&#xf15c;" />
+                                    <TextBlock Foreground="{DynamicResource TextColor3}" FontSize="12" Text="文件类型" />
+
+                                </StackPanel>
+                                <u:MultiComboBox
+                                    SelectedItems="{Binding SearchInfo.FileType,Mode=TwoWay}"
+                                    PlaceholderText="请选择类型"
+                                    Height="30"
+                                    HorizontalAlignment="Stretch">
+                                    <u:MultiComboBoxItem>图片</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>文档</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>视频</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>音频</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>压缩包</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>应用</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>系统</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>代码</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>文件夹</u:MultiComboBoxItem>
+                                </u:MultiComboBox>
+                            </StackPanel>
+                        </Border>
+                        <!--修改时间-->
+                        <Border Classes="FineScreeningBorder">
+                            <StackPanel Spacing="5">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource ThemeColor}"
+                                               FontSize="12"
+                                               FontFamily="{StaticResource FASolid}" Text="&#xf073;" />
+                                    <TextBlock Foreground="{DynamicResource TextColor3}" FontSize="12" Text="修改时间" />
+
+                                </StackPanel>
+                                <u:DateRangePicker
+                                    Classes="FlatRangePicker"
+                                    StartPlaceholderText="开始时间"
+                                    EndPlaceholderText="结束时间"
+                                    DisplayFormat="yyyy-MM-dd"
+                                    SelectedEndDate="{Binding SearchInfo.EndLastModifiedTime,Mode=TwoWay}"
+                                    SelectedStartDate="{Binding SearchInfo.StarLastModifiedTime,Mode=TwoWay}" />
+                            </StackPanel>
+                        </Border>
+                        <!--大小-->
+                        <Border Classes="FineScreeningBorder">
+                            <StackPanel Spacing="4">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource ThemeColor}"
+                                               FontSize="12"
+                                               FontFamily="{StaticResource FASolid}" Text="&#xf545;" />
+                                    <TextBlock Foreground="{DynamicResource TextColor3}" FontSize="12" Text="文件大小" />
+
+                                </StackPanel>
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="5">
+                                    <tc:DefaultInput Watermark="最小kb" Height="30" FontSize="12"
+                                                     Text="{Binding SearchInfo.FileSizeInBytesMin,Mode=TwoWay,Converter={StaticResource EmptyStringToNullableUlongConverter}}" />
+                                    <tc:DefaultInput Grid.Column="1" Height="30" Watermark="最大kb" FontSize="12"
+                                                     Text="{Binding SearchInfo.FileSizeInBytesMax,Mode=TwoWay,Converter={StaticResource EmptyStringToNullableUlongConverter}}" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        <!--排序-->
+                        <Border Classes="FineScreeningBorder">
+                            <StackPanel Spacing="5">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource ThemeColor}"
+                                               FontSize="12"
+                                               FontFamily="{StaticResource FASolid}" Text="&#xf161;" />
+                                    <TextBlock Foreground="{DynamicResource TextColor3}" FontSize="12" Text="排序方式" />
+
+                                </StackPanel>
+                                <u:MultiComboBox
+                                    SelectedItems="{Binding SearchInfo.OrderByType,Mode=TwoWay}"
+                                    PlaceholderText="请选择排序方式"
+                                    Height="30"
+                                    HorizontalAlignment="Stretch">
+                                    <u:MultiComboBoxItem>时间</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>类型</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>大小</u:MultiComboBoxItem>
+                                </u:MultiComboBox>
+                            </StackPanel>
+                        </Border>
+                        <!--上传时间-->
+                        <Border Classes="FineScreeningBorder">
+                            <StackPanel Spacing="5">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource ThemeColor}"
+                                               FontSize="12"
+                                               FontFamily="{StaticResource FASolid}" Text="&#xf017;" />
+                                    <TextBlock Foreground="{DynamicResource TextColor3}" FontSize="12" Text="上传时间" />
+
+                                </StackPanel>
+                                <u:DateRangePicker
+                                    Classes="FlatRangePicker"
+                                    StartPlaceholderText="开始时间"
+                                    EndPlaceholderText="结束时间"
+                                    DisplayFormat="yyyy-MM-dd"
+                                    SelectedEndDate="{Binding SearchInfo.EndCreationTime,Mode=TwoWay}"
+                                    SelectedStartDate="{Binding SearchInfo.StarCreationTime,Mode=TwoWay}" />
+                            </StackPanel>
+                        </Border>
+                        <!--结果包含-->
+                        <Border Classes="FineScreeningBorder">
+                            <StackPanel Spacing="5">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource ThemeColor}"
+                                               FontSize="12"
+                                               FontFamily="{StaticResource FASolid}" Text="&#xf682;" />
+                                    <TextBlock Foreground="{DynamicResource TextColor3}" FontSize="12" Text="结果二次筛选" />
+
+                                </StackPanel>
+                                <u:MultiComboBox
+                                    PlaceholderText="请选择展示类型"
+                                    Height="30"
+                                    SelectedItems="{Binding Secondary,Mode=TwoWay}"
+                                    HorizontalAlignment="Stretch">
+                                    <u:MultiComboBoxItem>图片</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>文档</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>视频</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>音频</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>压缩包</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>应用</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>系统</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>代码</u:MultiComboBoxItem>
+                                    <u:MultiComboBoxItem>文件夹</u:MultiComboBoxItem>
+                                </u:MultiComboBox>
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
+                </StackPanel>
+            </StackPanel>
+
+        </Border>
+
+        <!--搜索结果-->
+        <Border Classes="SearchResultsBorder">
+            <Panel>
+                <u:LoadingContainer
+                    ZIndex="1"
+                    IsLoading="{Binding !IsLoaded}"
+                    LoadingMessage="搜索中..." />
+                <DockPanel>
+                    <Border Padding="30,20" DockPanel.Dock="Top"
+                            CornerRadius="10,10,0,0" BorderThickness="0,0,0,1"
+                            Transitions="{StaticResource CommonColorTransitions}">
+                        <DockPanel LastChildFill="False" HorizontalSpacing="10">
+                            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" FontSize="18" Text="搜索结果"
+                                       FontWeight="Bold" />
+                            <Border Transitions="{StaticResource CommonColorTransitions}"
+                                    Background="{DynamicResource HomeBg}" Padding="10,4" CornerRadius="50">
+                                <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" FontSize="12"
+                                           HorizontalAlignment="Left"
+                                           FontWeight="600"
+
+                                           Foreground="{DynamicResource SideTextColor}"
+                                           Text="{Binding FileSystemItems.Count, StringFormat='为您找到 {0} 个相关文件'}" />
+                            </Border>
+
+                        </DockPanel>
+                    </Border>
+
+                    <ScrollViewer Transitions="{StaticResource CommonColorTransitions}"
+                                  Background="{DynamicResource HomeBg}" Padding="10">
+                        <Border Padding="0,0,0,36"
+                                ClipToBounds="False">
+                            <ItemsRepeater ClipToBounds="False" ItemsSource="{Binding FileSystemItems}">
+                                <ItemsRepeater.ItemTemplate>
+                                    <DataTemplate>
+                                        <ContentControl Content="{Binding}"/>
+                                               
+                                        
+                                    </DataTemplate>
+                                </ItemsRepeater.ItemTemplate>
+                                <ItemsRepeater.Layout>
+                                    <UniformGridLayout MinItemWidth="150"
+                                                       MinItemHeight="150"
+                                                       MinColumnSpacing="12"
+                                                       MinRowSpacing="12"/>
+                                </ItemsRepeater.Layout>
+                                <ItemsRepeater.DataTemplates>
+                                    <DataTemplate x:DataType="model:UserDirsInfoItem">
+                                        <!--文件夹模板-->
+                                        <Border Focusable="True" DoubleTapped="InputElement_OnDoubleTapped"
+                                                Classes="FileCard">
+                                            <Panel>
+                                                <Button Classes="CardMore">
+                                                    <Button.Flyout>
+                                                        <Flyout ShowMode="Transient" Placement="Bottom"
+                                                                FlyoutPresenterClasses="el-dropdown-menu">
+                                                            <StackPanel Width="130" Spacing="2" Margin="-8,-4"
+                                                                        Button.Click="Button_OnClick">
+                                                                <Button Classes="el-dropdown-item" Content="打开文件夹"
+                                                                        Command="{Binding $parent[UserControl].((vm:SearchPageViewModel)DataContext).OpenFileOrFolderPFolderCommand}"
+                                                                        CommandParameter="{Binding}" />
+                                                                <Border Height="1"
+                                                                        Background="{DynamicResource CheckButtonCheckBg}"
+                                                                        Margin="0,4" />
+                                                                <Button Classes="el-dropdown-item" Content="重命名"
+                                                                        Command="{Binding $parent[UserControl].((vm:SearchPageViewModel)DataContext).EditNameCommand}"
+                                                                        CommandParameter="{Binding}" />
+                                                                <Border Height="1"
+                                                                        Background="{DynamicResource CheckButtonCheckBg}"
+                                                                        Margin="0,4" />
+                                                                <Button Classes="el-dropdown-item"
+                                                                        Command="{Binding $parent[UserControl].((vm:SearchPageViewModel)DataContext).DelFileOrFolderCommand}"
+                                                                        CommandParameter="{Binding}">
+                                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                        <TextBlock
+                                                                            Foreground="{DynamicResource DelColor}"
+                                                                            FontFamily="{StaticResource FASolid}"
+                                                                            Text="&#xf1f8;"
+                                                                            VerticalAlignment="Center" />
+                                                                        <TextBlock
+                                                                            Foreground="{DynamicResource DelColor}"
+                                                                            Text="删除文件夹" VerticalAlignment="Center" />
+                                                                    </StackPanel>
+                                                                </Button>
+
+                                                            </StackPanel>
+                                                        </Flyout>
+                                                    </Button.Flyout>
+                                                </Button>
+
+                                                <!--内容布局-->
+                                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <!-- 图标-->
+                                                    <TextBlock Classes="IconLarge"
+                                                               Foreground="#FACC15"
+                                                               FontFamily="{StaticResource FASolid}"
+                                                               Text="&#xf07b;"
+                                                               HorizontalAlignment="Center" />
+
+                                                    <!--名称-->
+                                                    <TextBlock ToolTip.Tip="{Binding FolderName}"
+                                                               MaxWidth="110"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               FontWeight="SemiBold"
+                                                               FontSize="13"
+                                                               TextAlignment="Center"
+                                                               Margin="0,0,0,4"
+                                                               Text="{Binding FolderName}" />
+
+                                                    <!--时间-->
+                                                    <TextBlock Foreground="{DynamicResource TextColor3}"
+                                                               FontSize="11"
+                                                               TextAlignment="Center"
+                                                               Text="{Binding CreationTime, StringFormat='yyyy/MM/dd HH:mm'}" />
+                                                </StackPanel>
+                                            </Panel>
+                                        </Border>
+
+                                    </DataTemplate>
+
+                                    <DataTemplate x:DataType="model:UserFilesInfoItem">
+                                        <!--文件模板-->
+                                        <Border DoubleTapped="InputElement_OnDoubleTapped2"
+                                                Classes="FileCard">
+                                            <Panel>
+                                                <Button Classes="CardMore">
+                                                    <Button.Flyout>
+                                                        <Flyout ShowMode="TransientWithDismissOnPointerMoveAway"
+                                                                Placement="Bottom"
+                                                                FlyoutPresenterClasses="el-dropdown-menu">
+                                                            <StackPanel Width="130" Spacing="2" Margin="-8,-4"
+                                                                        Button.Click="Button_OnClick">
+                                                                <Button Classes="el-dropdown-item" Content="打开所在位置"
+                                                                        Command="{Binding $parent[UserControl].((vm:SearchPageViewModel)DataContext).OpenFileOrFolderPFolderCommand}"
+                                                                        CommandParameter="{Binding}" />
+                                                                <Border Height="1"
+                                                                        Background="{DynamicResource CheckButtonCheckBg}"
+                                                                        Margin="0,4" />
+                                                                <Button Classes="el-dropdown-item" Content="下载" 
+                                                                        Command="{Binding $parent[UserControl].((vm:SearchPageViewModel)DataContext).DownloadFileCommand}"
+                                                                        CommandParameter="{Binding}" />
+                                                                <Button Classes="el-dropdown-item" Content="复制直链"
+                                                                        Command="{Binding $parent[UserControl].((vm:SearchPageViewModel)DataContext).CopyFileLinkCommand}"
+                                                                        CommandParameter="{Binding}" />
+                                                                <Button Classes="el-dropdown-item" Content="分享"
+                                                                        Command="{Binding $parent[UserControl].((vm:SearchPageViewModel)DataContext).OpenShareFileCommand}"
+                                                                        CommandParameter="{Binding}" />
+                                                                <Border Height="1"
+                                                                        Background="{DynamicResource CheckButtonCheckBg}"
+                                                                        Margin="0,4" />
+                                                                <Button Classes="el-dropdown-item" Content="重命名"
+                                                                        Command="{Binding $parent[UserControl].((vm:SearchPageViewModel)DataContext).EditNameCommand}"
+                                                                        CommandParameter="{Binding}" />
+                                                                <Button Classes="el-dropdown-item" Content="属性"
+                                                                        Command="{Binding $parent[UserControl].((vm:SearchPageViewModel)DataContext).OpenFilePropertiesCommand}"
+                                                                        CommandParameter="{Binding}" />
+                                                                <Border Height="1"
+                                                                        Background="{DynamicResource CheckButtonCheckBg}"
+                                                                        Margin="0,4" />
+                                                                <Button Classes="el-dropdown-item"
+                                                                        Command="{Binding $parent[UserControl].((vm:SearchPageViewModel)DataContext).DelFileOrFolderCommand}"
+                                                                        CommandParameter="{Binding}">
+                                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                        <TextBlock
+                                                                            Foreground="{DynamicResource DelColor}"
+                                                                            FontFamily="{StaticResource FASolid}"
+                                                                            Text="&#xf1f8;"
+                                                                            VerticalAlignment="Center" />
+                                                                        <TextBlock
+                                                                            Foreground="{DynamicResource DelColor}"
+                                                                            Text="删除文件" VerticalAlignment="Center" />
+                                                                    </StackPanel>
+                                                                </Button>
+
+                                                            </StackPanel>
+                                                        </Flyout>
+                                                    </Button.Flyout>
+                                                </Button>
+
+                                                <!-- 内容布局-->
+                                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <!--图标与缩略图容器-->
+                                                    <Panel Margin="0,0,0,15">
+                                                        <!--动态扩展名图标-->
+                                                        <TextBlock x:Name="FallbackIcon"
+                                                                   Classes="IconLarge"
+                                                                   Margin="0"
+                                                                   IsVisible="{Binding #ThumbnailImage.Source, Converter={x:Static ObjectConverters.IsNull}}"
+                                                                   FontFamily="{Binding FileTypeInfo.FontFamilyResource}"
+                                                                   Foreground="{Binding FileTypeInfo.HexColor}"
+                                                                   Text="{Binding FileTypeInfo.IconCode}"
+                                                                   HorizontalAlignment="Center"
+                                                                   VerticalAlignment="Center" />
+
+                                                        <!--图像缩略图-->
+                                                        <Border ClipToBounds="True" CornerRadius="8" Width="56"
+                                                                Height="56"
+                                                                IsVisible="{Binding #ThumbnailImage.Source, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                                            <Image x:Name="ThumbnailImage"
+                                                                   Stretch="UniformToFill"
+                                                                   asyncImageLoader:ImageLoader.Source="{Binding ImageUrl}" />
+                                                        </Border>
+                                                    </Panel>
+
+                                                    <!--文件名-->
+                                                    <TextBlock ToolTip.Tip="{Binding FileName}"
+                                                               MaxWidth="110"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               FontWeight="SemiBold"
+                                                               FontSize="13"
+                                                               TextAlignment="Center"
+                                                               Margin="0,0,0,4"
+                                                               Text="{Binding FileName}" />
+
+                                                    <!--日期-->
+                                                    <TextBlock Foreground="{DynamicResource TextColor3}"
+                                                               FontSize="11"
+                                                               TextAlignment="Center"
+                                                               Text="{Binding CreationTime, StringFormat='yyyy/MM/dd HH:mm'}" />
+                                                </StackPanel>
+                                            </Panel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsRepeater.DataTemplates>
+                            </ItemsRepeater>
+                        </Border>
+
+                    </ScrollViewer>
+                </DockPanel>
+            </Panel>
+
+
+        </Border>
+    </DockPanel>
+
+</UserControl>

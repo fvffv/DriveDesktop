@@ -1,0 +1,68 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:drive_desktop.Components.TemplateControls">
+    
+    <Design.PreviewWith>
+        <controls:DefaultDialog IsOpen="True">
+            <TextBlock Text="这里是塞进来的自定义内容..." Margin="50"/>
+        </controls:DefaultDialog>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|DefaultDialog">
+        <Setter Property="Opacity" Value="0" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="MinWidth" Value="450" />
+        <Setter Property="MinHeight" Value="130" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.2" Easing="CubicEaseOut"/>
+            </Transitions>
+        </Setter>
+        
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <Border Background="#66000000" 
+                            HorizontalAlignment="Stretch" 
+                            VerticalAlignment="Stretch"/>
+                    
+                    <Border x:Name="PART_DialogCard"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource HomeBg}"
+                            CornerRadius="12"
+                            Padding="24"
+                            MinWidth="{TemplateBinding MinWidth}"
+                            MinHeight="{TemplateBinding MinHeight}">
+                        <Border.Effect>
+                            <DropShadowEffect Opacity="0.25" BlurRadius="20" OffsetY="5" />
+                        </Border.Effect>
+                        
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="controls|DefaultDialog /template/ Border#PART_DialogCard">
+        <Setter Property="RenderTransform" Value="translateY(-50px)" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" Easing="CubicEaseOut"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="controls|DefaultDialog:open">
+        <Setter Property="Opacity" Value="1" />
+        <Setter Property="IsHitTestVisible" Value="True" />
+    </Style>
+
+    <Style Selector="controls|DefaultDialog:open /template/ Border#PART_DialogCard">
+        <Setter Property="RenderTransform" Value="translateY(0px)" />
+    </Style>
+</Styles>

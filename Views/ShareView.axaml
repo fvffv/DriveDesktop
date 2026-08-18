@@ -1,0 +1,317 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:u="https://irihi.tech/ursa"
+        xmlns:vm="using:drive_desktop.ViewModels"
+        xmlns:tc="using:drive_desktop.Components.TemplateControls"
+        xmlns:loader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+        x:Class="drive_desktop.Views.ShareView"
+        x:DataType="vm:ShareViewModel"
+        mc:Ignorable="d"
+        d:DesignWidth="960"
+        d:DesignHeight="535"
+        Width="{Binding WindowWidth}"
+        Height="535"
+        MinWidth="560"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        Title="{Binding Name}">
+    <Window.Styles>
+        <Style Selector="TextBlock.KpiWatermark">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="FontFamily" Value="{StaticResource FASolid}" />
+            <Setter Property="Margin" Value="-10,-20,0,0" />
+            <Setter Property="FontSize" Value="200" />
+            <Setter Property="Opacity" Value="0.03" />
+            <Setter Property="RenderTransform" Value="rotate(-15deg) scale(1)" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
+
+        <Style Selector="Button#DownloadButton">
+            <Setter Property="Background" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Margin="9"
+                            Height="52"
+                            Padding="20,0"
+                            Background="{TemplateBinding Background}"
+                            BoxShadow="0 4 12 0 #403B82F6"
+                            CornerRadius="14">
+                        <DockPanel HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   HorizontalSpacing="8">
+                            <TextBlock VerticalAlignment="Center"
+                                       FontFamily="{StaticResource FASolid}"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       Text="&#xf0ed;" />
+                            <TextBlock VerticalAlignment="Center"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       Text="点击即可下载" />
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <Style Selector="Button#DownloadButton:pointerover">
+            <Setter Property="RenderTransform" Value="translateY(-2px)" />
+        </Style>
+        <Style Selector="Button#DownloadButton:pressed">
+            <Setter Property="RenderTransform" Value="translateY(1px)" />
+        </Style>
+    </Window.Styles>
+
+    <Grid ColumnDefinitions="*,Auto">
+        <Border Grid.Column="0"
+                Padding="60,50"
+                Background="{DynamicResource SidebarBg}"
+                Transitions="{StaticResource CommonColorTransitions}">
+            <!--分享者信息-->
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="20">
+                    <!--头像-->
+                    <Border Width="50"
+                            Height="50"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource ThemeColor}"
+                            ClipToBounds="True"
+                            CornerRadius="500">
+                        <Image Stretch="UniformToFill"  loader:ImageLoader.Source="{Binding AvatarUrl}"/>
+                    </Border>
+                    <!--名称 分享日期-->
+                    <StackPanel VerticalAlignment="Center" Spacing="5">
+                        <TextBlock FontSize="18"
+                                   FontWeight="700"
+                                   Text="{Binding PublisherText}" />
+                        <Panel>
+                            <TextBlock VerticalAlignment="Center"
+                                       FontFamily="{StaticResource FASolid}"
+                                       FontSize="13"
+                                       Foreground="{DynamicResource SideTextColor}"
+                                       Text="&#xf017;" />
+                            <TextBlock Margin="20,0,0,0"
+                                       FontSize="13"
+                                       Foreground="{DynamicResource SideTextColor}"
+                                       Text="{Binding PublishedAtText}" />
+                        </Panel>
+                    </StackPanel>
+                </StackPanel>
+
+                <Panel Margin="0,20,0,0">
+                    <!--锁图标-->
+                    <Border Margin="0,0,30,0"
+                            Padding="14,6"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            ZIndex="10"
+                            Background="#f59e0b"
+                            BorderBrush="{DynamicResource SideBarBrColor}"
+                            BorderThickness="2"
+                            CornerRadius="50"
+                            IsVisible="{Binding HasPassword}">
+                        <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                            <TextBlock VerticalAlignment="Center"
+                                       FontFamily="{StaticResource FASolid}"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource TextColor}"
+                                       Text="&#xf023;" />
+                            <TextBlock VerticalAlignment="Center"
+                                       FontSize="12"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource TextColor}"
+                                       Text="提取需要密码" />
+                        </StackPanel>
+                    </Border>
+
+                    <!--资源边框-->
+                    <Border Margin="0,10,0,0"
+                            Padding="25"
+                            Background="{DynamicResource HomeBg}"
+                            BorderBrush="{DynamicResource SideBarBrColor}"
+                            BorderThickness="1"
+                            CornerRadius="20"
+                            Transitions="{StaticResource CommonColorTransitions}">
+                        <StackPanel Orientation="Horizontal" Spacing="20">
+                            <!--资源图标-->
+                            <Border Width="60"
+                                    Height="60"
+                                    Background="{Binding IconInfo.HexColor,Converter={StaticResource ColorToTransparentBrushConverter}}"
+                                    CornerRadius="16">
+                                <TextBlock HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontFamily="{Binding IconInfo.FontFamilyResource}"
+                                           FontSize="28"
+                                           Foreground="{Binding IconInfo.HexColor}"
+                                           Text="{Binding IconInfo.IconCode}" />
+                            </Border>
+
+                            <StackPanel VerticalAlignment="Center" Spacing="8">
+                                <!--文件名-->
+                                <TextBlock Width="280"
+                                           HorizontalAlignment="Left"
+                                           FontSize="16"
+                                           FontWeight="700"
+                                           Text="{Binding Name}"
+                                           TextTrimming="CharacterEllipsis"
+                                           ToolTip.Tip="{Binding Name}" />
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock VerticalAlignment="Center"
+                                               FontFamily="{StaticResource FASolid}"
+                                               FontSize="13"
+                                               Foreground="{DynamicResource SideTextColor}"
+                                               Text="&#xf0a0;" />
+                                    <!--文件大小-->
+                                    <TextBlock VerticalAlignment="Center"
+                                               FontSize="13"
+                                               FontWeight="Bold"
+                                               Foreground="{DynamicResource SideTextColor}"
+                                               Text="{Binding FileSizeText}" />
+                                    <TextBlock Margin="10,0,0,0"
+                                               VerticalAlignment="Center"
+                                               FontFamily="{StaticResource FASolid}"
+                                               FontSize="13"
+                                               Foreground="#ef4444"
+                                               Text="&#xf273;" />
+                                    <!--过期日期-->
+                                    <TextBlock VerticalAlignment="Center"
+                                               FontSize="13"
+                                               FontWeight="Bold"
+                                               Foreground="#ef4444"
+                                               Text="{Binding ExpirationText}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Panel>
+
+                <!--下载按钮-->
+                <Button x:Name="DownloadButton"
+                        Margin="0,40,0,0"
+                        HorizontalAlignment="Stretch"
+                        Command="{Binding DownloadCommand}" />
+
+                <Rectangle Margin="0,40,0,10"
+                           Stroke="{DynamicResource SideBarBrColor}"
+                           StrokeDashArray="4,2"
+                           StrokeThickness="1" />
+                <!--二维码-->
+                <StackPanel Orientation="Horizontal" Spacing="15">
+                    <Border Background="White" CornerRadius="5">
+                        <u:QRCode Width="70"
+                                  Height="70"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  CornerRadius="0"
+                                  Data="{Binding ShareKey,StringFormat='share_{0}'}"
+                                  ErrorCorrection="Medium"
+                                  Foreground="{DynamicResource ThemeColor}"
+                                  SymbolCornerRatio="0" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center" Spacing="10">
+                        <TextBlock FontWeight="Bold" Text="移动端扫码提取" />
+                        <TextBlock FontSize="12"
+                                   Foreground="{DynamicResource SideTextColor}"
+                                   Text="使用手机端扫一扫，即可下载。" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <TextBlock Grid.Column="0" Classes="KpiWatermark" Text="&#xf0ed;" />
+
+        <!--右边发布者寄语-->
+        <Border Grid.Column="1"
+                Width="{Binding IntroductionPanelWidth}"
+                Padding="50"
+                Background="{DynamicResource HomeBg}"
+                BorderBrush="{DynamicResource SideBarBrColor}"
+                BorderThickness="1,0,0,0"
+                IsVisible="{Binding HasIntroduction}">
+            <StackPanel VerticalAlignment="Center" Spacing="30">
+                <TextBlock FontFamily="{StaticResource FASolid}"
+                           FontSize="30"
+                           Foreground="#0078D4"
+                           Opacity="0.5"
+                           Text="&#xf10d;" />
+                <TextBlock FontSize="16"
+                           LineHeight="25"
+                           Text="{Binding Introduction}"
+                           TextWrapping="Wrap" />
+                <Panel>
+                    <Border Width="20"
+                            Height="2"
+                            HorizontalAlignment="Left"
+                            Background="{DynamicResource ThemeColor}" />
+                    <TextBlock Margin="30,0,0,0"
+                               Foreground="{DynamicResource SideTextColor}"
+                               Text="{Binding IntroductionAuthorText}" />
+                </Panel>
+            </StackPanel>
+        </Border>
+        <!--提取码弹窗-->
+        <tc:DefaultDialog Grid.ColumnSpan="2"
+                          ZIndex="100"
+                          MinWidth="400"
+                          IsOpen="{Binding IsPasswordDialogOpen}">
+            <StackPanel Width="350" Spacing="18">
+                <Panel>
+                    <TextBlock FontSize="18"
+                               FontWeight="Bold"
+                               Text="输入提取密码" />
+                    <Button HorizontalAlignment="Right"
+                            Classes="naked"
+                            Command="{Binding CancelPasswordDownloadCommand}">
+                        <TextBlock FontFamily="{StaticResource FASolid}" Text="&#xf00d;" />
+                    </Button>
+                </Panel>
+
+                <TextBlock Foreground="{DynamicResource SideTextColor}"
+                           Text="该分享设置了密码，请输入正确密码后继续下载。"
+                           TextWrapping="Wrap" />
+
+                <tc:DefaultInput HorizontalAlignment="Stretch"
+                                 IconText="&#xf023;"
+                                 IsShowIcon="True"
+                                 IconColor="{DynamicResource ThemeColor}"
+                                 PasswordChar="●"
+                                 Text="{Binding DownloadPassword, Mode=TwoWay}"
+                                 Watermark="请输入提取密码" />
+
+                <TextBlock FontSize="12"
+                           Foreground="#ef4444"
+                           IsVisible="{Binding PasswordValidationMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                           Text="{Binding PasswordValidationMessage}" />
+
+                <StackPanel HorizontalAlignment="Right"
+                            Orientation="Horizontal"
+                            Spacing="10">
+                    <Button Padding="20,8"
+                            Command="{Binding CancelPasswordDownloadCommand}"
+                            Content="取消" />
+                    <Button Padding="20,8"
+                            Background="{DynamicResource ThemeColor}"
+                            Command="{Binding ConfirmPasswordDownloadCommand}"
+                            Content="确认下载"
+                            Foreground="White" />
+                </StackPanel>
+            </StackPanel>
+        </tc:DefaultDialog>
+    </Grid>
+</Window>

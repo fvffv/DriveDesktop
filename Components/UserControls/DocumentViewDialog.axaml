@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:tc="using:drive_desktop.Components.TemplateControls"
+             x:DataType="vm:DocumentViewDialogViewModel"
+             xmlns:docx="clr-namespace:OfficeViewer.Avalonia.Docx;assembly=OfficeViewer.Avalonia"
+             xmlns:pptx="clr-namespace:OfficeViewer.Avalonia.Pptx;assembly=OfficeViewer.Avalonia"
+             xmlns:xlsx="clr-namespace:OfficeViewer.Avalonia.Xlsx;assembly=OfficeViewer.Avalonia"
+             xmlns:pdf="clr-namespace:OfficeViewer.Avalonia.Pdf;assembly=OfficeViewer.Avalonia"
+             xmlns:u="https://irihi.tech/ursa"
+             x:Class="drive_desktop.Components.UserControls.DocumentViewDialog">
+    <UserControl.DataContext>
+        <vm:DocumentViewDialogViewModel />
+    </UserControl.DataContext>
+    <tc:DefaultDialog IsOpen="{Binding IsShowDialog}">
+        <DockPanel Width="1000" Height="800" VerticalSpacing="25">
+            <Panel DockPanel.Dock="Top">
+                <TextBlock FontWeight="Bold" Text="文档预览" FontSize="18" />
+                <Button Classes="naked" HorizontalAlignment="Right" Command="{Binding CloseCommand}">
+                    <TextBlock Classes="close" FontFamily="{StaticResource FASolid}" FontSize="18" Text="&#xf00d;" />
+                </Button>
+            </Panel>
+            <Panel>
+                <u:LoadingContainer ZIndex="1"
+                                    IsLoading="{Binding IsLoaded}"
+                                    LoadingMessage="加载中..." />
+                <ScrollViewer>
+                    <Carousel SelectedIndex="{Binding PageIndex}">
+                        <docx:DocxViewer x:Name="DocxPreview" Document="{Binding DocxDocument}" />
+                        <pptx:PptxViewer x:Name="PptxPreview"
+                                         Document="{Binding PptxDocument}" />
+                        <xlsx:XlsxViewer x:Name="XlsxPreview"
+                                         Document="{Binding XlsxDocument}" />
+                        <pdf:PdfViewer x:Name="PdfPreview"
+                                       Document="{Binding PdfDocument}" />
+                    </Carousel>
+                </ScrollViewer>
+            </Panel>
+        </DockPanel>
+    </tc:DefaultDialog>
+</UserControl>
