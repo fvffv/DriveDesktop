@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using System;
@@ -30,8 +31,17 @@ public partial class AiChat : UserControl
     private bool _isAiChatOpen;
     private int _aiChatAnimationVersion;
     private Point? _aiChatButtonPosition;
+    private ResizeDirection _aiResizeDirection;
+    private IPointer? _aiResizePointer;
+    private Point _aiResizeStartPoint;
+    private double _aiResizeStartWidth;
+    private double _aiResizeStartHeight;
+    private Transitions? _aiChatPanelTransitions;
 
     private const double AiChatExpandedHeight = 600;
+    private const double AiChatMinWidth = 280;
+    private const double AiChatMinHeight = 280;
+    private const double AiChatEdgeMargin = 40;
     private const int AiChatAnimationDurationMilliseconds = 260;
     public AiChat()
     {
@@ -42,6 +52,7 @@ public partial class AiChat : UserControl
         };
         _aiLongPressTimer.Tick += AiLongPressTimer_Tick;
         AiAssistantHost.SizeChanged += AiAssistantHost_SizeChanged;
+        _aiChatPanelTransitions = AiChatPanel.Transitions;
        
     }
    
@@ -160,7 +171,7 @@ public partial class AiChat : UserControl
                     return;
                 }
 
-                AiChatPanel.Height = AiChatExpandedHeight;
+                AiChatPanel.Height = _aiChatExpandedHeight;
                 AiChatPanel.Opacity = 1;
                 Dispatcher.UIThread.Post(
                     AiChatScrollViewer.ScrollToEnd,
@@ -192,6 +203,90 @@ public partial class AiChat : UserControl
         {
             viewModel.SeedAiChatCommand.Execute(null);
         }
+    }
+
+    private double _aiChatExpandedHeight = AiChatExpandedHeight;
+
+    private void AiResizeLeftHandle_PointerPressed(object? sender, PointerPressedEventArgs e) =>
+        BeginAiResize(ResizeDirection.Left, sender, e);
+
+    private void AiResizeBottomHandle_PointerPressed(object? sender, PointerPressedEventArgs e) =>
+        BeginAiResize(ResizeDirection.Bottom, sender, e);
+
+    private void AiResizeBottomLeftHandle_PointerPressed(object? sender, PointerPressedEventArgs e) =>
+        BeginAiResize(ResizeDirection.Left | ResizeDirection.Bottom, sender, e);
+
+    private void BeginAiResize(ResizeDirection direction, object? sender, PointerPressedEventArgs e)
+    {
+        if (sender is not Control handle || !e.GetCurrentPoint(handle).Properties.IsLeftButtonPressed)
+        {
+            return;
+        }
+
+        _aiResizeDirection = direction;
+        _aiResizePointer = e.Pointer;
+        _aiResizeStartPoint = e.GetPosition(AiAssistantCanvas);
+        _aiResizeStartWidth = AiChatPanel.Bounds.Width;
+        _aiResizeStartHeight = AiChatPanel.Bounds.Height;
+        _aiChatButtonPosition ??= AiFloatingButton.TranslatePoint(default, AiAssistantCanvas);
+        AiChatPanel.Transitions = null;
+        e.Pointer.Capture(handle);
+        e.Handled = true;
+    }
+
+    private void AiResizeHandle_PointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (_aiResizePointer is null || !ReferenceEquals(e.Pointer, _aiResizePointer))
+        {
+            return;
+        }
+
+        var point = e.GetPosition(AiAssistantCanvas);
+        var delta = point - _aiResizeStartPoint;
+        var maxWidth = Math.Max(AiChatMinWidth, AiAssistantCanvas.Bounds.Width - AiChatEdgeMargin);
+        var maxHeight = Math.Max(AiChatMinHeight, AiAssistantCanvas.Bounds.Height - AiChatEdgeMargin);
+
+        if (_aiResizeDirection.HasFlag(ResizeDirection.Left))
+        {
+            AiChatPanel.Width = Math.Clamp(
+                _aiResizeStartWidth - delta.X,
+                AiChatMinWidth,
+                maxWidth);
+        }
+
+        if (_aiResizeDirection.HasFlag(ResizeDirection.Bottom))
+        {
+            _aiChatExpandedHeight = Math.Clamp(
+                _aiResizeStartHeight + delta.Y,
+                AiChatMinHeight,
+                maxHeight);
+            AiChatPanel.Height = _aiChatExpandedHeight;
+        }
+
+        e.Handled = true;
+    }
+
+    private void AiResizeHandle_PointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (!ReferenceEquals(e.Pointer, _aiResizePointer))
+        {
+            return;
+        }
+
+        EndAiResize();
+        e.Handled = true;
+    }
+
+    private void AiResizeHandle_PointerCaptureLost(object? sender, PointerCaptureLostEventArgs e) =>
+        EndAiResize();
+
+    private void EndAiResize()
+    {
+        var resizePointer = _aiResizePointer;
+        _aiResizePointer = null;
+        _aiResizeDirection = ResizeDirection.None;
+        resizePointer?.Capture(null);
+        AiChatPanel.Transitions = _aiChatPanelTransitions;
     }
 
     private void AiChatScrollViewer_ScrollChanged(object? sender, ScrollChangedEventArgs e)
@@ -243,5 +338,13 @@ public partial class AiChat : UserControl
         Canvas.SetBottom(AiAssistantHost, double.NaN);
         Canvas.SetLeft(AiAssistantHost, Math.Clamp(left, 0, maxLeft));
         Canvas.SetTop(AiAssistantHost, Math.Clamp(top, 0, maxTop));
+    }
+
+    [Flags]
+    private enum ResizeDirection
+    {
+        None = 0,
+        Left = 1,
+        Bottom = 2
     }
 }

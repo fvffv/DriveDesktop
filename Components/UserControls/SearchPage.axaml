@@ -19,11 +19,11 @@
             <Setter Property="CornerRadius" Value="24" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}" />
-            <Setter Property="Padding" Value="30" />
+            <Setter Property="Padding" Value="30,30,30,20" />
             <Setter Property="Margin" Value="10" />
             <Setter Property="Height" Value="350" />
             <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="ClipToBounds" Value="False" />
             <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
             <Setter Property="Transitions">
                 <Transitions>
@@ -34,7 +34,7 @@
             </Setter>
         </Style>
         <Style Selector="Border.SearchPageBorder2">
-            <Setter Property="Height" Value="150" />
+            <Setter Property="Height" Value="170" />
         </Style>
         <!--搜索按钮-->
         <Style Selector="Button.SeachButton">
@@ -148,16 +148,17 @@
             <Setter Property="Margin" Value="10,10,10,0" />
             <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
             <Setter Property="CornerRadius" Value="24" />
-            <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}" />
+
             <Setter Property="ClipToBounds" Value="True" />
             <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
         </Style>
 
     </UserControl.Styles>
     <DockPanel Margin="20,30">
+        
         <Border Classes="SearchPageBorder" DockPanel.Dock="Top"
                 Classes.SearchPageBorder2="{Binding !#AdvancedSearchButton.IsChecked}">
-            <StackPanel Spacing="10" VerticalAlignment="Top">
+            <StackPanel Spacing="10" VerticalAlignment="Top" ClipToBounds="True">
                 <Grid ColumnSpacing="10" ColumnDefinitions="*,Auto">
                     <!--搜索框-->
                     <tc:DefaultInput Background="{DynamicResource HomeBg}" CornerRadius="16"
@@ -165,7 +166,7 @@
                                      HorizontalAlignment="Stretch" IconFontSize="20"
                                      Watermark="输入文件名、扩展名或关键字搜索全局文件..."
                                      Text="{Binding SearchInfo.Keyword,Mode=TwoWay}"
-                                     Transitions="{StaticResource CommonColorTransitions}"
+                                   
                                      IconColor="{DynamicResource ThemeColor}" IsShowIcon="True" IconText="&#xf002;" />
                     <!--搜索按钮-->
                     <Button Grid.Column="1" Classes="SeachButton" Width="100" Cursor="Hand"
@@ -348,7 +349,7 @@
                     LoadingMessage="搜索中..." />
                 <DockPanel>
                     <Border Padding="30,20" DockPanel.Dock="Top"
-                            CornerRadius="10,10,0,0" BorderThickness="0,0,0,1"
+                            BorderThickness="0,0,0,1"
                             Transitions="{StaticResource CommonColorTransitions}">
                         <DockPanel LastChildFill="False" HorizontalSpacing="10">
                             <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" FontSize="18" Text="搜索结果"
@@ -360,26 +361,26 @@
                                            FontWeight="600"
 
                                            Foreground="{DynamicResource SideTextColor}"
-                                           Text="{Binding FileSystemItems.Count, StringFormat='为您找到 {0} 个相关文件'}" />
+                                           Text="{Binding Number, StringFormat='为您找到 {0} 个相关文件'}" />
                             </Border>
 
                         </DockPanel>
                     </Border>
 
-                    <ScrollViewer Transitions="{StaticResource CommonColorTransitions}"
-                                  Background="{DynamicResource HomeBg}" Padding="10">
+                    <tc:LoadMoreScrollViewer VerticalScrollBarVisibility="Auto" IsLoadMoreEnabled="True" LoadMoreThreshold="50" Transitions="{StaticResource CommonColorTransitions}"
+                                             Background="{DynamicResource HomeBg}" Padding="10"  LoadMoreCommand="{Binding LoadNextPageCommand}">
                         <Border Padding="0,0,0,36"
                                 ClipToBounds="False">
+                            
                             <ItemsRepeater ClipToBounds="False" ItemsSource="{Binding FileSystemItems}">
                                 <ItemsRepeater.ItemTemplate>
                                     <DataTemplate>
                                         <ContentControl Content="{Binding}"/>
-                                               
                                         
                                     </DataTemplate>
                                 </ItemsRepeater.ItemTemplate>
                                 <ItemsRepeater.Layout>
-                                    <UniformGridLayout MinItemWidth="150"
+                                    <UniformGridLayout MinItemWidth="170"
                                                        MinItemHeight="150"
                                                        MinColumnSpacing="12"
                                                        MinRowSpacing="12"/>
@@ -565,7 +566,7 @@
                             </ItemsRepeater>
                         </Border>
 
-                    </ScrollViewer>
+                    </tc:LoadMoreScrollViewer>
                 </DockPanel>
             </Panel>
 

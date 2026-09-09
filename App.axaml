@@ -4,7 +4,7 @@
              xmlns:semi="https://irihi.tech/semi"
              xmlns:u="https://irihi.tech/ursa"
              xmlns:transitionsAndConverter="clr-namespace:drive_desktop.Components.TransitionsAndConverter"
-
+             Name="DriveDesktop"
              RequestedThemeVariant="Light">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
     <Application.Resources>
@@ -33,15 +33,10 @@
                 <!-- 亮色主题 -->
                 <ResourceDictionary x:Key="Light">
                     <BoxShadows x:Key="AllShadow">0 10 30 0 #08000000</BoxShadows>
-                    <Color x:Key="HoverBg">#0f000000</Color>
-                    <Color x:Key="StrongBg">#190078d4</Color>
-                    <Color x:Key="BorderSoft">#14000000</Color>
-                    <Color x:Key="TextBoxBg">#F5F5F7</Color>
                     <Color x:Key="MenuColorBg">#ecf5ff</Color>
                     <Color x:Key="TextColor">Black</Color>
                     <Color x:Key="TextColor2">White</Color>
                     <Color x:Key="TextColor3">#606266</Color>
-                    <Color x:Key="TextColor4">#67696D</Color>
                     <Color x:Key="SideTextColor">#8D9095</Color>
                     <Color x:Key="BrColor">#dcdfe6</Color>
                     <Color x:Key="SideBarBrColor">#eef0f5</Color>
@@ -52,60 +47,74 @@
                     <Color x:Key="HomeBg">#F4F6F9</Color>
                     <Color x:Key="IconColor">#5C5F66</Color>
                     <Color x:Key="IconColor2">#5C5F66</Color>
-                    <Color x:Key="RadioButtonHoverBg">#0c000000</Color>
                     <Color x:Key="RadioButtonCheckBg">#10000000</Color>
                     <Color x:Key="CheckButtonCheckBg">#18000000</Color>
                     <Color x:Key="ThemeColor">#3b82f6</Color>
-                    <Color x:Key="ThemeColor2">White</Color>
                     <Color x:Key="DelColor">#F56C6C</Color>
-                    <Color x:Key="ImgViewButtonBg">#666062</Color>
-                    <BoxShadows x:Key="SidebarShadow">6 0 16 -4 #14000000</BoxShadows>
                     <BoxShadows x:Key="TopShadow">0 4 12 -2 #0D000000, 0 2 6 -1 #08000000</BoxShadows>
                     <SolidColorBrush x:Key="LoginPanelBackgroundBrush" Color="#F9FAFC" />
 
                 </ResourceDictionary>
                 <!-- 暗色主题 -->
                 <ResourceDictionary x:Key="Dark">
-                    <BoxShadows x:Key="AllShadow">0 10 30 0 #40000000</BoxShadows>
-                    <Color x:Key="HoverBg">#0fffffff</Color>
-                    <Color x:Key="StrongBg">#23409eff</Color>
-                    <Color x:Key="BorderSoft">#14ffffff</Color>
-                    <Color x:Key="TextBoxBg">#0F1724</Color>
-                    <Color x:Key="MenuColorBg">#26409EFF</Color>
-                    <Color x:Key="TextColor">White</Color>
-                    <Color x:Key="TextColor2">#131B2E</Color>
-                    <Color x:Key="TextColor3">#CFD3DC</Color>
-                    <Color x:Key="SideTextColor">#94a3b8</Color>
-                    <Color x:Key="SideBarBrColor">#334155</Color>
-                    <Color x:Key="SidebarRadioBg">#334155</Color>
-                    <Color x:Key="SidebarRadioTextHover">#f8fafc</Color>
-                    <Color x:Key="SidebarRadioBgCheck">#21324E</Color>
-                    <Color x:Key="BrColor">#374151</Color>
-                    <Color x:Key="SidebarBg">#1E293B</Color>
-                    <Color x:Key="HomeBg">#131B2E</Color>
-                    <Color x:Key="IconColor">#9CA3AF</Color>
-                    <Color x:Key="IconColor2">#FFFFFF</Color>
-                    <Color x:Key="RadioButtonHoverBg">#0cffffff</Color>
-                    <Color x:Key="RadioButtonCheckBg">#14ffffff</Color>
-                    <Color x:Key="CheckButtonCheckBg">#20ffffff</Color>
-                    <Color x:Key="ThemeColor">#3b82f6</Color>
-                    <Color x:Key="DelColor">#F56C6C</Color>
-                    <Color x:Key="ThemeColor2">#182235</Color>
-                    <Color x:Key="ImgViewButtonBg">#dccfd3</Color>
-                    <BoxShadows x:Key="SidebarShadow">8 0 13 -3 #59000000</BoxShadows>
-                    <BoxShadows x:Key="TopShadow">0 4 20 -2 #40000000, 0 2 8 -1 #26000000</BoxShadows>
-                    <SolidColorBrush x:Key="LoginPanelBackgroundBrush" Color="#131B2E" />
+                    <!-- 阴影 -->
+                    <BoxShadows x:Key="AllShadow">0 10 30 0 #70000000</BoxShadows>
+
+                    <!-- 菜单选中背景：中性深灰 -->
+                    <Color x:Key="MenuColorBg">#383B40</Color>
+
+                    <!-- 文字 -->
+                    <Color x:Key="TextColor">#E8EAED</Color>
+                    <Color x:Key="TextColor2">#181A1D</Color>
+                    <Color x:Key="TextColor3">#D0D3D8</Color>
+                    <Color x:Key="SideTextColor">#969BA3</Color>
+
+                    <!-- 边框 -->
+                    <Color x:Key="SideBarBrColor">#303338</Color>
+                    <Color x:Key="BrColor">#41454B</Color>
+
+                    <!-- 背景 -->
+                    <Color x:Key="SidebarBg">#242629</Color>
+                    <Color x:Key="HomeBg">#181A1D</Color>
+
+                    <!-- 卡片和列表 -->
+                    <Color x:Key="SidebarRadioBg">#2B2E32</Color>
+                    <Color x:Key="SidebarRadioBgCheck">#3A3F46</Color>
+                    <Color x:Key="SidebarRadioTextHover">#F2F3F5</Color>
+
+                    <!-- 图标 -->
+                    <Color x:Key="IconColor">#A5AAB2</Color>
+                    <Color x:Key="IconColor2">#E7E9EC</Color>
+
+                    <!-- 选择状态 -->
+                    <Color x:Key="RadioButtonCheckBg">#20FFFFFF</Color>
+                    <Color x:Key="CheckButtonCheckBg">#2AFFFFFF</Color>
+
+                    <!-- 主色：只保留蓝色 -->
+                    <Color x:Key="ThemeColor">#3B82F6</Color>
+
+                    <!-- 删除/错误 -->
+                    <Color x:Key="DelColor">#F05F72</Color>
+
+                    <!-- 顶部阴影 -->
+                    <BoxShadows x:Key="TopShadow">0 4 20 -2 #70000000,0 2 8 -1 #45000000</BoxShadows>
+
+                    <!-- 登录背景 -->
+                    <SolidColorBrush x:Key="LoginPanelBackgroundBrush"
+                                     Color="#181A1D" />
                 </ResourceDictionary>
 
             </ResourceDictionary.ThemeDictionaries>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="avares://LiveMarkdown.Avalonia/Defaults.axaml" />
+                <ResourceInclude Source="avares://NativeMedia.Avalonia/Themes/Generic.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
     <Application.Styles>
         <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
         <StyleInclude Source="avares://LiveMarkdown.Avalonia/Styles.axaml" />
+        
         <!--设置默认字体-->
         <Style Selector="Window">
             <Setter Property="FontFamily" Value="Microsoft YaHei UI,Simsun,苹方-简,宋体-简" />
@@ -231,7 +240,7 @@
             <Setter Property="Margin" Value="2,5" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="20" />
-
+            
             <Setter Property="RenderTransform" Value="translateY(0px)" />
             <Setter Property="BoxShadow" Value="0 4 6 -1 #05000000, 0 2 4 -1 #05000000" />
             <Setter Property="Transitions">

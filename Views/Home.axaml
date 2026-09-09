@@ -3,13 +3,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Width="1520"
-        Height="1000"
+        Width="1420"
+        Height="900"
         MinWidth="960"
         MinHeight="600"
         xmlns:chrome="using:Avalonia.Controls.Chrome"
         d:DesignWidth="1200"
         d:DesignHeight="800"
+        Icon="avares://drive-desktop/Assets/avalonia-logo.ico"
         WindowStartupLocation="CenterScreen"
         xmlns:uc="using:drive_desktop.Components.UserControls"
         x:Class="drive_desktop.Views.Home"
@@ -17,22 +18,31 @@
         xmlns:vm="using:drive_desktop.ViewModels"
         xmlns:model="using:drive_desktop.Models"
         xmlns:u="https://irihi.tech/ursa"
-        Background="Transparent"
+        Background="{DynamicResource HomeBg}"
         xmlns:transitionsAndConverter="clr-namespace:drive_desktop.Components.TransitionsAndConverter"
         xmlns:templateControls="clr-namespace:drive_desktop.Components.TemplateControls"
         xmlns:avalonia="clr-namespace:LiveMarkdown.Avalonia;assembly=LiveMarkdown.Avalonia"
         WindowDecorations="Full"
         CanResize="True"
         CanMinimize="True"
+        
         x:Name="HomeWindow"
         CanMaximize="True"
         Title="网盘首页">
     <Design.DataContext>
         <vm:HomeViewModel />
     </Design.DataContext>
+    <Window.Transitions>
+        <Transitions>
+            <BrushTransition Property="Background" Duration="0:0:0.3"
+                             Easing="CubicEaseOut" />
+
+
+        </Transitions>
+    </Window.Transitions>
     <Window.Styles>
         <Style Selector="Border.ContentShow">
-            <Setter Property="Background" Value="{DynamicResource HomeBg}" />
+
             <Setter Property="BoxShadow" Value="{DynamicResource TopShadow}" />
             <Setter Property="Transitions">
                 <Transitions>
@@ -73,6 +83,8 @@
             <Setter Property="BoxShadow" Value="0 20 50 0 #1A000000" />
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="ZIndex" Value="90" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SideBarBrColor}" />
             <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
             <Setter Property="Width" Value="340" />
             <Setter Property="Padding" Value="24" />
@@ -80,6 +92,8 @@
             <Setter Property="Transitions">
                 <Transitions>
                     <BrushTransition Property="Background" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3"
                                      Easing="CubicEaseOut" />
                     <TransformOperationsTransition Property="RenderTransform"
                                                    Duration="0:0:0.8"
@@ -102,7 +116,7 @@
             <Setter Property="Opacity" Value="0" />
             <Setter Property="Transitions">
                 <Transitions>
-                    <!-- 此时只需要对数字 (Opacity) 做渐变，极其平滑且无性能损耗 -->
+             
                     <DoubleTransition Property="Opacity" Duration="0:0:0.3" Easing="CubicEaseOut" />
                 </Transitions>
             </Setter>
@@ -232,7 +246,8 @@
             </Setter>
 
         </Style>
-        <Style Selector="Border.SearchBorderShow">
+        <!-- SearchBorderShow 由 ViewModel 控制：显示立即，隐藏延迟 2 秒 -->
+        <Style Selector="Border.SearchBorder.SearchBorderShow">
             <Setter Property="RenderTransform" Value="translate(0px, 0px)" />
             <Setter Property="IsHitTestVisible" Value="True" />
             <Setter Property="Opacity" Value="1" />
@@ -388,24 +403,24 @@
             <Setter Property="RenderTransform" Value="translateY(1px)" />
         </Style>
     </Window.Styles>
-    <Panel>
-        <Grid ColumnDefinitions="258,*" RowDefinitions="Auto,*">
+    <Panel >
+        <Grid  ColumnDefinitions="Auto,*" >
             <uc:Sidebar Grid.RowSpan="2" DataContext="{Binding SidebarVM}" />
             <!--全局遮罩  用来失去焦点-->
-            <Border Grid.Row="1"
+            <Border 
                     ZIndex="89"
                     Grid.Column="1"
                     Background="Transparent"
                     IsVisible="{Binding UpLoadShow}"
                     PointerPressed="Mask_PointerPressed" />
-            <Border Grid.Row="1"
+            <Border 
                     ZIndex="89"
                     Grid.Column="1"
                     Background="Transparent"
                     IsVisible="{Binding FastSearchShow}"
                     PointerPressed="Mask2_PointerPressed" />
             <!--上传区-->
-            <Border Grid.Row="1" Grid.Column="1" Classes="UploadBorder"
+            <Border Grid.Column="1" Classes="UploadBorder"
                     Classes.UploadBorderShow="{Binding UpLoadShow}">
                 <StackPanel>
                     <Border DragDrop.AllowDrop="True" DragDrop.Drop="UploadBorder_Drop" Cursor="Hand"
@@ -475,8 +490,8 @@
                 </StackPanel>
             </Border>
             <!--快捷搜索区-->
-            <Border Grid.Row="1" Grid.Column="1" Classes="SearchBorder"
-                    Classes.SearchBorderShow="{Binding TopBarViewModel.SearchIsfocus}">
+            <Border  Grid.Column="1" Classes="SearchBorder"
+                    Classes.SearchBorderShow="{Binding TopBarViewModel.SearchBorderShow}">
                 <DockPanel>
                     <!--文件分享按钮-->
                     <Button DockPanel.Dock="Top"
@@ -526,7 +541,7 @@
                 </DockPanel>
 
             </Border>
-            <Border Grid.Row="1" Grid.Column="1" Classes="ContentShow">
+            <Border  Grid.Column="1" Classes="ContentShow">
                 <Carousel SelectedIndex="{Binding PageIndex}">
                     <Carousel.PageTransition>
                         <transitionsAndConverter:SequentialFadeTransition Duration="0:0:0.1" />
@@ -543,6 +558,7 @@
 
      
         <uc:AiChat DataContext="{Binding AiChatViewModel}" />
+        <uc:MusicDialog ClipToBounds="False" HorizontalAlignment="Center" Margin="0,0,0,20" VerticalAlignment="Bottom" DataContext="{Binding MusicDialogViewModel}" />
         <uc:CustomViewEdit DataContext="{Binding CustomViewEditViewModel}" />
         <uc:NewFolderDialog DataContext="{Binding NewFolderDialogViewModel}" />
         <uc:MoveFilesDialog DataContext="{Binding MoveFilesViewModel}" />

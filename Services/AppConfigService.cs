@@ -40,6 +40,14 @@ public class AppConfigService
                 Config = JsonSerializer.Deserialize(json, AppConfigJsonContext.Default.AppConfigModel)
                          ?? new AppConfigModel();
             }
+
+
+            if (!Directory.Exists(Config.DownloadLocation))
+            {
+                var path = Path.Combine(Path.Combine(AppContext.BaseDirectory, "Downloads"));
+                Directory.CreateDirectory(path);
+                Config.DownloadLocation = path;
+            }
         }
         catch (Exception ex)
         {
@@ -55,7 +63,7 @@ public class AppConfigService
     {
         var options = new JsonSerializerOptions
         {
-            WriteIndented = true // 让生成的 json 有换行和缩进，方便人类阅读
+            WriteIndented = true // 格式化，方便阅读
         };
 
 
@@ -140,6 +148,7 @@ public class AppConfigModel
 [JsonSerializable(typeof(DefaultMsg<FileShareInfoDto>))]
 [JsonSerializable(typeof(DefaultMsg<ShareInfoPrivateDto[]>))]
 [JsonSerializable(typeof(DefaultMsg<DashboardStatisticsDto>))]
+[JsonSerializable(typeof(AiChatRequest))]
 [JsonSerializable(typeof(AiChatRequest))]
 internal partial class AppConfigJsonContext : JsonSerializerContext
 {

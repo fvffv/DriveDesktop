@@ -10,6 +10,7 @@
         x:DataType="vm:ShareViewModel"
         mc:Ignorable="d"
         d:DesignWidth="960"
+        Icon="avares://drive-desktop/Assets/avalonia-logo.ico"
         d:DesignHeight="535"
         Width="{Binding WindowWidth}"
         Height="535"

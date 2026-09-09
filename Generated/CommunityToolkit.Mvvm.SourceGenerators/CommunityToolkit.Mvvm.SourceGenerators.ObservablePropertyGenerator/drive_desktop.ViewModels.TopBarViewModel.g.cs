@@ -115,6 +115,27 @@ namespace drive_desktop.ViewModels
             }
         }
 
+        /// <inheritdoc cref="_searchBorderShow"/>
+        [global::System.CodeDom.Compiler.GeneratedCode("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator", "8.4.0.0")]
+        [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        public bool SearchBorderShow
+        {
+            get => _searchBorderShow;
+            set
+            {
+                if (!global::System.Collections.Generic.EqualityComparer<bool>.Default.Equals(_searchBorderShow, value))
+                {
+                    OnSearchBorderShowChanging(value);
+                    OnSearchBorderShowChanging(default, value);
+                    OnPropertyChanging(global::CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SearchBorderShow);
+                    _searchBorderShow = value;
+                    OnSearchBorderShowChanged(value);
+                    OnSearchBorderShowChanged(default, value);
+                    OnPropertyChanged(global::CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SearchBorderShow);
+                }
+            }
+        }
+
         /// <inheritdoc cref="_isShowBorder"/>
         [global::System.CodeDom.Compiler.GeneratedCode("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator", "8.4.0.0")]
         [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
@@ -268,6 +289,28 @@ namespace drive_desktop.ViewModels
         /// <remarks>This method is invoked right after the value of <see cref="SearchIsfocus"/> is changed.</remarks>
         [global::System.CodeDom.Compiler.GeneratedCode("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator", "8.4.0.0")]
         partial void OnSearchIsfocusChanged(bool oldValue, bool newValue);
+        /// <summary>Executes the logic for when <see cref="SearchBorderShow"/> is changing.</summary>
+        /// <param name="value">The new property value being set.</param>
+        /// <remarks>This method is invoked right before the value of <see cref="SearchBorderShow"/> is changed.</remarks>
+        [global::System.CodeDom.Compiler.GeneratedCode("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator", "8.4.0.0")]
+        partial void OnSearchBorderShowChanging(bool value);
+        /// <summary>Executes the logic for when <see cref="SearchBorderShow"/> is changing.</summary>
+        /// <param name="oldValue">The previous property value that is being replaced.</param>
+        /// <param name="newValue">The new property value being set.</param>
+        /// <remarks>This method is invoked right before the value of <see cref="SearchBorderShow"/> is changed.</remarks>
+        [global::System.CodeDom.Compiler.GeneratedCode("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator", "8.4.0.0")]
+        partial void OnSearchBorderShowChanging(bool oldValue, bool newValue);
+        /// <summary>Executes the logic for when <see cref="SearchBorderShow"/> just changed.</summary>
+        /// <param name="value">The new property value that was set.</param>
+        /// <remarks>This method is invoked right after the value of <see cref="SearchBorderShow"/> is changed.</remarks>
+        [global::System.CodeDom.Compiler.GeneratedCode("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator", "8.4.0.0")]
+        partial void OnSearchBorderShowChanged(bool value);
+        /// <summary>Executes the logic for when <see cref="SearchBorderShow"/> just changed.</summary>
+        /// <param name="oldValue">The previous property value that was replaced.</param>
+        /// <param name="newValue">The new property value that was set.</param>
+        /// <remarks>This method is invoked right after the value of <see cref="SearchBorderShow"/> is changed.</remarks>
+        [global::System.CodeDom.Compiler.GeneratedCode("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator", "8.4.0.0")]
+        partial void OnSearchBorderShowChanged(bool oldValue, bool newValue);
         /// <summary>Executes the logic for when <see cref="IsShowBorder"/> is changing.</summary>
         /// <param name="value">The new property value being set.</param>
         /// <remarks>This method is invoked right before the value of <see cref="IsShowBorder"/> is changed.</remarks>

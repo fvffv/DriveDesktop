@@ -195,7 +195,7 @@
                 <!--搜索-->
                 <TextBox ClipToBounds="True" Classes="ModernSearchBox"
                          Padding="0,0,10,0"
-                         PlaceholderText="语义搜索文件..."
+                         PlaceholderText="搜索文件或分享链接..."
                          IsFocused="{Binding SearchIsfocus,Mode=OneWayToSource}"
                          Text="{Binding SearchContent}" />
                 
@@ -213,7 +213,7 @@
                         BorderThickness="1">
 
                     <Border.Background>
-                        <ImageBrush  Source="{Binding HeadImg}" Stretch="UniformToFill" />
+                        <ImageBrush  Source="{Binding UserInfoService.UserHead}" Stretch="UniformToFill" />
                     </Border.Background>
 
                 </Border>

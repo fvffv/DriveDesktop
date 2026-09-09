@@ -8,7 +8,7 @@
              xmlns:tc="using:drive_desktop.Components.TemplateControls"
              xmlns:u="https://irihi.tech/ursa"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             Background="{DynamicResource HomeBg}"
+   
              xmlns:model="using:drive_desktop.Models"
              xmlns:transitionsAndConverter="clr-namespace:drive_desktop.Components.TransitionsAndConverter"
              x:Class="drive_desktop.Components.UserControls.FileTransmission">
@@ -229,8 +229,7 @@
 
 
     <Grid ColumnDefinitions="*,Auto" ClipToBounds="False">
-        <Border ClipToBounds="False" Padding="30,25" Background="{DynamicResource HomeBg}"
-                Transitions="{StaticResource CommonColorTransitions}">
+        <Border ClipToBounds="False" Padding="30,25" >
             <DockPanel ClipToBounds="False">
                 <TextBlock DockPanel.Dock="Top" Text="传输管理" FontSize="24" FontWeight="700" />
                 <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" Text="Welcome back, 您将在这里管理您的传输任务" Classes="Title" />

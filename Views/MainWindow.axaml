@@ -31,9 +31,77 @@
         <Style Selector="Panel.Bg">
             <Setter Property="Transitions">
                 <Transitions>
-                    <BrushTransition Property="Background" Duration="0:0:0.2" />
+                    <BrushTransition Property="Background" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
                 </Transitions>
             </Setter>
+        </Style>
+
+        <Style Selector="Border#LoginSwitchBorder[Tag=0] TextBlock#LoginSwitchBorderLoginTitle">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="Border#LoginSwitchBorder[Tag=1] TextBlock#LoginSwitchBorderRegTitle">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="Border#LoginSwitchBorderBg">
+            <Setter Property="RenderTransform" Value="translate(0, 0)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform"
+                                                   Duration="0:0:1.5"
+                                                   Easing="ElasticEaseOut" />
+                    <BrushTransition Property="Background" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border#LoginSwitchBorder[Tag=1] Border#LoginSwitchBorderBg">
+            <Setter Property="RenderTransform" Value="translate(170px, 0)" />
+        </Style>
+
+
+        <Style Selector="TextBlock#LoginSwitchBorderLoginTitle">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="700" />
+            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
+        </Style>
+        <Style Selector="TextBlock#LoginSwitchBorderRegTitle">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="700" />
+            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
+        </Style>
+        <Style Selector="Button.LoginButton">
+            <Setter Property="ClipToBounds" Value="False"></Setter>
+            <Setter Property="Background" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Margin="9" BoxShadow="0 4 12 0 #403B82F6" Height="{TemplateBinding Height}"
+                            CornerRadius="14"
+
+                            Padding="20,0" Background="{TemplateBinding Background}">
+                        <DockPanel HorizontalSpacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource FASolid}" FontSize="13"
+                                       Foreground="White" Text="{TemplateBinding Tag}" />
+                            <TextBlock VerticalAlignment="Center" Foreground="White" FontWeight="Bold"
+                                       Text="{TemplateBinding Content}" />
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button#LoginButton:pointerover">
+            <Setter Property="RenderTransform" Value="translateY(-2px)" />
+        </Style>
+        <Style Selector="Button#LoginButton:pressed">
+            <Setter Property="RenderTransform" Value="translateY(1px)" />
         </Style>
     </Window.Styles>
 
@@ -41,102 +109,141 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="9*,7*">
+    <Grid ColumnDefinitions="8*,7*">
         <!--左-->
         <Panel Grid.Column="0">
-            <Image ZIndex="-1" Source="../Assets/ViewAssets/login.webp" Stretch="UniformToFill" />
-            <Border Padding="40">
-                <StackPanel Width="440" Spacing="40">
-                    <TextBlock Foreground="White"
-                               FontFamily="{StaticResource FASolid}"
-                               Text="&#xf0c2;"
-                               FontSize="40" />
+            <Panel.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                    <GradientStop Offset="0" Color="#0078D4" />
+                    <GradientStop Offset="1" Color="#005A9E" />
+                </LinearGradientBrush>
+            </Panel.Background>
 
-                    <TextBlock Classes="default-shadow"
-                               Foreground="White"
-                               Text="您的专属云端空间"
-                               FontSize="40"
-                               FontWeight="Bold" />
+            <Grid>
+                <Image Source="avares://drive-desktop/Assets/ViewAssets/login.jpg"
+                       Stretch="UniformToFill" />
 
-                    <TextBlock Classes="default-shadow"
-                               Foreground="White"
-                               Text="安全、高效，随时随地访问您的文件。"
-                               FontSize="16" />
-                </StackPanel>
 
-            </Border>
+                <DockPanel LastChildFill="False" Margin="50">
+                    <!--Logo-->
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="12">
+                        <TextBlock Foreground="White" Text="&#xf0c2;" VerticalAlignment="Center" FontSize="30"
+                                   FontFamily="{StaticResource FASolid}" />
+                        <TextBlock Text="星云网盘" FontSize="24" FontWeight="ExtraBold" Foreground="White" />
+                    </StackPanel>
+
+                    <Border BoxShadow="0 20 40 0 #26000000" DockPanel.Dock="Bottom" Padding="40" CornerRadius="24"
+                            BorderThickness="1" BorderBrush="#33FFFFFF">
+                        <Border.Background>
+                            <SolidColorBrush Color="White" Opacity="0.1" />
+                        </Border.Background>
+
+                        <StackPanel>
+                            <TextBlock Text="安全、极速的&#x0a;云端数据中心" FontSize="32" FontWeight="ExtraBold"
+                                       Foreground="White" LineHeight="42" Margin="0,0,0,15" />
+                            <TextBlock Text="随时随地管理您的文件，支持全平台跨设备无缝同步与高速分享。加入云盘，释放本地存储压力。" FontSize="15"
+                                       Foreground="#E5FFFFFF" TextWrapping="Wrap" LineHeight="24" />
+                        </StackPanel>
+                    </Border>
+                </DockPanel>
+            </Grid>
+
+
         </Panel>
         <!--右-->
 
-        <Panel Classes="Bg" Grid.Column="1" Background="{DynamicResource LoginPanelBackgroundBrush}">
+        <Panel Classes="Bg" Grid.Column="1" Background="{DynamicResource SidebarBg}">
             <uc:ThemeSwitch HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"
                             DataContext="{Binding ThemeSwitchVM}" />
-            <Carousel SelectedIndex="{Binding CurrentPageIndex}">
-                <Carousel.PageTransition>
-                    <anim:SequentialFadeTransition Duration="0:0:0.2" />
-                </Carousel.PageTransition>
-                <!--登录-->
-                <StackPanel Margin="40" VerticalAlignment="Center">
-                    <TextBlock HorizontalAlignment="Center" Foreground="{DynamicResource TextColor}" FontWeight="Bold"
-                               FontSize="32">
-                        欢迎回来
-                    </TextBlock>
-                    <TextBlock Margin="0,18,0,20" HorizontalAlignment="Center" FontSize="16" Foreground="#6b7280">登录以继续</TextBlock>
-                    <tc:DefaultInput IconText="&#xf007;" Watermark="电子邮箱/用户名" Margin="0,10,0,10"
-                                     Text="{Binding LoginInfoModel.UsernameOrEmail}" />
-                    <tc:DefaultInput IconText="&#xf023;" Watermark="密码" PasswordChar="*" Margin="0,10,0,10"
-                                     Text="{Binding LoginInfoModel.Password}" />
-                    <tc:DefaultButton Icon="&#xf2f6;" Margin="0,20,0,20" Text="{Binding LoginButtonStatus.Title}"
-                                      IsEnabled="{Binding LoginButtonStatus.IsEnabled}"
-                                      IsLoading="{Binding LoginButtonStatus.IsLoading}"
-                                      ActionCommand="{Binding LoginCommand}" />
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Foreground="#6b7280" Text="还没有账户?   " />
-                        <Button Classes="naked" Command="{Binding TogglePageCommand}">
-                            <TextBlock Foreground="{DynamicResource ThemeColor}" FontWeight="Bold">立即注册</TextBlock>
-                        </Button>
+            <StackPanel VerticalAlignment="Top">
+                <!--切换登录注册区域-->
+                <Border x:Name="LoginSwitchBorder" Tag="{Binding CurrentPageIndex}"
+                        Transitions="{DynamicResource CommonColorTransitions}" Height="60" Margin="40,40,40,0"
+                        Background="{DynamicResource HomeBg}" CornerRadius="16" Padding="6">
+                    <Panel>
+                        <Border BoxShadow="{DynamicResource AllShadow}" x:Name="LoginSwitchBorderBg"
+                                HorizontalAlignment="Left" Width="185"
+                                Background="{DynamicResource SidebarBg}" CornerRadius="16" />
+                        <Grid ColumnDefinitions="*,*">
+                            <Button Command="{Binding TogglePageCommand}" CommandParameter="0"
+                                    HorizontalAlignment="Center"
+                                    DockPanel.Dock="Left" Classes="naked">
+                                <TextBlock x:Name="LoginSwitchBorderLoginTitle" Text="登录" />
+                            </Button>
+                            <Button Command="{Binding TogglePageCommand}" CommandParameter="1"
+                                    HorizontalAlignment="Center" Grid.Column="1"
+                                    DockPanel.Dock="Right" Classes="naked">
+                                <TextBlock x:Name="LoginSwitchBorderRegTitle" Text="注册账号" />
+                            </Button>
+                        </Grid>
+                    </Panel>
+                </Border>
+                <Carousel SelectedIndex="{Binding CurrentPageIndex}">
+                    <Carousel.PageTransition>
+                        <anim:SequentialFadeTransition Duration="0:0:0.2" />
+                    </Carousel.PageTransition>
+                    <!--登录-->
+                    <StackPanel Margin="40" VerticalAlignment="Top">
 
+                        <TextBlock HorizontalAlignment="Left" Foreground="{DynamicResource TextColor}"
+                                   FontWeight="Bold"
+                                   FontSize="28" Text="欢迎回来" />
+                        <TextBlock Margin="0,18,0,20" HorizontalAlignment="Left" FontSize="16"
+                                   Foreground="{DynamicResource SideTextColor}"
+                                   Text="输入您的账号和密码以继续访问控制台" />
+                        <tc:DefaultInput IconColor="{DynamicResource SideTextColor}" IsShowIcon="True"
+                                         Background="{DynamicResource HomeBg}" IconText="&#xf007;" Watermark="电子邮箱/用户名"
+                                         Margin="0,10,0,10"
+                                         Text="{Binding LoginInfoModel.UsernameOrEmail}" />
+                        <tc:DefaultInput IconColor="{DynamicResource SideTextColor}" IsShowIcon="True"
+                                         Background="{DynamicResource HomeBg}" IconText="&#xf023;" Watermark="密码"
+                                         PasswordChar="*" Margin="0,10,0,10"
+                                         Text="{Binding LoginInfoModel.Password}" />
+
+                        <Button Margin="0,20,0,0"
+                                Height="50"
+                                HorizontalAlignment="Stretch"
+                                Classes="LoginButton" Tag="&#xf090;" Content="进入网盘" Command="{Binding LoginCommand}" />
                     </StackPanel>
-                </StackPanel>
 
-                <!--注册-->
-                <StackPanel Margin="40" VerticalAlignment="Center">
-                    <TextBlock HorizontalAlignment="Center" Foreground="{DynamicResource TextColor}" FontWeight="Bold"
-                               FontSize="32">
-                        创建账户
-                    </TextBlock>
-                    <TextBlock Margin="0,18,0,20" HorizontalAlignment="Center" FontSize="16" Foreground="#6b7280">开启您的云端之旅</TextBlock>
-                    <tc:DefaultInput IconText="&#xf007;" Watermark="用户名" Margin="0,10,0,10"
-                                     Text="{Binding UserRegInfoModel.UserName}" />
-                    <tc:DefaultInput IconText="&#xf0e0;" Watermark="电子邮箱" Margin="0,10,0,10"
-                                     Text="{Binding UserRegInfoModel.Email}" />
-                    <Grid ColumnDefinitions="*, 120">
-                        <tc:DefaultInput IconText="&#xf3ed;" Watermark="验证码" Margin="0,10,10,10"
-                                         Text="{Binding UserRegInfoModel.Code}" />
-                        <tc:DefaultButton Theme="{DynamicResource OutlineIconButton}"
-                                          Foreground="{DynamicResource ThemeColor}" Grid.Column="1" Icon="&#xf0e0;"
-                                          Margin="0,10,0,10" Text="{Binding CodeButtonStatus.Title}"
-                                          IsLoading="{Binding CodeButtonStatus.IsLoading}"
-                                          IsEnabled="{Binding CodeButtonStatus.IsEnabled}"
-                                          ActionCommand="{Binding SendCaptchaCommand}" />
+                    <!--注册-->
+                    <StackPanel Margin="40" VerticalAlignment="Top">
+                        <TextBlock HorizontalAlignment="Left" Foreground="{DynamicResource TextColor}"
+                                   FontWeight="Bold"
+                                   FontSize="28" Text="创建新账号" />
+                        <TextBlock Margin="0,18,0,20" HorizontalAlignment="Left" FontSize="16"
+                                   Foreground="{DynamicResource SideTextColor}" Text="只需几步，即可开启您的云端自由之旅" />
+                        <tc:DefaultInput Background="{DynamicResource HomeBg}" IconColor="{DynamicResource SideTextColor}" IsShowIcon="True"
+                                         IconText="&#xf007;" Watermark="用户名" Margin="0,10,0,10"
+                                         Text="{Binding UserRegInfoModel.UserName}" />
+                        <tc:DefaultInput Background="{DynamicResource HomeBg}" IconColor="{DynamicResource SideTextColor}" IsShowIcon="True"
+                                         IconText="&#xf0e0;" Watermark="电子邮箱" Margin="0,10,0,10"
+                                         Text="{Binding UserRegInfoModel.Email}" />
+                        <Grid ColumnDefinitions="*, 120">
+                            <tc:DefaultInput Background="{DynamicResource HomeBg}" IconColor="{DynamicResource SideTextColor}" IsShowIcon="True"
+                                             IconText="&#xf3ed;" Watermark="验证码" Margin="0,10,10,10"
+                                             Text="{Binding UserRegInfoModel.Code}" />
+                            <tc:DefaultButton Theme="{DynamicResource OutlineIconButton}"
+                                              Foreground="{DynamicResource ThemeColor}" Grid.Column="1" Icon="&#xf0e0;"
+                                              Margin="0,10,0,10" Text="{Binding CodeButtonStatus.Title}"
+                                              IsLoading="{Binding CodeButtonStatus.IsLoading}"
+                                              IsEnabled="{Binding CodeButtonStatus.IsEnabled}"
+                                              ActionCommand="{Binding SendCaptchaCommand}" />
 
-                    </Grid>
-                    <tc:DefaultInput IconText="&#xf3ed;" Watermark="设置密码" PasswordChar="*" Margin="0,10,0,10"
-                                     Text="{Binding UserRegInfoModel.Password}" />
-                    <tc:DefaultButton Icon="&#xf2f6;" Margin="0,20,0,20" Text="{Binding RegButtonStatus.Title}"
-                                      IsLoading="{Binding RegButtonStatus.IsLoading}"
-                                      IsEnabled="{Binding RegButtonStatus.IsEnabled}" ActionCommand="{Binding RegisterCommand}" />
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Foreground="#6b7280" Text="已有账户?   " />
-                        <Button Classes="naked" Command="{Binding TogglePageCommand}">
-                            <TextBlock Foreground="{DynamicResource ThemeColor}" FontWeight="Bold">返回登陆</TextBlock>
-                        </Button>
+                        </Grid>
+                        <tc:DefaultInput Background="{DynamicResource HomeBg}" IconColor="{DynamicResource SideTextColor}" IsShowIcon="True"
+                                         IconText="&#xf3ed;" Watermark="设置密码" PasswordChar="*" Margin="0,10,0,10"
+                                         Text="{Binding UserRegInfoModel.Password}" />
+                        <Button Margin="0,10,0,0"
+                                Height="50"
+                                HorizontalAlignment="Stretch"
+                                Classes="LoginButton" Tag="&#xf234;" Content="注册账户" Command="{Binding RegisterCommand}" />
 
+             
                     </StackPanel>
-                </StackPanel>
 
-            </Carousel>
-
+                </Carousel>
+            </StackPanel>
 
         </Panel>
     </Grid>

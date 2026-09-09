@@ -1,0 +1,184 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:drive_desktop.ViewModels"
+             x:DataType="vm:MusicDialogViewModel"
+             xmlns:media="using:NativeMedia.Avalonia"
+             x:Class="drive_desktop.Components.UserControls.MusicDialog">
+    <UserControl.DataContext>
+        <vm:MusicDialogViewModel />
+    </UserControl.DataContext>
+    <UserControl.Styles>
+        <Style Selector="Border.MusicBorder">
+            <Setter Property="Tag" Value="{Binding IsOpen}" />
+            <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="CornerRadius" Value="90" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SideBarBrColor}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="20,16" />
+            <Setter Property="RenderTransform" Value="Scale(0.5,0.5) translate(0px, 35px)" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Height" Value="80" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.3"
+                                      Easing="CubicEaseOut" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                    <TransformOperationsTransition Property="RenderTransform"
+                                                   Duration="0:0:0.3"
+                                                   Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.MusicBorder[Tag=True]">
+            <Setter Property="RenderTransform" Value="Scale(1,1) translate(0px, 0px)" />
+            <Setter Property="Opacity" Value="1" />
+
+        </Style>
+        <Style Selector="Border.MusicBorder:pointerover">
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+        </Style>
+        <Style Selector="ToggleButton.MusicPlayButton">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="ClipToBounds" Value="False" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Classes="MusicPlayButtonBorder">
+                        <TextBlock Foreground="White" FontSize="17" HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" FontFamily="{StaticResource FASolid}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="ToggleButton.MusicPlayButton[IsChecked=False] /template/ TextBlock">
+            <Setter Property="Text" Value="&#xf04b;" />
+        </Style>
+        <Style Selector="ToggleButton.MusicPlayButton[IsChecked=True] /template/ TextBlock">
+            <Setter Property="Text" Value="&#xf04c;" />
+        </Style>
+        <Style Selector="Border.MusicPlayButtonBorder">
+            <Setter Property="Height" Value="42" />
+            <Setter Property="Width" Value="42" />
+            <Setter Property="BoxShadow" Value="0 4 12 0 #593B82F6" />
+            <Setter Property="Background" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="CornerRadius" Value="509" />
+            <Setter Property="RenderTransform" Value="Scale(1,1) " />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform"
+                                                   Duration="0:0:0.3"
+                                                   Easing="CubicEaseOut" />
+
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="ToggleButton.MusicPlayButton:pointerover /template/ Border.MusicPlayButtonBorder">
+            <Setter Property="RenderTransform" Value="Scale(1.1,1.1)" />
+        </Style>
+        <Style Selector="Slider.jdt /template/ RepeatButton#PART_IncreaseButton">
+            <Setter Property="Height" Value="5" />
+        </Style>
+        <Style Selector="Slider.jdt /template/ RepeatButton#PART_IncreaseButton /template/  Border#TrackBackground">
+            <Setter Property="Height" Value="5" />
+            <Setter Property="CornerRadius" Value="0,50,50,0" />
+        </Style>
+        <Style Selector="Slider.jdt /template/ RepeatButton#PART_DecreaseButton">
+            <Setter Property="Height" Value="5" />
+        </Style>
+        <Style Selector="Slider.jdt /template/ RepeatButton#PART_DecreaseButton /template/  Border#TrackBackground">
+            <Setter Property="Height" Value="5" />
+            <Setter Property="CornerRadius" Value="50,0,0,50" />
+        </Style>
+        <Style Selector="Slider.jdt /template/ Thumb#thumb">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <Style Selector="ToggleButton.MusicClose">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="ClipToBounds" Value="False" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border>
+                        <TextBlock Transitions="{StaticResource CommonColorTransitionsTextBlock}"
+                                   Foreground="{DynamicResource SideTextColor}" Text="&#xf00d;" FontSize="20"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontFamily="{StaticResource FASolid}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+
+        <Style Selector="ToggleButton.MusicClose:pointerover /template/ TextBlock">
+            <Setter Property="Foreground" Value="#ef4444" />
+        </Style>
+    </UserControl.Styles>
+
+    <Border Classes="MusicBorder">
+
+        <Grid ColumnSpacing="25" ColumnDefinitions="*,3*,*,Auto,2*,*">
+            <media:AudioPlayer x:Name="AudioPlayer" IsPlaying="{Binding IsPlay}" AutoPlay="True" ShowControls="False"
+                                
+                               Source="{Binding Url}" IsVisible="False"
+                               Volume="{Binding #MusicVolume.Value}" />
+            <!--图标-->
+            <Image Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Height="50"
+                   Source="avares://drive-desktop/Assets/ViewAssets/cp.png" >
+                <Image.RenderTransform>
+                    <RotateTransform />
+                </Image.RenderTransform>
+                <Image.Styles>
+                    <Style Selector="Image">
+                        <Style.Animations>
+                            <!-- Duration 控制单圈时长，IterationCount="INFINITE" 表示无限循环 -->
+                            <Animation Duration="0:0:5" IterationCount="INFINITE">
+                                <KeyFrame Cue="0%">
+                                    <Setter Property="RotateTransform.Angle" Value="0" />
+                                </KeyFrame>
+                                <KeyFrame Cue="100%">
+                                    <Setter Property="RotateTransform.Angle" Value="360" />
+                                </KeyFrame>
+                            </Animation>
+                        </Style.Animations>
+                    </Style>
+                </Image.Styles>
+            </Image>
+            <!--文件名-->
+            <StackPanel Spacing="5" VerticalAlignment="Center" Grid.Column="1">
+                <TextBlock Width="150" Text="{Binding Name}" FontSize="14" TextTrimming="CharacterEllipsis" FontWeight="700" />
+                <TextBlock Foreground="{DynamicResource SideTextColor}" FontSize="12" FontWeight="500"
+                           Text="Cloud Audio" />
+            </StackPanel>
+            <!--暂停播放按钮-->
+            <ToggleButton IsChecked="{Binding IsPlay,Mode=TwoWay}" Grid.Column="2" Classes="MusicPlayButton" />
+            <StackPanel Spacing="-5" VerticalAlignment="Center" Grid.Column="3">
+                <Slider Cursor="Hand" Classes="jdt" Width="250" Value="{Binding #AudioPlayer.PositionSeconds,Mode=TwoWay}" Maximum="{Binding #AudioPlayer.DurationSeconds}" />
+                <TextBlock HorizontalAlignment="Center" Foreground="{DynamicResource SideTextColor}" FontSize="12"
+                           FontWeight="500"
+                            >
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} / {1}">
+                            <Binding Path="#AudioPlayer.CurrentTimeText" />
+                            <Binding Path="#AudioPlayer.DurationText" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </StackPanel>
+            <!--音量-->
+            <StackPanel Spacing="10" Orientation="Horizontal" Grid.Column="4">
+                <TextBlock Margin="0,4,0,0" VerticalAlignment="Center" FontFamily="{StaticResource FASolid}"
+                           Foreground="{DynamicResource SideTextColor}" Text="&#xf028;" />
+                <Slider x:Name="MusicVolume" Minimum="0" Maximum="1" Width="80" Value="1" />
+            </StackPanel>
+
+            <ToggleButton Grid.Column="5" Classes="MusicClose" IsChecked="{Binding IsOpen,Mode=TwoWay}" Command="{Binding CloseCommand}" />
+        </Grid>
+    </Border>
+</UserControl>

@@ -7,17 +7,18 @@
 
     <Style Selector="controls|DefaultInput">
         <Setter Property="Height" Value="50" />
-        <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+        <Setter Property="Background" Value="{DynamicResource HomeBg}" />
         <Setter Property="CornerRadius" Value="10" />
         <Setter Property="Template">
             <ControlTemplate>
                 <Panel>
                     <!--边框-->
                     <Border Classes="BgBorder1" CornerRadius="{TemplateBinding CornerRadius}"
-                            Background="Transparent" />
+                             />
                     <!--底色-->
-                    <Border CornerRadius="{TemplateBinding CornerRadius}" ZIndex="-1" Opacity="0.8"
-                            
+                    <Border Transitions="{StaticResource CommonColorTransitions}"
+                            CornerRadius="{TemplateBinding CornerRadius}" ZIndex="-1" Opacity="0.8"
+
                             Background="{TemplateBinding Background}" />
 
                     <Grid Margin="10,0,10,0" ColumnDefinitions="Auto,*">

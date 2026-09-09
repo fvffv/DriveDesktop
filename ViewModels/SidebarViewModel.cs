@@ -23,7 +23,7 @@ public partial class SidebarViewModel : ViewModelBase
     /// <summary>
     /// 侧边视图菜单
     /// </summary>
-    [ObservableProperty] public ObservableCollection<CustomView> customViews;
+    [ObservableProperty] public ObservableCollection<CustomView> customViews = new ObservableCollection<CustomView>();
     /// <summary>
     /// 已使用容量
     /// </summary>
@@ -41,14 +41,19 @@ public partial class SidebarViewModel : ViewModelBase
     /// </summary>
     [ObservableProperty]
     private double _percentage = 0;
-    
-    
+
+    /// <summary>
+    /// 导航是否展开状态
+    /// </summary>
+    [ObservableProperty] private bool isExpand = false;
     [ObservableProperty]
     private string _driveName = "居家网盘";
     private readonly WebApiService _webApiService;
     private readonly ConstantResourceService _constantResourceService;
     private readonly UserInfoService _userInfoService;
     private readonly IThemeService _themeService;
+    
+    
     [RelayCommand]
     private void EditCustomView(CustomView cv)
     {
@@ -62,10 +67,11 @@ public partial class SidebarViewModel : ViewModelBase
     /// <summary>
     /// 初始化视图列表
     /// </summary>
-    private async Task InitCustomViews()
+    private void InitCustomViews()
     {
+        var customViews = _userInfoService.ShowUserInfo.Preferences?.CustomView;
         CustomViews = new ObservableCollection<CustomView>(
-            _userInfoService.ShowUserInfo.Preferences.CustomView.Select(x => new CustomView()
+            (customViews ?? []).Select(x => new CustomView()
             {
                 Name = x.Name,
                 Icon = _constantResourceService.GetSidebarIcon(x.Icon),
@@ -96,10 +102,16 @@ public partial class SidebarViewModel : ViewModelBase
         _webApiService = webApiService;
         _constantResourceService = constantResourceService;
         _userInfoService = userInfoService;
-        DriveName = _userInfoService.CloudInfo.Name;
-        InitCustomViews();
-        InitStorageCapacityInfo();
         IsLight = _themeService.CurrentTheme == ThemeVariant.Light;
+    }
+
+    public async Task InitializeAsync()
+    {
+        DriveName = string.IsNullOrWhiteSpace(_userInfoService.CloudInfo.Name)
+            ? "居家网盘"
+            : _userInfoService.CloudInfo.Name;
+        InitCustomViews();
+        await InitStorageCapacityInfo();
     }
 
     [RelayCommand]
@@ -239,6 +251,9 @@ public partial class SidebarViewModel : ViewModelBase
         
        
     }
+
+
+   
 
     
 }

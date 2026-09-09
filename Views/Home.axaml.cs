@@ -27,10 +27,25 @@ public partial class Home : Window
       
 
         InitializeComponent();
-
+        Opened += Home_Opened;
   
     }
-    
+    private async void Home_Opened(object? sender, EventArgs e)
+    {
+        try
+        {
+            if (DataContext is HomeViewModel vm)
+            {
+                await vm.InitializeAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            Home.GlobalToastManager?.Show(
+                new Toast($"加载失败：{ex.Message}"),
+                type: NotificationType.Error);
+        }
+    }
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);

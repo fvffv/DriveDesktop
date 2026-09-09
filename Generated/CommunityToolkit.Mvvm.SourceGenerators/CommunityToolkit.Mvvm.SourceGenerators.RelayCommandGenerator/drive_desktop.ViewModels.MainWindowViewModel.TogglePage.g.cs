@@ -8,10 +8,10 @@ namespace drive_desktop.ViewModels
     {
         /// <summary>The backing field for <see cref="TogglePageCommand"/>.</summary>
         [global::System.CodeDom.Compiler.GeneratedCode("CommunityToolkit.Mvvm.SourceGenerators.RelayCommandGenerator", "8.4.0.0")]
-        private global::CommunityToolkit.Mvvm.Input.RelayCommand? togglePageCommand;
-        /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="TogglePage"/>.</summary>
+        private global::CommunityToolkit.Mvvm.Input.RelayCommand<string>? togglePageCommand;
+        /// <summary>Gets an <see cref="global::CommunityToolkit.Mvvm.Input.IRelayCommand{T}"/> instance wrapping <see cref="TogglePage"/>.</summary>
         [global::System.CodeDom.Compiler.GeneratedCode("CommunityToolkit.Mvvm.SourceGenerators.RelayCommandGenerator", "8.4.0.0")]
         [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-        public global::CommunityToolkit.Mvvm.Input.IRelayCommand TogglePageCommand => togglePageCommand ??= new global::CommunityToolkit.Mvvm.Input.RelayCommand(new global::System.Action(TogglePage));
+        public global::CommunityToolkit.Mvvm.Input.IRelayCommand<string> TogglePageCommand => togglePageCommand ??= new global::CommunityToolkit.Mvvm.Input.RelayCommand<string>(new global::System.Action<string>(TogglePage));
     }
 }

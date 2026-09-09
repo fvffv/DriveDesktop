@@ -6,6 +6,7 @@
              xmlns:tc="using:drive_desktop.Components.TemplateControls"
              xmlns:vm="using:drive_desktop.ViewModels"
              x:DataType="vm:CustomViewEditViewModel"
+          
              xmlns:models="using:drive_desktop.Models"
              x:Class="drive_desktop.Components.UserControls.CustomViewEdit">
     <Design.DataContext>

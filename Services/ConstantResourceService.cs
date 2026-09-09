@@ -59,7 +59,7 @@ public class ConstantResourceService
 
         byte[] hash = await sha256.ComputeHashAsync(stream);
 
-        return Convert.ToHexString(hash);
+        return Convert.ToHexString(hash).ToLowerInvariant();
     }
     /// <summary>
     /// 图标hash表
@@ -136,7 +136,8 @@ public class ConstantResourceService
         }
 
         span = span.Trim();
-        return CustomViewIconDict.GetValueOrDefault(span.ToString(), "\uf07b");
+        var tst = CustomViewIconDict.GetValueOrDefault(span.ToString(), "\uf07b");
+        return tst;
     }
 
     //全局共享的Options
@@ -181,7 +182,9 @@ public class ConstantResourceService
                 {
                     Name = name,
                     Keywords = keywords,
-                    Icon = GetSidebarIcon(iconName)
+                    Icon = CustomViewIconDict.GetValueOrDefault(iconName, "\uf07b"),
+                    Color = FileIconHelper.GetSideIconColor(iconName),
+                    Type = 0
                 });
                 i++;
             }

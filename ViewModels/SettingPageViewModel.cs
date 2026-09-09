@@ -69,10 +69,14 @@ public partial class SettingPageViewModel:ViewModelBase
         _webApiService = webApiService;
         _topBarViewModel = topBarViewModel;
 
+       
+    }
+    public async Task InitializeAsync()
+    {
         SynchronizeLocalConfig();
         SynchronizePreferences();
+         
     }
-
     /// <summary>
     /// 提供给设置页面绑定的全局用户信息服务。
     /// </summary>

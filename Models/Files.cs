@@ -177,7 +177,13 @@ public partial class UserFilesInfoItem : ObservableObject, UserFiles
 public partial class UserDirsInfoItem : ObservableObject, UserFiles
 {
     public string Id { get; set; }
-    public string FolderName { get; set; }
+
+
+    public string FolderName
+    {
+        get;
+        set => SetProperty(ref field, value);
+    }= string.Empty;
     public DateTime CreationTime { get; set; }
     [ObservableProperty] private bool isChecked = false;
 }
@@ -364,7 +370,7 @@ public partial class TopFilesData : ObservableObject
 public class BreadcrumbNode(string folderName, string folderId)
 {
     public string FolderName { get; set; } = folderName; // 显示的名称，比如 "图片"
-    public string FolderId { get; set; } = folderId; // 用来查询后台的真实 ID 或 路径
+    public string? FolderId { get; set; } = folderId; // 用来查询后台的真实 ID 或 路径
 }
 
 public partial class SearchInfo : ObservableObject

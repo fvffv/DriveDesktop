@@ -65,6 +65,8 @@ public partial class Composition
         .Bind<AiChatViewModel>().As(Lifetime.Singleton).To<AiChatViewModel>()
         // 分享文件面板
         .Bind<ShareViewModel>().As(Lifetime.Transient).To<ShareViewModel>()
+        // 音乐播放器
+        .Bind<MusicDialog>().As(Lifetime.Singleton).To<MusicDialog>()
         //声明根节点
         .Bind<HomeViewModel>().As(Lifetime.Transient).To<HomeViewModel>()
         .Root<MainWindowViewModel>("RootViewModel");

@@ -19,15 +19,18 @@ namespace drive_desktop.Views
             {
                 if (m.WindowName == "Home")
                 {
+                  
                     var home = new Home();
                     home.DataContext = m.ViewModel;
+                    
                     home.Show();
+                    
                     if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                     {
                         desktop.MainWindow = home;
                     }
 
-                    home.Show();
+                 
                     this.Close(); 
                 }
             });

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Controls.Notifications;
 using Avalonia.Styling;
@@ -58,10 +60,10 @@ namespace drive_desktop.ViewModels
         /// 切换页面
         /// </summary>
         [RelayCommand]
-        private void TogglePage()
+        private void TogglePage(string a)
         {
            
-            CurrentPageIndex = CurrentPageIndex == 0 ? 1 : 0;
+            CurrentPageIndex = int.Parse(a);
         }
 
 
@@ -76,7 +78,8 @@ namespace drive_desktop.ViewModels
             _homeVmFactory = homeVmFactory;
             _webApiService = webApiService;
             _userInfoService = userInfoService;
-
+            
+           
             
 
            LoginInfoModel.UsernameOrEmail = _appConfigService.Config.UserName;
@@ -86,9 +89,18 @@ namespace drive_desktop.ViewModels
             //注册监听到主题色发生变化后的消费者
             WeakReferenceMessenger.Default.Register<ThemeService.ThemeChangedMessage>(this,
                 (recipient, message) => { CurrentTheme = message.NewTheme; });
+            var innerHandler = new HttpClientHandler
+            {
+                UseProxy = false, 
+                Proxy = null,
+            };
+
+            _httpClient = new HttpClient(new GlobalFallbackHandler(innerHandler));
+            _httpClient.DefaultRequestHeaders.ExpectContinue = false;
+            _httpClient.PostAsync(_appConfigService.Config.ServerIp + "/api/User/LoginUser", null);
         }
 
-        public MainWindowViewModel()
+        public MainWindowViewModel() 
         {
             // 这里可以随便写点假数据供预览器显示
         }
@@ -165,6 +177,19 @@ namespace drive_desktop.ViewModels
             }
             RegButtonStatus.End();
         }
+        private  readonly HttpClient _httpClient;
+   
+        public async Task<DefaultMsg<LoginResult>> LoginLegacyAsync(LoginInfo loginInfo)
+        {
+            string jsonStr = ConstantResourceService.ToJson(loginInfo);
+            using var content = new StringContent(jsonStr, Encoding.UTF8, "application/json");
+            using var response = await _httpClient.PostAsync(_appConfigService.Config.ServerIp + "/api/User/LoginUser", content);
+            response.EnsureSuccessStatusCode();
+        
+        
+            return ConstantResourceService.FromJson<DefaultMsg<LoginResult>>(await response.Content.ReadAsStringAsync());
+        }
+        
         /// <summary>
         /// 登录
         /// </summary>
@@ -181,9 +206,10 @@ namespace drive_desktop.ViewModels
             {
                 LoginInfo request = LoginInfoModel;
 
-                var info =
-                    await _webApiService.UserApi.LoginAsync(request);
-
+               
+                var info = await LoginLegacyAsync(request);
+              
+               
                 if (info.Status != 0)
                 {
                     MainWindow.GlobalToastManager?.Show(
@@ -203,16 +229,7 @@ namespace drive_desktop.ViewModels
                 _appConfigService.Config.Password = LoginInfoModel.Password;
                 _appConfigService.Config.JWT = info.Data.token;
                 _appConfigService.Save();
-
-                await _userInfoService.ReUserInfo();
-
-                var cloudInfo =
-                    await _webApiService.FileApi.GetCloudInfoAsync();
-
-                if (cloudInfo.Status == 0)
-                {
-                    _userInfoService.CloudInfo = cloudInfo.Data;
-                }
+                
 
                 var homeVm = _homeVmFactory();
 

@@ -358,8 +358,7 @@
         </Style>
     </UserControl.Styles>
     <Grid ColumnDefinitions="*,Auto" ClipToBounds="False">
-        <Border Transitions="{StaticResource CommonColorTransitions}" ClipToBounds="False" Padding="30,25"
-                Background="{DynamicResource HomeBg}">
+        <Border ClipToBounds="False" Padding="30,25">
             <DockPanel ClipToBounds="False">
                 <TextBlock DockPanel.Dock="Top" Text="分享管理" FontSize="24" FontWeight="700" />
                 <TextBlock DockPanel.Dock="Top" Margin="0,5,0,0" Text="管理您的外链分享记录、查看状态并配置提取权限" Classes="Title" />

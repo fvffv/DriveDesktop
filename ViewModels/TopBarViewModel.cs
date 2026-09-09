@@ -19,6 +19,7 @@ namespace drive_desktop.ViewModels;
 public partial class TopBarViewModel : ViewModelBase
 {
     private CancellationTokenSource? _searchDebounceCts;
+    private CancellationTokenSource? _searchBorderDelayCts;
     [ObservableProperty] private string _title = "我的文件";
     [ObservableProperty] private Bitmap _headImg;
     [ObservableProperty] private int _selectedNum = 0;
@@ -27,6 +28,32 @@ public partial class TopBarViewModel : ViewModelBase
     /// 搜索框焦点
     /// </summary>
     [ObservableProperty] private bool _searchIsfocus;
+
+    /// <summary>
+    /// 搜索结果区域是否显示
+    /// </summary>
+    [ObservableProperty] private bool _searchBorderShow;
+
+    partial void OnSearchIsfocusChanged(bool value)
+    {
+        _searchBorderDelayCts?.Cancel();
+
+        if (value)
+        {
+            SearchBorderShow = true;
+            return;
+        }
+
+        var cts = new CancellationTokenSource();
+        _searchBorderDelayCts = cts;
+        _ = HideSearchBorderAfterDelayAsync(cts.Token);
+    }
+
+    private async Task HideSearchBorderAfterDelayAsync(CancellationToken cancellationToken)
+    {
+        await Task.Delay(TimeSpan.FromSeconds(0.2), cancellationToken);
+        SearchBorderShow = false;
+    }
     
     
     /// <summary>
@@ -74,7 +101,7 @@ public partial class TopBarViewModel : ViewModelBase
     /// </summary>
     [ObservableProperty] private bool _isShowBorder = false;
 
-    private readonly UserInfoService _userInfoService;
+    public UserInfoService UserInfoService { get; set; }
     private readonly WebApiService _webApiService;
     public SearchViewModel SearchVM { get; set; }
     [ObservableProperty] private ThemeSwitchViewModel _themeSwitchVM;
@@ -86,12 +113,19 @@ public partial class TopBarViewModel : ViewModelBase
     public TopBarViewModel(WebApiService webApiService, UserInfoService userInfoService,
         ThemeSwitchViewModel themeSwitchVM, SearchViewModel searchVM)
     {
-        _userInfoService = userInfoService;
+        UserInfoService = userInfoService;
         _themeSwitchVM = themeSwitchVM;
         _webApiService = webApiService;
         SearchVM = searchVM;
         HeadImg = userInfoService.UserHead;
     }
+
+    public void RefreshUserInfo()
+    {
+        HeadImg = UserInfoService.UserHead;
+    }
+
+
 
     /// <summary>
     /// 新建文件夹

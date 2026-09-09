@@ -8,6 +8,7 @@
              xmlns:u="https://irihi.tech/ursa"
              x:DataType="vm:SidebarViewModel"
              xmlns:models="using:drive_desktop.Models"
+             
              xmlns:tc="using:drive_desktop.Components.TemplateControls"
              x:Class="drive_desktop.Components.UserControls.Sidebar">
     <Design.DataContext>
@@ -16,72 +17,145 @@
     <UserControl.Styles>
         <!--side背景-->
         <Style Selector="Border#SideBarBorder">
+            <Setter Property="Width" Value="258"/>
             <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
             <Setter Property="BorderThickness" Value="0,0,1,0" />
             <Setter Property="BorderBrush" Value="{DynamicResource SideBarBrColor}" />
-            <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}"/>
-               
+            <Setter Property="Transitions">
+                <Transitions >
+                    <BrushTransition Property="Background" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                    <DoubleTransition Property="Width" Duration="0:0:0.3"
+                                     Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+            
+        </Style>
+        <Style Selector="Border#SideBarBorder[Tag=False]">
+            <Setter Property="Width" Value="90"/>
+        </Style>
+        <Style Selector="Border#SideBarBorder[Tag=False] TextBlock#Title">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        
+        <Style Selector="Border#SideBarBorder[Tag=False] TextBlock#Title">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="Border#SideBarBorder[Tag=False] TextBlock#ToggleSidebarButton">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Border#SideBarBorder[Tag=False] StackPanel#LogoStackPanel">
+            <Setter Property="Orientation" Value="Vertical" />
+        </Style>
+        <Style Selector="Border#SideBarBorder[Tag=False] TextBlock#SidebarRadioButtonTitle">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="Border#SideBarBorder[Tag=False] StackPanel#SidebarRadioButtonStackPanel">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Border#SideBarBorder[Tag=False] DockPanel#SidebarRadioButton2DockPanel">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="Border#SideBarBorder[Tag=False] Border#StorageShow">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="StackPanel#ThemeSwitch">
+            <Setter Property="Orientation" Value="Horizontal" />
+        </Style>
+        <Style Selector="Border#SideBarBorder[Tag=False] StackPanel#ThemeSwitch">
+            <Setter Property="Orientation" Value="Vertical" />
+        </Style>
+        <Style Selector=" TextBlock#ViewTitle">
+            <Setter Property="Text" Value="自定义视图"/>
+        </Style>
+        <Style Selector="Border#SideBarBorder[Tag=False] TextBlock#ViewTitle">
+            <Setter Property="Text" Value="视图" />
+        </Style>
+        <Style Selector="Border#SideBarBorder[Tag=False] Button#ViewAdd2">
+            <Setter Property="IsVisible" Value="False" />
         </Style>
         <!--sidebar切换按钮-->
         <Style Selector="ToggleButton#ToggleSidebarButton">
-    
-            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="60,0,0,0"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
             <Setter Property="Template">
-               <ControlTemplate>
-                   
-                   <TextBlock x:Name="ToggleSidebarButtonIcon" Foreground="{DynamicResource SideTextColor}"
-                              FontFamily="{StaticResource FASolid}"
-                              Text="&#xf0c9;"
-                              FontSize="20" VerticalAlignment="Center" >
-                       <TextBlock.Styles>
-                           <Style Selector="TextBlock#ToggleSidebarButtonIcon">
-                               <Setter Property="Transitions">
-                                   <Transitions>
-                                       <BrushTransition Property="Foreground" Duration="0:0:0.3" />
-                                   </Transitions>
-                               </Setter>
-                           </Style>
-                       </TextBlock.Styles>
-                   </TextBlock>
-               </ControlTemplate>
-           </Setter>
+                <ControlTemplate>
+                    <TextBlock x:Name="ToggleSidebarButtonIcon" Foreground="{DynamicResource SideTextColor}"
+                               FontFamily="{StaticResource FASolid}"
+                               Text="&#xf0c9;"
+                              
+                               FontSize="20" VerticalAlignment="Center">
+                        <TextBlock.Styles>
+                            <Style Selector="TextBlock#ToggleSidebarButtonIcon">
+                                <Setter Property="Transitions">
+                                    <Transitions>
+                                        <BrushTransition Property="Foreground" Duration="0:0:0.3" />
+                                    </Transitions>
+                                </Setter>
+                            </Style>
+                        </TextBlock.Styles>
+                    </TextBlock>
+                </ControlTemplate>
+            </Setter>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform"
+                                                   Duration="0:0:0.3"
+                                                   Easing="CubicEaseOut" />
+
+                </Transitions>
+            </Setter>
         </Style>
+        <Style Selector="ToggleButton#ToggleSidebarButton[IsChecked=False]">
+            <Setter Property="RenderTransform" Value="rotate(90deg)" />
+            <Setter Property="Margin" Value="0,0,0,0"/>
+        </Style>
+        <Style Selector="StackPanel#LogoStackPanel">
+            <Setter Property="Orientation" Value="Horizontal"/>
+        </Style>
+        
+        
         <Style Selector="ToggleButton#ToggleSidebarButton:pointerover TextBlock#ToggleSidebarButtonIcon">
-           <Setter Property="Foreground" Value="{DynamicResource ThemeColor}"/> 
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
         </Style>
         <!--sidebar选项-->
         <Style Selector="RadioButton.SidebarRadioButton">
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="GroupName" Value="SidebarRadio"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="GroupName" Value="SidebarRadio" />
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Border x:Name="SidebarRadioButtonBorder" CornerRadius="12" Padding="15,12" >
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock  
-                                       FontFamily="{StaticResource FASolid}"
-                                       Text="{TemplateBinding RadioButton.Tag}"
-                                       FontSize="18" VerticalAlignment="Center" />
-                            <TextBlock Margin="15,0,0,0" 
+                    <Border x:Name="SidebarRadioButtonBorder" CornerRadius="12" Padding="15,12">
+                        <StackPanel x:Name="SidebarRadioButtonStackPanel" Orientation="Horizontal">
+                            <TextBlock
+                                FontFamily="{StaticResource FASolid}"
+                                Text="{TemplateBinding RadioButton.Tag}"
+                                HorizontalAlignment="Center"
+                                FontSize="18" VerticalAlignment="Center" />
+                            <TextBlock x:Name="SidebarRadioButtonTitle" Margin="15,0,0,0"
                                        Text="{TemplateBinding RadioButton.Content}"
                                        FontSize="15" VerticalAlignment="Center" />
                         </StackPanel>
-                        
+
                         <Border.Styles>
                             <Style Selector="Border#SidebarRadioButtonBorder">
-                                <Setter Property="Background" Value="{DynamicResource SidebarBg}"/>
-                                <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}"/>
-                                    
-                                
-                            </Style>    
-                            
+                                <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+                                <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+
+
+                            </Style>
+
                             <Style Selector="Border#SidebarRadioButtonBorder TextBlock">
-                                <Setter Property="Foreground" Value="{DynamicResource SideTextColor}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
                                 <Setter Property="Transitions">
                                     <Transitions>
                                         <BrushTransition Property="Foreground" Duration="0:0:0.3" Easing="CubicEaseOut" />
                                     </Transitions>
                                 </Setter>
-                            </Style>    
+                            </Style>
                         </Border.Styles>
                     </Border>
                 </ControlTemplate>
@@ -89,28 +163,28 @@
         </Style>
         <Style Selector="RadioButton.SidebarRadioButton:not(:checked):pointerover Border#SidebarRadioButtonBorder">
             <Setter Property="Background"
-                    Value="{DynamicResource SidebarRadioBg}"/>
+                    Value="{DynamicResource SidebarRadioBg}" />
         </Style>
 
         <!-- 按下时直接向选中色过渡 -->
         <Style Selector="RadioButton.SidebarRadioButton:not(:checked):pressed Border#SidebarRadioButtonBorder">
             <Setter Property="Background"
-                    Value="{DynamicResource SidebarRadioBgCheck}"/>
+                    Value="{DynamicResource SidebarRadioBgCheck}" />
         </Style>
 
         <Style Selector="RadioButton.SidebarRadioButton:checked Border#SidebarRadioButtonBorder">
             <Setter Property="Background"
-                    Value="{DynamicResource SidebarRadioBgCheck}"/>
+                    Value="{DynamicResource SidebarRadioBgCheck}" />
         </Style>
         <Style Selector="RadioButton.SidebarRadioButton:checked Border#SidebarRadioButtonBorder TextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
         </Style>
-        
+
         <Style Selector="StackPanel.CustomViewItemButtonBorder">
             <Setter Property="Opacity" Value="0" />
             <Setter Property="Transitions">
                 <Transitions>
-                    <DoubleTransition Property="Opacity" Duration="0:0:0.3"  Easing="CubicEaseOut"/>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.3" Easing="CubicEaseOut" />
                 </Transitions>
             </Setter>
         </Style>
@@ -129,7 +203,7 @@
             <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
             <Setter Property="Transitions">
                 <Transitions>
-                    <BrushTransition Property="Foreground" Duration="0:0:0.3" Easing="CubicEaseOut"/>
+                    <BrushTransition Property="Foreground" Duration="0:0:0.3" Easing="CubicEaseOut" />
                 </Transitions>
             </Setter>
         </Style>
@@ -137,65 +211,69 @@
             <Setter Property="Foreground" Value="{DynamicResource IconColor2}" />
             <Setter Property="Transitions">
                 <Transitions>
-                    <BrushTransition Property="Foreground" Duration="0:0:0.3" Easing="CubicEaseOut"/>
+                    <BrushTransition Property="Foreground" Duration="0:0:0.3" Easing="CubicEaseOut" />
                 </Transitions>
             </Setter>
         </Style>
         <Style Selector="TextBlock.DelButton:pointerover">
             <Setter Property="Foreground" Value="{DynamicResource DelColor}" />
-            
+
         </Style>
 
-          <Style Selector="RadioButton.SidebarRadioButton2">
-              <Setter Property="Cursor" Value="Hand"/>
-              <Setter Property="GroupName" Value="SidebarRadio"/>
+        <Style Selector="RadioButton.SidebarRadioButton2">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="GroupName" Value="SidebarRadio" />
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Border x:Name="SidebarRadioButton2Border" CornerRadius="12" Padding="15,12" >
-                        <Grid ColumnDefinitions="20,*">
-                            <TextBlock Foreground="{TemplateBinding RadioButton.Foreground}" 
-                                        FontFamily="{StaticResource FASolid}"
-                                        Text="{TemplateBinding RadioButton.Tag}"
-                                        FontSize="18" VerticalAlignment="Center" />
-                            <DockPanel Grid.Column="1">
-                                <TextBlock DockPanel.Dock="Left"  x:Name="SidebarRadioButton2Text" Margin="15,0,0,0" 
-                                            Text="{TemplateBinding RadioButton.Content}"
-                                            FontSize="15" VerticalAlignment="Center" />
+                    <Border x:Name="SidebarRadioButton2Border" CornerRadius="12" Padding="15,12">
+                        <Grid ColumnDefinitions="20,Auto">
+                            <TextBlock Foreground="{TemplateBinding RadioButton.Foreground}"
+                                       FontFamily="{StaticResource FASolid}"
+                                       Text="{TemplateBinding RadioButton.Tag}"
+                                       HorizontalAlignment="Center"
+                                       FontSize="18" VerticalAlignment="Center" />
+                            <DockPanel x:Name="SidebarRadioButton2DockPanel" Grid.Column="1">
+                                <TextBlock DockPanel.Dock="Left" x:Name="SidebarRadioButton2Text" Margin="15,0,0,0"
+                                           Text="{TemplateBinding RadioButton.Content}"
+                                           FontSize="15" VerticalAlignment="Center" />
                                 <StackPanel Margin="40,0,10,0" Classes="CustomViewItemButtonBorder"
                                             Orientation="Horizontal" HorizontalAlignment="Right" Spacing="15">
                                     <!--编辑-->
                                     <Button Classes="naked"
-                                            Command="{Binding $parent[ItemsControl].((vm:SidebarViewModel)DataContext).EditCustomViewCommand}" CommandParameter="{Binding }">
+                                            Command="{Binding $parent[ItemsControl].((vm:SidebarViewModel)DataContext).EditCustomViewCommand}"
+                                            CommandParameter="{Binding }">
                                         <TextBlock Classes="CustomViewItemButtonBorderText EditButton"
                                                    Text="&#xf304;" />
                                     </Button>
                                     <!--删除-->
-                                    <Button Classes="naked" Command="{Binding $parent[ItemsControl].((vm:SidebarViewModel)DataContext).DelCustomViewCommand}" CommandParameter="{Binding}">
+                                    <Button Classes="naked"
+                                            Command="{Binding $parent[ItemsControl].((vm:SidebarViewModel)DataContext).DelCustomViewCommand}"
+                                            CommandParameter="{Binding}">
                                         <TextBlock Classes="CustomViewItemButtonBorderText DelButton"
                                                    Text="&#xf2ed;" />
                                     </Button>
                                 </StackPanel>
                             </DockPanel>
-                           
+
 
                         </Grid>
-                        
+
                         <Border.Styles>
                             <Style Selector="Border#SidebarRadioButton2Border">
-                                <Setter Property="Background" Value="{DynamicResource SidebarBg}"/>
-                                <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}"/>
-                    
-                                
-                            </Style>    
-                            
+                                <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+                                <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+
+
+                            </Style>
+
                             <Style Selector="Border#SidebarRadioButton2Border TextBlock#SidebarRadioButton2Text">
-                                <Setter Property="Foreground" Value="{DynamicResource SideTextColor}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
                                 <Setter Property="Transitions">
                                     <Transitions>
-                                        <BrushTransition Property="Foreground" Duration="0:0:0.3" Easing="CubicEaseOut"/>
+                                        <BrushTransition Property="Foreground" Duration="0:0:0.3" Easing="CubicEaseOut" />
                                     </Transitions>
                                 </Setter>
-                            </Style>    
+                            </Style>
                         </Border.Styles>
                     </Border>
                 </ControlTemplate>
@@ -203,25 +281,25 @@
         </Style>
         <Style Selector="RadioButton.SidebarRadioButton2:not(:checked):pointerover Border#SidebarRadioButton2Border">
             <Setter Property="Background"
-                    Value="{DynamicResource SidebarRadioBg}"/>
+                    Value="{DynamicResource SidebarRadioBg}" />
         </Style>
 
         <!-- 按下时直接向选中色过渡 -->
         <Style Selector="RadioButton.SidebarRadioButton2:not(:checked):pressed Border#SidebarRadioButton2Border">
             <Setter Property="Background"
-                    Value="{DynamicResource SidebarRadioBgCheck}"/>
+                    Value="{DynamicResource SidebarRadioBgCheck}" />
         </Style>
 
         <Style Selector="RadioButton.SidebarRadioButton2:checked Border#SidebarRadioButton2Border">
             <Setter Property="Background"
-                    Value="{DynamicResource SidebarRadioBgCheck}"/>
+                    Value="{DynamicResource SidebarRadioBgCheck}" />
         </Style>
         <Style Selector="RadioButton.SidebarRadioButton2:checked TextBlock#SidebarRadioButton2Text">
-            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
         </Style>
         <!--添加视图按钮变色-->
         <Style Selector="TextBlock#AddClassIcon">
-            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
             <Setter Property="Transitions">
                 <Transitions>
                     <BrushTransition Property="Foreground" Duration="0:0:0.3" />
@@ -233,7 +311,7 @@
         </Style>
         <!--智能成视图按钮变色-->
         <Style Selector="TextBlock#GenClassIcon">
-            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
             <Setter Property="Transitions">
                 <Transitions>
                     <BrushTransition Property="Foreground" Duration="0:0:0.3" />
@@ -245,111 +323,122 @@
         </Style>
         <!--底部主题切换亮色按钮-->
         <Style Selector="RadioButton#LightRadioButton">
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="GroupName" Value="Theme"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="GroupName" Value="Theme" />
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Border x:Name="LightRadioButtonBorder" Width="43" CornerRadius="50" BoxShadow="{DynamicResource AllShadow}">
-                        <TextBlock  
+                    <Border x:Name="LightRadioButtonBorder" Width="43" CornerRadius="50"
+                            >
+                        <TextBlock
                             FontFamily="{StaticResource FASolid}"
                             Foreground="{DynamicResource SideTextColor}"
                             Text="&#xf185;"
                             FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         <Border.Styles>
                             <Style Selector="Border#LightRadioButtonBorder">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}"/>
-                                
-                            </Style>    
-                            
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+
+                            </Style>
+
                             <Style Selector="Border#LightRadioButtonBorder TextBlock">
                                 <Setter Property="Transitions">
                                     <Transitions>
                                         <BrushTransition Property="Foreground" Duration="0:0:0.3" />
                                     </Transitions>
                                 </Setter>
-                            </Style>    
+                            </Style>
                         </Border.Styles>
                     </Border>
                 </ControlTemplate>
             </Setter>
         </Style>
         <Style Selector="RadioButton#LightRadioButton:checked Border#LightRadioButtonBorder">
-            <Setter Property="Background" Value="{DynamicResource SidebarBg}"/>
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
         </Style>
         <Style Selector="RadioButton#LightRadioButton:checked Border#LightRadioButtonBorder TextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
         </Style>
-        
-         <!--底部主题切换暗色按钮-->
+
+        <!--底部主题切换暗色按钮-->
         <Style Selector="RadioButton#NightRadioButton">
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="GroupName" Value="Theme"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="GroupName" Value="Theme" />
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Border x:Name="NightRadioButtonBorder" Width="43" CornerRadius="50" BoxShadow="{DynamicResource AllShadow}">
-                        <TextBlock  
+                    <Border x:Name="NightRadioButtonBorder" Width="43" CornerRadius="50"
+                           >
+                        <TextBlock
                             FontFamily="{StaticResource FASolid}"
                             Foreground="{DynamicResource SideTextColor}"
                             Text="&#xf186;"
                             FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         <Border.Styles>
                             <Style Selector="Border#NightRadioButtonBorder">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}"/>
-                            </Style>    
-                            
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Transitions" Value="{StaticResource CommonColorTransitions}" />
+                            </Style>
+
                             <Style Selector="Border#NightRadioButtonBorder TextBlock">
                                 <Setter Property="Transitions">
                                     <Transitions>
                                         <BrushTransition Property="Foreground" Duration="0:0:0.3" />
                                     </Transitions>
                                 </Setter>
-                            </Style>    
+                            </Style>
                         </Border.Styles>
                     </Border>
                 </ControlTemplate>
             </Setter>
         </Style>
         <Style Selector="RadioButton#NightRadioButton:checked Border#NightRadioButtonBorder">
-            <Setter Property="Background" Value="{DynamicResource SidebarBg}"/>
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
         </Style>
         <Style Selector="RadioButton#NightRadioButton:checked Border#NightRadioButtonBorder TextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
         </Style>
     </UserControl.Styles>
-    <Border x:Name="SideBarBorder">
-        <Grid RowDefinitions="Auto,*,Auto" >
+    <Border  x:Name="SideBarBorder" Tag="{Binding IsExpand}">
+        <Grid RowDefinitions="Auto,*,Auto">
 
             <!--上-->
-            <DockPanel Margin="20,30,20,30">
+            <StackPanel Spacing="10" x:Name="LogoStackPanel"  Margin="20,30,20,30">
                 <!--logo-->
-                <TextBlock DockPanel.Dock="Left"   Foreground="#0078D4"
+                <TextBlock  Foreground="#0078D4"
+                           x:Name="DriveIcon"
                            FontFamily="{StaticResource FASolid}"
                            Text="&#xf0c2;"
+                           HorizontalAlignment="Center"
                            FontSize="26" VerticalAlignment="Center" />
                 <!--title-->
-                <TextBlock DockPanel.Dock="Left" 
+                <TextBlock 
                            Margin="12,0,0,0"
-                            FontWeight="700"
+                           FontWeight="700"
+                           x:Name="Title"
                            Text="{Binding DriveName}"
                            FontSize="20" VerticalAlignment="Center" />
-                <ToggleButton  HorizontalAlignment="Right" x:Name="ToggleSidebarButton"/>
-            </DockPanel>
+                <ToggleButton  x:Name="ToggleSidebarButton" IsChecked="{Binding IsExpand,Mode=TwoWay}"/>
+            </StackPanel>
             <!--中-->
             <ScrollViewer VerticalScrollBarVisibility="Hidden" Margin="20,0,20,0" Grid.Row="1">
                 <StackPanel Spacing="3">
-                    <RadioButton Content="我的文件" IsChecked="True" Tag="&#xf07c;" HorizontalAlignment="Stretch" Classes="SidebarRadioButton" CommandParameter="0" Command="{Binding SwitchViewCommand}"/>
-                    <RadioButton CommandParameter="1" Command="{Binding SwitchViewCommand}" Content="全局搜索" Tag="&#xf002;" HorizontalAlignment="Stretch" Classes="SidebarRadioButton"/>
+                    <RadioButton Content="我的文件" IsChecked="True" Tag="&#xf07c;" HorizontalAlignment="Stretch"
+                                 Classes="SidebarRadioButton" CommandParameter="0"
+                                 Command="{Binding SwitchViewCommand}" />
+                    <RadioButton CommandParameter="1" Command="{Binding SwitchViewCommand}" Content="全局搜索"
+                                 Tag="&#xf002;" HorizontalAlignment="Stretch" Classes="SidebarRadioButton" />
                     <DockPanel LastChildFill="False" Margin="0,10">
-                        <TextBlock DockPanel.Dock="Left" Text="自定义视图" Foreground="{DynamicResource SideTextColor}" FontSize="12" FontWeight="Bold"/>
-                        <Button Margin="10,0,0,0" DockPanel.Dock="Right" Classes="naked" ToolTip.VerticalOffset="0" ToolTip.Placement="Top"
+                        <TextBlock x:Name="ViewTitle" DockPanel.Dock="Left"  Foreground="{DynamicResource SideTextColor}"
+                                   FontSize="12" FontWeight="Bold" />
+                        <Button x:Name="ViewAdd" Margin="10,0,0,0" DockPanel.Dock="Right" Classes="naked" ToolTip.VerticalOffset="0"
+                                ToolTip.Placement="Top"
                                 ToolTip.Tip="手动添加视图/快捷方式" Command="{Binding AddCustomViewCommand}">
                             <TextBlock x:Name="AddClassIcon" Text="&#xf067;" FontFamily="{StaticResource FASolid}"
                                        FontSize="16" />
-                            
+
                         </Button>
-                        <Button  DockPanel.Dock="Right"  Classes="naked" ToolTip.VerticalOffset="0" ToolTip.Placement="Top"
+                        <Button x:Name="ViewAdd2" DockPanel.Dock="Right" Classes="naked" ToolTip.VerticalOffset="0"
+                                ToolTip.Placement="Top"
                                 ToolTip.Tip="智能生成常用文件分类" Command="{Binding AutoCustomViewCommand}">
                             <TextBlock x:Name="GenClassIcon" Text="&#xf0d0;" FontFamily="{StaticResource FASolid}"
                                        FontSize="16" />
@@ -359,37 +448,58 @@
                     <ItemsControl ItemsSource="{Binding CustomViews}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="models:CustomView">
-                                <RadioButton CommandParameter="{Binding}" Command="{Binding $parent[ItemsControl].((vm:SidebarViewModel)DataContext).SwitchViewCommand}" Margin="0.,0,0,0" Foreground="{Binding Color}" Content="{Binding Name}" Tag="{Binding Icon}" HorizontalAlignment="Stretch" Classes="SidebarRadioButton2"/>
+                                <RadioButton CommandParameter="{Binding}"
+                                             Command="{Binding $parent[ItemsControl].((vm:SidebarViewModel)DataContext).SwitchViewCommand}"
+                                             Margin="0.,0,0,0" Foreground="{Binding Color}" Content="{Binding Name}"
+                                             Tag="{Binding Icon}" HorizontalAlignment="Stretch"
+                                             Classes="SidebarRadioButton2" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
 
                     </ItemsControl>
-                    <TextBlock DockPanel.Dock="Left" Text="管理" Foreground="{DynamicResource SideTextColor}" FontSize="12" FontWeight="Bold"/>
-                    <RadioButton CommandParameter="2" Command="{Binding SwitchViewCommand}" Content="传输管理" Tag="&#xf0e7;" HorizontalAlignment="Stretch" Classes="SidebarRadioButton"/>
-                    <RadioButton CommandParameter="3" Command="{Binding SwitchViewCommand}" Content="分享管理" Tag="&#xf1e0;" HorizontalAlignment="Stretch" Classes="SidebarRadioButton"/>
-                    <RadioButton CommandParameter="4" Command="{Binding SwitchViewCommand}" Content="统计看板"  Tag="&#xf200;" HorizontalAlignment="Stretch" Classes="SidebarRadioButton"/>
-                    <RadioButton CommandParameter="5" Command="{Binding SwitchViewCommand}" Content="设置" Tag="&#xf013;" HorizontalAlignment="Stretch" Classes="SidebarRadioButton"/>
+                    <TextBlock DockPanel.Dock="Left" Text="管理" Foreground="{DynamicResource SideTextColor}"
+                               FontSize="12" FontWeight="Bold" />
+                    <RadioButton CommandParameter="2" Command="{Binding SwitchViewCommand}" Content="传输管理"
+                                 Tag="&#xf0e7;" HorizontalAlignment="Stretch" Classes="SidebarRadioButton" />
+                    <RadioButton CommandParameter="3" Command="{Binding SwitchViewCommand}" Content="分享管理"
+                                 Tag="&#xf1e0;" HorizontalAlignment="Stretch" Classes="SidebarRadioButton" />
+                    <RadioButton CommandParameter="4" Command="{Binding SwitchViewCommand}" Content="统计看板"
+                                 Tag="&#xf200;" HorizontalAlignment="Stretch" Classes="SidebarRadioButton" />
+                    <RadioButton CommandParameter="5" Command="{Binding SwitchViewCommand}" Content="设置" Tag="&#xf013;"
+                                 HorizontalAlignment="Stretch" Classes="SidebarRadioButton" />
                 </StackPanel>
             </ScrollViewer>
             <!--存储控件和切换主题-->
-            <Border Transitions="{StaticResource  CommonColorTransitions}"  Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource SideBarBrColor}" Padding="10">
-            
+            <Border Transitions="{StaticResource  CommonColorTransitions}" Grid.Row="2" BorderThickness="0,1,0,0"
+                    BorderBrush="{DynamicResource SideBarBrColor}" Padding="10">
+
                 <StackPanel Margin="10,20,10,20">
                     <!--存储空间-->
-                    <Border Transitions="{StaticResource  CommonColorTransitions}" Margin="0,0,0,15" Background="{DynamicResource SidebarRadioBg}" CornerRadius="12" Padding="15">
-                      
+                    <Border x:Name="StorageShow" Transitions="{StaticResource  CommonColorTransitions}" Margin="0,0,0,15"
+                            Background="{DynamicResource SidebarRadioBg}" CornerRadius="12" Padding="15">
+
                         <StackPanel>
                             <Panel>
-                                <TextBlock FontSize="12" FontWeight="600" HorizontalAlignment="Left" Foreground="{DynamicResource SidebarRadioTextHover}" Text="{Binding UsedSpaceInBytes}"/>
-                                <TextBlock FontSize="12"  FontWeight="600" HorizontalAlignment="Right" Foreground="{DynamicResource SideTextColor}" Text="{Binding TotalSpaceInBytes}"/>
+                                <TextBlock FontSize="12" FontWeight="600" HorizontalAlignment="Left"
+                                           Foreground="{DynamicResource SidebarRadioTextHover}"
+                                           Text="{Binding UsedSpaceInBytes}" />
+                                <TextBlock FontSize="12" FontWeight="600" HorizontalAlignment="Right"
+                                           Foreground="{DynamicResource SideTextColor}"
+                                           Text="{Binding TotalSpaceInBytes}" />
                             </Panel>
-                            <ProgressBar Margin="0,8,0,0" MinWidth="0" Height="6"  Grid.Row="1" Value="{Binding Percentage}" Maximum="100" />
+                            <ProgressBar Margin="0,8,0,0" MinWidth="0" Height="6" Grid.Row="1"
+                                         Value="{Binding Percentage}" Maximum="100" />
                         </StackPanel>
                     </Border>
-                    <Border HorizontalAlignment="Center" Background="{DynamicResource HomeBg}" CornerRadius="50" Padding="5">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <RadioButton Width="44" HorizontalAlignment="Left" Height="36" x:Name="LightRadioButton" Command="{Binding ThemeSwitchCommand}" CommandParameter="0" IsChecked="{Binding IsLight}" />
-                            <RadioButton Width="44" HorizontalAlignment="Right" Height="36" x:Name="NightRadioButton" Command="{Binding ThemeSwitchCommand}" CommandParameter="1" IsChecked="{Binding !IsLight}"/>
+                    <Border  ClipToBounds="True" HorizontalAlignment="Center" Background="{DynamicResource HomeBg}" CornerRadius="50"
+                             Padding="5">
+                        <StackPanel x:Name="ThemeSwitch" Spacing="8">
+                            <RadioButton Width="44" HorizontalAlignment="Center" Height="36" x:Name="LightRadioButton"
+                                         Command="{Binding ThemeSwitchCommand}" CommandParameter="0"
+                                         IsChecked="{Binding IsLight}" />
+                            <RadioButton Width="44" HorizontalAlignment="Center" Height="36" x:Name="NightRadioButton"
+                                         Command="{Binding ThemeSwitchCommand}" CommandParameter="1"
+                                         IsChecked="{Binding !IsLight}" />
                         </StackPanel>
                     </Border>
                 </StackPanel>

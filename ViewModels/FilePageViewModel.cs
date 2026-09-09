@@ -74,7 +74,7 @@ public partial class FilePageViewModel : ViewModelBase
     /// </summary>
     [ObservableProperty] 
     [NotifyPropertyChangedFor(nameof(IsConditionMet))]
-    private bool _isLoading;
+    private bool _isLoading = true;
 
     //虚拟的占位数据，用于生成 12个骨架屏卡片
     public int[] SkeletonItems { get; } = new int[12];
@@ -85,6 +85,18 @@ public partial class FilePageViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isTurnPage = false;
     private int pageNumber = 1;
+    // 每次切换/刷新目录都会递增。旧的分页请求返回后，版本不匹配就不能再写入当前列表。
+    private int _directoryRequestVersion;
+
+    private int BeginDirectoryRequest()
+    {
+        IsTurnPage = false;
+        return ++_directoryRequestVersion;
+    }
+
+    private bool IsCurrentDirectoryRequest(int requestVersion) =>
+        requestVersion == _directoryRequestVersion;
+
     public FilePageViewModel()
     {
       
@@ -97,8 +109,6 @@ public partial class FilePageViewModel : ViewModelBase
         _appConfigService = appConfigService;
         TopBarViewModel = topBarViewModel;
         _topLevelProvider = topLevelProvider;
-        // 初始化文件列表
-        TaskInitFileInfo();
         
         WeakReferenceMessenger.Default.Register<DefaultMsg>(this, async (r, m) =>
         {
@@ -138,17 +148,27 @@ public partial class FilePageViewModel : ViewModelBase
                 }
                 
         
-            });
+        });
+    }
+
+    public Task InitializeAsync()
+    {
+        return TaskInitFileInfo();
     }
 
     private async Task TaskInitFileInfo()
     {
+        var requestVersion = BeginDirectoryRequest();
         IsLoading = true;
         BreadcrumbList.Clear();
         _userInfoService.CurrentDirectoryId = _userInfoService.ShowUserInfo.RootFolderId;
         _userInfoService.CurrentDirectoryPath = "/";
         var info =
             await _webApiService.FileApi.GetUserDirectoryFileInfoAsync(_userInfoService.ShowUserInfo.RootFolderId);
+        if (!IsCurrentDirectoryRequest(requestVersion))
+        {
+            return;
+        }
         BreadcrumbList.Add(new BreadcrumbNode("首页", _userInfoService.ShowUserInfo.RootFolderId));
         if (info.Status == 0)
         {
@@ -166,6 +186,7 @@ public partial class FilePageViewModel : ViewModelBase
                 type: NotificationType.Error
             );
         }
+        IsTurnPage = false;
         IsLoading = false;
     }
 
@@ -228,11 +249,16 @@ public partial class FilePageViewModel : ViewModelBase
     [RelayCommand]
     private async Task FolderClick(UserDirsInfoItem item)
     {
+        var requestVersion = BeginDirectoryRequest();
         IsLoading = true; 
         pageNumber = 1;
         TopBarViewModel.IsShowBorder = false;
        
         var info = await _webApiService.FileApi.GetUserDirectoryFileInfoAsync(item.Id);
+        if (!IsCurrentDirectoryRequest(requestVersion))
+        {
+            return;
+        }
         if (info.Status == 0)
         {
             FileCount = info.Data.TotalFileCount;
@@ -256,6 +282,7 @@ public partial class FilePageViewModel : ViewModelBase
                 type: NotificationType.Error
             );
         }
+        IsTurnPage = false;
         IsLoading = false; 
         GC.Collect();
     }
@@ -267,12 +294,17 @@ public partial class FilePageViewModel : ViewModelBase
     [RelayCommand]
     private async Task BreadcrumbClick(BreadcrumbNode item)
     {
+        var requestVersion = BeginDirectoryRequest();
         
         //防止folderID是空
         if (string.IsNullOrEmpty(item.FolderId))
         {
             item.FolderId = (await _webApiService.FileApi.GetFolderByPathStrictAsync(_userInfoService.ShowUserInfo.RootFolderId,
                 BreadcrumbPath)).Data.ToString();
+            if (!IsCurrentDirectoryRequest(requestVersion))
+            {
+                return;
+            }
             if (string.IsNullOrEmpty(item.FolderId))
             {
                 Home.GlobalToastManager?.Show(
@@ -284,6 +316,10 @@ public partial class FilePageViewModel : ViewModelBase
         }
         IsLoading = true; 
         var info = await _webApiService.FileApi.GetUserDirectoryFileInfoAsync(item.FolderId);
+        if (!IsCurrentDirectoryRequest(requestVersion))
+        {
+            return;
+        }
         if (info.Status == 0)
         {
             pageNumber = 1;
@@ -316,6 +352,7 @@ public partial class FilePageViewModel : ViewModelBase
                 type: NotificationType.Error
             );
         }
+        IsTurnPage = false;
         IsLoading = false; 
         GC.Collect();
     }
@@ -323,6 +360,7 @@ public partial class FilePageViewModel : ViewModelBase
     [RelayCommand]
     private async Task BreadcrumbInput()
     {
+        var requestVersion = BeginDirectoryRequest();
         if (string.IsNullOrWhiteSpace(BreadcrumbPath))
         {
             return;
@@ -330,6 +368,10 @@ public partial class FilePageViewModel : ViewModelBase
         
         var info = await _webApiService.FileApi.GetFolderByPathStrictAsync(_userInfoService.ShowUserInfo.RootFolderId,
             BreadcrumbPath);
+        if (!IsCurrentDirectoryRequest(requestVersion))
+        {
+            return;
+        }
         if (info.Status == 0)
         {
             IsLoading = true; 
@@ -338,6 +380,10 @@ public partial class FilePageViewModel : ViewModelBase
             BreadcrumbTextBoxEnabled = false;
             BreadcrumbTextBoxEnabled = true;
             var info2 = await _webApiService.FileApi.GetUserDirectoryFileInfoAsync(info.Data.ToString());
+            if (!IsCurrentDirectoryRequest(requestVersion))
+            {
+                return;
+            }
             FileCount = info2.Data.TotalFileCount;
             FileInfos = new ObservableCollection<UserFilesInfoItem>(info2.Data.FileInfos);
             FileInfos.Where(x=>x.FileTypeInfo.IsImg).Mutate(x=>x.ImageUrl = $"{_appConfigService.Config.ServerIp}/driveassets/imgcomp/{x.FileHash}.jpg");
@@ -363,6 +409,7 @@ public partial class FilePageViewModel : ViewModelBase
                 type: NotificationType.Error
             );
         }
+        IsTurnPage = false;
         IsLoading = false; 
         GC.Collect();
     }
@@ -373,10 +420,15 @@ public partial class FilePageViewModel : ViewModelBase
     [RelayCommand]
     private async Task RefreshCurrentDirectory()
     {
+        var requestVersion = BeginDirectoryRequest();
         IsLoading = true;
         pageNumber = 1;
         var info =
             await _webApiService.FileApi.GetUserDirectoryFileInfoAsync(_userInfoService.CurrentDirectoryId);
+        if (!IsCurrentDirectoryRequest(requestVersion))
+        {
+            return;
+        }
         if (info.Status == 0)
         {
             FileIsAllChecked = false;
@@ -398,6 +450,7 @@ public partial class FilePageViewModel : ViewModelBase
                 type: NotificationType.Error
             );
         }
+        IsTurnPage = false;
         IsLoading = false;
     }
     /// <summary>
@@ -406,7 +459,8 @@ public partial class FilePageViewModel : ViewModelBase
     [RelayCommand]
     private async Task LoadNextPage()
     {
-        if (FileInfos == null)
+        // 目录切换时禁止旧列表继续触发分页请求。
+        if (IsLoading || IsTurnPage || FileInfos == null)
         {
             return;
         }
@@ -415,29 +469,49 @@ public partial class FilePageViewModel : ViewModelBase
             return;
         }
         
+        var requestVersion = _directoryRequestVersion;
+        var directoryId = _userInfoService.CurrentDirectoryId;
+        var targetFileInfos = FileInfos;
+        var nextPageNumber = pageNumber + 1;
         IsTurnPage = true;
-        var info =  await _webApiService.FileApi.GetUserDirectoryFileInfoAsync(_userInfoService.CurrentDirectoryId,++pageNumber);
-        if (info.Status == 0)
+        try
         {
-            
-            foreach (var item in info.Data.FileInfos)
+            var info = await _webApiService.FileApi.GetUserDirectoryFileInfoAsync(directoryId, nextPageNumber);
+            if (!IsCurrentDirectoryRequest(requestVersion) ||
+                !string.Equals(directoryId, _userInfoService.CurrentDirectoryId, StringComparison.Ordinal) ||
+                !ReferenceEquals(targetFileInfos, FileInfos))
             {
-                if (item.FileTypeInfo.IsImg)
+                return;
+            }
+
+            if (info.Status == 0)
+            {
+                foreach (var item in info.Data.FileInfos)
                 {
-                    item.ImageUrl = $"{_appConfigService.Config.ServerIp}/driveassets/imgcomp/{item.FileHash}.jpg";
+                    if (item.FileTypeInfo.IsImg)
+                    {
+                        item.ImageUrl = $"{_appConfigService.Config.ServerIp}/driveassets/imgcomp/{item.FileHash}.jpg";
+                    }
+                    targetFileInfos.Add(item);
                 }
-                FileInfos.Add(item);
+                pageNumber = nextPageNumber;
+            }
+            else
+            {
+                Home.GlobalToastManager?.Show(
+                    new Toast($"获取文件错误:{info.Msg}"),
+                    type: NotificationType.Error
+                );
             }
         }
-        else
+        finally
         {
-            Home.GlobalToastManager?.Show(
-                new Toast($"获取文件错误:{info.Msg}"),
-                type: NotificationType.Error
-            );
+            if (IsCurrentDirectoryRequest(requestVersion) &&
+                ReferenceEquals(targetFileInfos, FileInfos))
+            {
+                IsTurnPage = false;
+            }
         }
-        
-        IsTurnPage = false;
     }
     /// <summary>
     /// 编辑文件或文件夹名字
@@ -586,6 +660,28 @@ public partial class FilePageViewModel : ViewModelBase
         if (item.FileTypeInfo.TypeName is "文档2007")
         {
             WeakReferenceMessenger.Default.Send(new DialogMessage("DocumentViewDialog", true,item));
+        }
+        if (item.FileTypeInfo.TypeName is "音频")
+        {
+            WeakReferenceMessenger.Default.Send(new MusicPlayMsg(true, item));
+        }
+        if (item.FileTypeInfo.TypeName is "视频")
+        {
+            var info =await _webApiService.FileApi.GetFileDownLoadTempKeyAsync(item.Id);
+            if (info.Status == 0)
+            {
+                new VideoPreviewView()
+                {
+                    DataContext = new VideoPreviewViewModel( $"{_appConfigService.Config.ServerIp.TrimEnd('/')}/api/Files/DownLoadKey/{info.Data}",item.FileName)
+                }.Show();
+            }
+            else
+            {
+                Home.GlobalToastManager?.Show(
+                    new Toast($"获取文件[{item.FileName}]失败: {info.Msg}"), 
+                    type: NotificationType.Error);
+            }
+            
         }
     }
 

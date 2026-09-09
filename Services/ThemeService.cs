@@ -46,4 +46,5 @@ public partial class ThemeService : ObservableObject, IThemeService
             : ThemeVariant.Light;
         
     }
+
 }

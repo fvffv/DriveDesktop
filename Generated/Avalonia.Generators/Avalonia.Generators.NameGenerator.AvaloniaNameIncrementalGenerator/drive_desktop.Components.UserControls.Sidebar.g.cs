@@ -8,17 +8,33 @@ namespace drive_desktop.Components.UserControls
 {
     partial class Sidebar
     {
-        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
         internal global::Avalonia.Controls.Border SideBarBorder;
-        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
+        internal global::Avalonia.Controls.StackPanel LogoStackPanel;
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
+        internal global::Avalonia.Controls.TextBlock DriveIcon;
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
+        internal global::Avalonia.Controls.TextBlock Title;
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
         internal global::Avalonia.Controls.Primitives.ToggleButton ToggleSidebarButton;
-        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
+        internal global::Avalonia.Controls.TextBlock ViewTitle;
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
+        internal global::Avalonia.Controls.Button ViewAdd;
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
         internal global::Avalonia.Controls.TextBlock AddClassIcon;
-        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
+        internal global::Avalonia.Controls.Button ViewAdd2;
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
         internal global::Avalonia.Controls.TextBlock GenClassIcon;
-        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
+        internal global::Avalonia.Controls.Border StorageShow;
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
+        internal global::Avalonia.Controls.StackPanel ThemeSwitch;
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
         internal global::Avalonia.Controls.RadioButton LightRadioButton;
-        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
         internal global::Avalonia.Controls.RadioButton NightRadioButton;
 
         /// <summary>
@@ -26,7 +42,7 @@ namespace drive_desktop.Components.UserControls
         /// </summary>
         /// <param name="loadXaml">Should the XAML be loaded into the component.</param>
 
-        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Avalonia.Generators.NameGenerator.InitializeComponentCodeGenerator", "12.1.2.0")]
         [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public void InitializeComponent(bool loadXaml = true)
         {
@@ -37,9 +53,17 @@ namespace drive_desktop.Components.UserControls
 
             var __thisNameScope__ = this.FindNameScope();
             SideBarBorder = __thisNameScope__?.Find<global::Avalonia.Controls.Border>("SideBarBorder");
+            LogoStackPanel = __thisNameScope__?.Find<global::Avalonia.Controls.StackPanel>("LogoStackPanel");
+            DriveIcon = __thisNameScope__?.Find<global::Avalonia.Controls.TextBlock>("DriveIcon");
+            Title = __thisNameScope__?.Find<global::Avalonia.Controls.TextBlock>("Title");
             ToggleSidebarButton = __thisNameScope__?.Find<global::Avalonia.Controls.Primitives.ToggleButton>("ToggleSidebarButton");
+            ViewTitle = __thisNameScope__?.Find<global::Avalonia.Controls.TextBlock>("ViewTitle");
+            ViewAdd = __thisNameScope__?.Find<global::Avalonia.Controls.Button>("ViewAdd");
             AddClassIcon = __thisNameScope__?.Find<global::Avalonia.Controls.TextBlock>("AddClassIcon");
+            ViewAdd2 = __thisNameScope__?.Find<global::Avalonia.Controls.Button>("ViewAdd2");
             GenClassIcon = __thisNameScope__?.Find<global::Avalonia.Controls.TextBlock>("GenClassIcon");
+            StorageShow = __thisNameScope__?.Find<global::Avalonia.Controls.Border>("StorageShow");
+            ThemeSwitch = __thisNameScope__?.Find<global::Avalonia.Controls.StackPanel>("ThemeSwitch");
             LightRadioButton = __thisNameScope__?.Find<global::Avalonia.Controls.RadioButton>("LightRadioButton");
             NightRadioButton = __thisNameScope__?.Find<global::Avalonia.Controls.RadioButton>("NightRadioButton");
         }

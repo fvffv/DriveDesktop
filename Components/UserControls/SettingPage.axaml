@@ -66,7 +66,7 @@
                     <Border x:Name="UpdateHeadBorder" BoxShadow="{DynamicResource AllShadow}"
                             BorderBrush="{DynamicResource SideBarBrColor}"
                             BorderThickness="1" Background="{DynamicResource TextColor2}"
-                            Transitions="{StaticResource CommonColorTransitions}" Width="34" Height="34"
+                             Width="34" Height="34"
                             CornerRadius="50">
                         <TextBlock Transitions="{StaticResource CommonColorTransitionsTextBlock}"
                                    x:Name="UpdateHeadIcon" HorizontalAlignment="Center" VerticalAlignment="Center"
@@ -477,7 +477,7 @@
                                                                            IconFontSize="20"
                                                                            Watermark="文件下面目录..."
                                                                            Text="{Binding DownloadLocation}"
-                                                                           Transitions="{StaticResource CommonColorTransitions}"
+                                                                          
                                                                            IsShowIcon="False" />
                                             <Button Grid.Column="1"
                                                     Classes="DirectoryButton"
@@ -513,7 +513,7 @@
                                                                            IconFontSize="20"
                                                                            Watermark="同时下载数量"
                                                                            Text="{Binding DownloadTaskCount, Mode=TwoWay}"
-                                                                           Transitions="{StaticResource CommonColorTransitions}"
+                                                                           
                                                                            IsShowIcon="False" />
 
                                             <TextBlock Grid.Row="0" Grid.Column="1" FontWeight="Bold" FontSize="13"
@@ -528,7 +528,7 @@
                                                                            IconFontSize="20"
                                                                            Watermark="同时上传数量"
                                                                            Text="{Binding UploadTaskCount, Mode=TwoWay}"
-                                                                           Transitions="{StaticResource CommonColorTransitions}"
+                                                                          
                                                                            IsShowIcon="False" />
                                         </Grid>
 
@@ -566,7 +566,7 @@
                                                                      Watermark="输入当前密码以验证身份"
                                                                      Text="{Binding CurrentPassword, Mode=TwoWay}"
                                                                      PasswordChar="●"
-                                                                    Transitions="{StaticResource CommonColorTransitions}"
+                                                                    
                                                                     IsShowIcon="False" />
                                     <TextBlock Margin="0,20,0,0"  FontWeight="Bold" FontSize="13"
                                                Foreground="{DynamicResource SideTextColor}"
@@ -581,7 +581,7 @@
                                                                      Watermark="请至少包含8位字母与数字"
                                                                      Text="{Binding NewPassword, Mode=TwoWay}"
                                                                      PasswordChar="●"
-                                                                    Transitions="{StaticResource CommonColorTransitions}"
+                                                                    
                                                                     IsShowIcon="False" />
                                     <TextBlock Margin="0,20,0,0"  FontWeight="Bold" FontSize="13"
                                                Foreground="{DynamicResource SideTextColor}"
@@ -596,7 +596,6 @@
                                                                      Watermark="请在此输入新密码"
                                                                      Text="{Binding ConfirmPassword, Mode=TwoWay}"
                                                                      PasswordChar="●"
-                                                                    Transitions="{StaticResource CommonColorTransitions}"
                                                                     IsShowIcon="False" />
                                     <Button Margin="0,20,0,0"
                                             HorizontalAlignment="Right"

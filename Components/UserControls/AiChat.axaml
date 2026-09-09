@@ -38,7 +38,8 @@
                             <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
                         </Transitions>
                     </Border.Transitions>
-                    <Grid RowDefinitions="*,8*,*">
+                    <Grid>
+                        <Grid RowDefinitions="*,8*,*">
                         <!--顶部标题栏-->
                         <Border Padding="25,20">
                             <Panel>
@@ -70,7 +71,7 @@
                                         <!--ai对话模板-->
                                         <DataTemplate x:DataType="model:AiChatAiMsg">
                                             <StackPanel  Spacing="5"  HorizontalAlignment="Left">
-                                                <Border Transitions="{StaticResource CommonColorTransitions}" MaxWidth="280" Padding="18,14" Background="{DynamicResource SidebarBg}" BorderBrush="{DynamicResource SideBarBrColor}" BorderThickness="1" CornerRadius="20,20,20,4">
+                                                <Border Transitions="{StaticResource CommonColorTransitions}" Margin="0,0,80,0"  Padding="18,14" Background="{DynamicResource SidebarBg}" BorderBrush="{DynamicResource SideBarBrColor}" BorderThickness="1" CornerRadius="20,20,20,4">
                                                     <avalonia:MarkdownRenderer  MarkdownBuilder="{Binding Content}" x:Name="MarkdownRenderer" />
                                                 </Border>
                                                 <TextBlock  FontSize="12" FontWeight="Bold" Foreground="{DynamicResource SideTextColor}" HorizontalAlignment="Left"  Text="{Binding Time}"/>
@@ -79,7 +80,7 @@
                                         <!--用户对话模板-->
                                         <DataTemplate x:DataType="model:AiChatUserMsg">
                                             <StackPanel Spacing="5" HorizontalAlignment="Right">
-                                                <Border Transitions="{StaticResource CommonColorTransitions}" MaxWidth="280" Padding="18,14" Background="{DynamicResource ThemeColor}" BorderBrush="{DynamicResource SideBarBrColor}" BorderThickness="1" CornerRadius="20,20,4,20">
+                                                <Border Transitions="{StaticResource CommonColorTransitions}"  Padding="18,14" Background="{DynamicResource ThemeColor}" BorderBrush="{DynamicResource SideBarBrColor}" BorderThickness="1" CornerRadius="20,20,4,20">
                                                     <TextBlock Foreground="White" Text="{Binding Content}" TextWrapping="Wrap"/>
                                                 </Border>
                                                 <TextBlock FontSize="12" FontWeight="Bold" Foreground="{DynamicResource SideTextColor}" HorizontalAlignment="Right" Text="{Binding Time}"/>
@@ -109,6 +110,37 @@
                                         Command="{Binding SeedAiChatCommand}" />
                             </Panel>
                         </Border>
+                        </Grid>
+                        <!-- 对话框尺寸调整热区：左侧调宽、底部调高、左下角同时调节 -->
+                        <Border x:Name="AiResizeLeftHandle"
+                                Width="8"
+                                HorizontalAlignment="Left"
+                                Background="Transparent"
+                                Cursor="SizeWestEast"
+                                PointerPressed="AiResizeLeftHandle_PointerPressed"
+                                PointerMoved="AiResizeHandle_PointerMoved"
+                                PointerReleased="AiResizeHandle_PointerReleased"
+                                PointerCaptureLost="AiResizeHandle_PointerCaptureLost" />
+                        <Border x:Name="AiResizeBottomHandle"
+                                Height="8"
+                                VerticalAlignment="Bottom"
+                                Background="Transparent"
+                                Cursor="SizeNorthSouth"
+                                PointerPressed="AiResizeBottomHandle_PointerPressed"
+                                PointerMoved="AiResizeHandle_PointerMoved"
+                                PointerReleased="AiResizeHandle_PointerReleased"
+                                PointerCaptureLost="AiResizeHandle_PointerCaptureLost" />
+                        <Border x:Name="AiResizeBottomLeftHandle"
+                                Width="18"
+                                Height="18"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom"
+                                Background="Transparent"
+                                Cursor="BottomLeftCorner"
+                                PointerPressed="AiResizeBottomLeftHandle_PointerPressed"
+                                PointerMoved="AiResizeHandle_PointerMoved"
+                                PointerReleased="AiResizeHandle_PointerReleased"
+                                PointerCaptureLost="AiResizeHandle_PointerCaptureLost" />
                     </Grid>
                 </Border>
                 <!-- 悬浮按钮 -->

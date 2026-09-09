@@ -132,6 +132,8 @@ public partial class FileTransmissionService : ObservableObject
     private readonly WebApiService _webApiService;
     private readonly UserInfoService _userInfoService;
     private readonly FilePageViewModel _filePageViewModel;
+    private readonly Task _databaseReadyTask;
+    private Task? _dataLoadTask;
 
     public FileTransmissionService(UserInfoService userInfoService, FilePageViewModel filePageViewModel,
         WebApiService webApiService,
@@ -146,19 +148,11 @@ public partial class FileTransmissionService : ObservableObject
         _uploadSemaphore = new SemaphoreSlim(_appConfigService.Config.UploadSemaphore,
             _appConfigService.Config.UploadSemaphore);
 
-        uploadOpt = new UploadConfiguration
-        {
-            ApiUrl = $"{_appConfigService.Config.ServerIp}/api/Files/UploadChunk",
-            JWT = $"Bearer {_appConfigService.Config.JWT}",
-            FileChunkSizeBytes = _userInfoService.CloudInfo.FileChunkSizeBytes,
-            MaxConcurrentChunks = 8,
-            HttpClientTimeout = 99990_000
-        };
+        RefreshUploadConfiguration();
 
 
-        //创建数据库连接
-        CreateDB();
-        LoadDataAsync();
+        //创建数据库连接，等用户信息加载完成后再读取当前用户的任务
+        _databaseReadyTask = CreateDB();
         WeakReferenceMessenger.Default.Register<FileTmMessage>(this,
             async (recipient, message) =>
             {
@@ -230,6 +224,40 @@ public partial class FileTransmissionService : ObservableObject
 
     public FileTransmissionService()
     {
+    }
+
+    public void RefreshUploadConfiguration()
+    {
+        long chunkSize = _userInfoService.CloudInfo.FileChunkSizeBytes;
+        if (chunkSize <= 0)
+        {
+            chunkSize = 10 * 1024 * 1024;
+        }
+
+        uploadOpt = new UploadConfiguration
+        {
+            ApiUrl = $"{_appConfigService.Config.ServerIp}/api/Files/UploadChunk",
+            JWT = $"Bearer {_appConfigService.Config.JWT}",
+            FileChunkSizeBytes = chunkSize,
+            MaxConcurrentChunks =5,
+            HttpClientTimeout = 99990_000
+        };
+    }
+
+    public Task InitializeAsync()
+    {
+        return _dataLoadTask ??= InitializeDataAsync();
+    }
+
+    private async Task InitializeDataAsync()
+    {
+        await _databaseReadyTask;
+        if (_userInfoService.ShowUserInfo.UserId == Guid.Empty)
+        {
+            return;
+        }
+
+        await LoadDataAsync();
     }
 
     public async Task LoadDataAsync()
@@ -721,22 +749,10 @@ public partial class FileTransmissionService : ObservableObject
     /// <param name="ufi"></param>
     public async Task AddUpload(FileUploadInfo fui)
     {
-        //尝试闪存
-        var re = await _webApiService.FileApi.SaveToFileAsync(fui.UploadFolderId, null, fui.Hash256);
 
-        if (re.Status == 0)
-        {
-            //成功+1 并通知
-            WeakReferenceMessenger.Default.Send(new UploadPanleProgressBarMsg(0));
-            Home.GlobalToastManager?.Show(
-                new Toast($"文件: {fui.Name} 闪传成功~"),
-                type: NotificationType.Success
-            );
-            return;
-        }
 
-        //检测是否重复下载
-        if (FileUploadInfos.Any(x => x.Hash256 == fui.Hash256))
+        //检测是否重复上传
+        if (FileUploadInfos.Any(x => x.Hash256 == fui.Hash256 && x.UploadFolderId == fui.UploadFolderId))
         {
             Home.GlobalToastManager?.Show(
                 new Toast($"文件 {fui.Name} 上传任务已存在"),
@@ -771,8 +787,22 @@ public partial class FileTransmissionService : ObservableObject
             return;
         }
 
+        
         // 从取得并发名额开始就登记为活动任务，暂停时才能准确归还名额。
         _activeUploads.TryAdd(fui.Id, true);
+        //尝试闪存
+        var re = await _webApiService.FileApi.SaveToFileAsync(fui.UploadFolderId, null, fui.Hash256);
+        if (re.Status == 0)
+        {
+            //成功+1 并通知
+            WeakReferenceMessenger.Default.Send(new UploadPanleProgressBarMsg(0));
+            Home.GlobalToastManager?.Show(
+                new Toast($"文件: {fui.Name} 闪传成功~"),
+                type: NotificationType.Success
+            );
+            await UploadComplete(fui,3);
+            return;
+        }
 
         // 先创建并持久化服务端上传会话。即使用户在请求期间暂停或关闭应用，
         // 下次启动也能使用同一个 UploadId 查询服务端已经完成的分片。
@@ -920,7 +950,7 @@ public partial class FileTransmissionService : ObservableObject
             return;
         }
 
-        if (data.Status != 0 || data.Data is null)
+        if (data.Status != 0)
         {
             Home.GlobalToastManager?.Show(
                 new Toast($"获取分片数据失败，请重新上传:{data.Msg}"),
@@ -970,7 +1000,7 @@ public partial class FileTransmissionService : ObservableObject
     ///  上传结束/成功/失败执行这个
     /// </summary>
     /// <param name="id"></param>
-    /// <param name="status">0成功 1失败 2取消</param>
+    /// <param name="status">0成功 1失败 2取消 3直接成功</param>
     public async Task UploadComplete(FileUploadInfo fud, int status)
     {
         try
@@ -992,13 +1022,17 @@ public partial class FileTransmissionService : ObservableObject
                     var r = await _webApiService.FileApi.MergeFiles(fud.UploadId.ToString(), fud.UploadFolderId);
                     if (r.Status != 0)
                     {
+                        item.IsEnd = true;
+                        item.EndTime = DateTime.Now;
                         item.ReasonFailure = r.Msg;
+                        await RemoveCompletedUploadFromListAsync(fud);
+                        RemoveTransferTask(fud.Id);
                         break;
                     }
 
                     item.IsEnd = true;
                     item.EndTime = DateTime.Now;
-                    FileUploadInfos.Remove(fud);
+                    await RemoveCompletedUploadFromListAsync(fud);
                     MarkTransferTaskCompleted(fud.Id);
                     break;
                 case 1:
@@ -1011,14 +1045,19 @@ public partial class FileTransmissionService : ObservableObject
                     item.IsEnd = true;
                     item.EndTime = DateTime.Now;
                     item.IsDel = true;
-                    FileUploadInfos.Remove(fud);
+                    await RemoveCompletedUploadFromListAsync(fud);
                     RemoveTransferTask(fud.Id);
+                    break;
+                case 3:
+                    item.IsEnd = true;
+                    item.EndTime = DateTime.Now;
+                    await RemoveCompletedUploadFromListAsync(fud);
+                    MarkTransferTaskCompleted(fud.Id);
                     break;
                 default:
                     return;
             }
 
-            OnPropertyChanged(nameof(IsConditionMetUpload));
             await _db.UpdateAsync(item, typeof(FileTransmissionModel));
         }
         catch (Exception e)
@@ -1034,6 +1073,19 @@ public partial class FileTransmissionService : ObservableObject
                 _uploadSemaphore.Release();
             }
         }
+    }
+
+    /// <summary>
+    /// 完成上传后从活动列表移除任务。
+    /// UploadFileCompleted 可能在后台线程触发，ObservableCollection 只能在 UI 线程修改。
+    /// </summary>
+    private async Task RemoveCompletedUploadFromListAsync(FileUploadInfo item)
+    {
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            FileUploadInfos.Remove(item);
+            OnPropertyChanged(nameof(IsConditionMetUpload));
+        });
     }
 
     /// <summary>

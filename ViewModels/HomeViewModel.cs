@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -11,6 +12,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Notifications;
 using Avalonia.Platform.Storage;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -127,8 +129,9 @@ public partial class HomeViewModel : ViewModelBase
     public DocumentViewDialogViewModel DocumentViewDialogViewModel { get; }
     public StatisticsDashboardPageViewModel StatisticsDashboardPageViewModel { get; }
     public SettingPageViewModel SettingPageViewModel { get; }
+    public MusicDialogViewModel MusicDialogViewModel { get; }
     public AiChatViewModel AiChatViewModel { get; }
-    public HomeViewModel(AiChatViewModel aiChatViewModel,SettingPageViewModel settingPageViewModel,StatisticsDashboardPageViewModel statisticsDashboardPageViewModel,DocumentViewDialogViewModel documentViewDialogViewModel,FileSharePageViewModel fileSharePageViewModel,FileTransmissionViewModel fileTransmissionViewModel, SearchPageViewModel searchPageViewModel,
+    public HomeViewModel(MusicDialogViewModel musicDialogViewModel,AiChatViewModel aiChatViewModel,SettingPageViewModel settingPageViewModel,StatisticsDashboardPageViewModel statisticsDashboardPageViewModel,DocumentViewDialogViewModel documentViewDialogViewModel,FileSharePageViewModel fileSharePageViewModel,FileTransmissionViewModel fileTransmissionViewModel, SearchPageViewModel searchPageViewModel,
         ShareFileDialogViewModel shareFileDialogViewModel, TextViewDialogViewModel textViewDialogViewModel,
         ImageViewModel imageViewModel, FilePropertiesDialogViewModel filePropertiesDialogViewModel,
         MoveFilesViewModel moveFilesViewModel, FilePageViewModel filePageViewModel, WebApiService webApiService,
@@ -137,6 +140,7 @@ public partial class HomeViewModel : ViewModelBase
         CustomViewEditViewModel customViewEditViewModel, TopBarViewModel topBarViewModel,
         UserInfoService userInfoService)
     {
+        MusicDialogViewModel = musicDialogViewModel;
         AiChatViewModel = aiChatViewModel;
         TopBarViewModel = topBarViewModel;
         SettingPageViewModel =  settingPageViewModel;
@@ -162,6 +166,7 @@ public partial class HomeViewModel : ViewModelBase
 
         NewFolderDialogViewModel = newFolderDialogViewModel;
 
+      
 
         //注册监听到主题色发生变化后的消费者
         WeakReferenceMessenger.Default.Register<ThemeService.ThemeChangedMessage>(this,
@@ -202,13 +207,50 @@ public partial class HomeViewModel : ViewModelBase
                     }
                 }
             });
-
+      
     }
-
+    
     public HomeViewModel()
     {
     }
 
+    private Task? _initializeTask;
+
+    public Task InitializeAsync()
+    {
+        
+        return _initializeTask ??= InitializeCoreAsync();
+    }
+
+    private async Task InitializeCoreAsync()
+    {
+        FilePageViewModel.IsLoading = true;
+        try
+        {
+       
+            await _userInfoService.ReUserInfo();
+
+            var cloudTask = _webApiService.FileApi.GetCloudInfoAsync();
+            var filePageTask = FilePageViewModel.InitializeAsync();
+            var transferTask = FileTransmissionViewModel.FileTransmissionService.InitializeAsync();
+            var setting = SettingPageViewModel.InitializeAsync();
+            var cloudInfo = await cloudTask;
+            if (cloudInfo.Status == 0 && cloudInfo.Data is not null)
+            {
+                _userInfoService.CloudInfo = cloudInfo.Data;
+                FileTransmissionViewModel.FileTransmissionService.RefreshUploadConfiguration();
+            }
+
+            var sidebarTask = SidebarVM.InitializeAsync();
+            await Task.WhenAll(cloudTask, sidebarTask, filePageTask, transferTask,setting);
+            TopBarViewModel.RefreshUserInfo();
+        }
+        catch
+        {
+            FilePageViewModel.IsLoading = false;
+            throw;
+        }
+    }
     /// <summary>
     /// 进行简单搜索以及判断是否是分享链接
     /// </summary>
@@ -218,21 +260,28 @@ public partial class HomeViewModel : ViewModelBase
         ShareFileName = string.Empty;
         _shareFileInfo = null;
         _shareKey = null;
+        Guid guid = Guid.Empty;
+        string shareKey  = string.Empty;
+        int idx1 = searchText.IndexOf("share/");
+        int idx2 = searchText.IndexOf("share_");
+        int startIndex = Math.Max(idx1, idx2); 
+        
+        var textToParse = startIndex >= 0 ? searchText[(startIndex + 6)..] : searchText;
 
-        //是否是分享key
-        if (searchText.StartsWith("share_", StringComparison.OrdinalIgnoreCase))
+        if (Guid.TryParse(textToParse, out  guid))
         {
-            var shareKey = searchText["share_".Length..].Trim();
-            if (!string.IsNullOrEmpty(shareKey))
+             shareKey = guid.ToString();
+        }
+
+        if (!string.IsNullOrEmpty(shareKey))
+        {
+            var info = await _webApiService.FileApi.GetShareInfoAsync(shareKey);
+            if (info.Status == 0 )
             {
-                var info = await _webApiService.FileApi.GetShareInfoAsync(shareKey);
-                if (info.Status == 0 )
-                {
-                    _shareFileInfo = info.Data;
-                    _shareKey = shareKey;
-                    ShareFileName = info.Data.Name;
-                    ShareFileButtonVisible = true;
-                }
+                _shareFileInfo = info.Data;
+                _shareKey = shareKey;
+                ShareFileName = info.Data.Name;
+                ShareFileButtonVisible = true;
             }
         }
         var info2 = await _webApiService.FileApi.SearchFilesAsync(new SearchInfoDTO()
@@ -246,11 +295,12 @@ public partial class HomeViewModel : ViewModelBase
             var tasks =   info2.Data.FileInfos.Take(10).Select(async x =>
             {
                 var p = await _webApiService.FileApi.GetFullFolderPathAsync(x.FolderId);
-                string path = "路径获取失败";
-                if (p.Status == 0)
+                string path = "/";
+                if (p.Status== 0)
                 {
                     path = p.Data.ToString();
                 }
+                
                 return new FileSearchSimpleItem()
                 {
                     Id = x.Id,
@@ -351,10 +401,7 @@ public partial class HomeViewModel : ViewModelBase
     /// </summary>
     /// <param name="localFolderPath">当前文件夹</param>
     /// <param name="serverParentFolderId">文件夹父id</param>
-    private async Task UploadFolderRecursiveAsync(
-        string localFolderPath,
-        string serverParentFolderId,
-        string serverParentFolderPath)
+    private async Task UploadFolderRecursiveAsync(string localFolderPath, string serverParentFolderId, string serverParentFolderPath)
     {
         var directoryInfo = new DirectoryInfo(localFolderPath);
 
@@ -364,10 +411,7 @@ public partial class HomeViewModel : ViewModelBase
         }
 
         // 创建当前服务器文件夹
-        DefaultMsg re =
-            await _webApiService.FileApi.CreateFolderAsync(
-                serverParentFolderId,
-                directoryInfo.Name);
+        DefaultMsg re = await _webApiService.FileApi.CreateFolderAsync(serverParentFolderId, directoryInfo.Name);
 
         if (re.Status != 0)
         {
@@ -382,34 +426,18 @@ public partial class HomeViewModel : ViewModelBase
         }
 
         // 拼接当前文件夹的服务器路径
-        string currentServerFolderPath =
-            CombineCloudPath(
-                serverParentFolderPath,
-                directoryInfo.Name);
+        string currentServerFolderPath = CombineCloudPath( serverParentFolderPath, directoryInfo.Name);
 
         // 只获取当前层文件
-        List<string> currentFiles =
-            Directory.EnumerateFiles(
-                localFolderPath,
-                "*",
-                SearchOption.TopDirectoryOnly).ToList();
+        List<string> currentFiles = Directory.EnumerateFiles( localFolderPath, "*", SearchOption.TopDirectoryOnly).ToList();
 
         if (currentFiles.Count > 0)
         {
-            WeakReferenceMessenger.Default.Send(
-                new FileTmMessage(
-                    1,
-                    currentFiles,
-                    currentServerFolderId,
-                    currentServerFolderPath));
+            WeakReferenceMessenger.Default.Send( new FileTmMessage(1, currentFiles, currentServerFolderId, currentServerFolderPath));
         }
 
         // 将当前层的 ID 和路径继续传给子目录
-        foreach (string childFolder in
-                 Directory.EnumerateDirectories(
-                     localFolderPath,
-                     "*",
-                     SearchOption.TopDirectoryOnly))
+        foreach (string childFolder in Directory.EnumerateDirectories(localFolderPath, "*", SearchOption.TopDirectoryOnly))
         {
             await UploadFolderRecursiveAsync(
                 childFolder,
@@ -417,26 +445,21 @@ public partial class HomeViewModel : ViewModelBase
                 currentServerFolderPath);
         }
     }
-    private static string CombineCloudPath(
-        string parentPath,
-        string folderName)
+    private static string CombineCloudPath( string parentPath, string folderName)
     {
         if (string.IsNullOrWhiteSpace(parentPath))
         {
             return folderName;
         }
 
-        string normalizedParent =
-            parentPath.Replace('\\', '/');
+        string normalizedParent = parentPath.Replace('\\', '/');
 
         bool isRoot = normalizedParent == "/";
 
         normalizedParent =
             normalizedParent.TrimEnd('/');
 
-        return isRoot
-            ? $"/{folderName}"
-            : $"{normalizedParent}/{folderName}";
+        return isRoot ? $"/{folderName}" : $"{normalizedParent}/{folderName}";
     }
     /// <summary>
     /// 选择文件

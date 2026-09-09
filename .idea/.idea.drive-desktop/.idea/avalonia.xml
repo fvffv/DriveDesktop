@@ -24,6 +24,7 @@
         <entry key="Components/UserControls/ImageView.axaml" value="drive-desktop.csproj" />
         <entry key="Components/UserControls/ImageViewDialog.axaml" value="drive-desktop.csproj" />
         <entry key="Components/UserControls/MoveFilesDialog.axaml" value="drive-desktop.csproj" />
+        <entry key="Components/UserControls/MusicDialog.axaml" value="drive-desktop.csproj" />
         <entry key="Components/UserControls/NewFolderDialog.axaml" value="drive-desktop.csproj" />
         <entry key="Components/UserControls/Search.axaml" value="drive-desktop.csproj" />
         <entry key="Components/UserControls/SearchPage.axaml" value="drive-desktop.csproj" />
@@ -38,6 +39,7 @@
         <entry key="Views/Home.axaml" value="drive-desktop.csproj" />
         <entry key="Views/MainWindow.axaml" value="drive-desktop.csproj" />
         <entry key="Views/ShareView.axaml" value="drive-desktop.csproj" />
+        <entry key="Views/VideoPreviewView.axaml" value="drive-desktop.csproj" />
       </map>
     </option>
   </component>

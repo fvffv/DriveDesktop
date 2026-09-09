@@ -54,7 +54,15 @@ public partial class FilePropertiesDialogViewModel : ViewModelBase
     private async Task GetFilePath(UserFilesInfoItem item)
     {
         var info = await _webApiService.FileApi.GetFullFolderPathAsync(item.FolderId);
-        Path = info.Data.ToString();
+        if (info.Status == 0)
+        {
+            Path = info.Data.ToString();
+        }
+        else
+        {
+            Path ="/";
+        }
+
     }
     
 }

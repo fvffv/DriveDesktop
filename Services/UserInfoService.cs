@@ -65,7 +65,7 @@ public partial class UserInfoService : ObservableObject
                
                 ShowUserInfo = res.Data;
                 ReTheme();
-                await LoadUserHeadImgAsync(res.Data.AvatarUrl);
+                _ = LoadUserHeadImgAsync(res.Data.AvatarUrl);
               
             }
            

@@ -89,3 +89,9 @@ public record UploadFlyoutMessage(bool show);
 /// <param name="show"></param>
 public record FastSearchFlyoutMessage(bool show,string msg);
 
+/// <summary>
+/// 音乐播放
+/// </summary>
+/// <param name="show"></param>
+public record MusicPlayMsg(bool show,UserFilesInfoItem msg);
+
