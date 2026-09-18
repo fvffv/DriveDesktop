@@ -3,8 +3,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Width="1420"
-        Height="900"
+        Width="1438"
+        Height="872"
         MinWidth="960"
         MinHeight="600"
         xmlns:chrome="using:Avalonia.Controls.Chrome"
@@ -552,6 +552,7 @@
                     <uc:FileSharePage DataContext="{Binding FileSharePageViewModel}" />
                     <uc:StatisticsDashboardPage DataContext="{Binding StatisticsDashboardPageViewModel}" />
                     <uc:SettingPage DataContext="{Binding SettingPageViewModel}" />
+                    <uc:PluginApplications DataContext="{Binding Plugins}" />
                 </Carousel>
             </Border>
         </Grid>

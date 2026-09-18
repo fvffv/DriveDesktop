@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsAotCompatible>true</IsAotCompatible>
+    <IsTrimmable>true</IsTrimmable>
+    <PackageId>Drive.Plugin.SDK</PackageId>
+    <Description>Drive 网盘客户端的托管插件 SDK：提供文件、传输、账户、菜单、存储、日志及 29 个宿主事件，通过独立运行器与 NativeAOT 主程序通信。</Description>
+    <PackageTags>Drive;Plugin;SDK;CloudDrive;IPC;NativeAOT;net11</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>Copyright (c) 2026 Drive</Copyright>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Keep the public SDK discoverable in IDEs and reject missing or invalid XML comments. -->
+    <WarningsAsErrors>$(WarningsAsErrors);CS1591;CS1570;CS1572;CS1573;CS1574;CS1584</WarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Drive.Plugin.Abi/Drive.Plugin.Abi.csproj" />
+    <None Include="buildTransitive/Drive.Plugin.SDK.targets" Pack="true" PackagePath="buildTransitive/Drive.Plugin.SDK.targets" />
+    <None Include="buildTransitive/Publish/RuntimeFiles.targets" Pack="true" PackagePath="buildTransitive/Publish/RuntimeFiles.targets" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- NuGet 展示文档与许可证随包交付，开发用 XML 注释继续由编译器生成。 -->
+    <None Update="README.md" Pack="true" PackagePath="/" />
+    <None Update="LICENSE.txt" Pack="true" PackagePath="/" />
+  </ItemGroup>
+</Project>

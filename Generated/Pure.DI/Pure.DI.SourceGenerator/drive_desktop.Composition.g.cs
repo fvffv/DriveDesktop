@@ -11,6 +11,7 @@ using System.Collections.Concurrent;
 using System.Text;
 using drive_desktop.Components.UserControls;
 using drive_desktop.Services;
+using drive_desktop.Services.Plugins;
 using drive_desktop.ViewModels;
 
 namespace drive_desktop
@@ -19,6 +20,14 @@ namespace drive_desktop
 	/// <para>
 	/// <b>Composition roots:</b><br/>
 	/// <list type="bullet">
+	/// <item>
+	/// <term>
+	/// <see cref="T:drive_desktop.Services.Plugins.DesktopPluginService"/> <see cref="Plugins"/><br/>or using <see cref="Resolve{T}()"/> method: <c>Resolve&lt;drive_desktop.Services.Plugins.DesktopPluginService&gt;()</c>
+	/// </term>
+	/// <description>
+	/// Provides a composition root of type <see cref="T:drive_desktop.Services.Plugins.DesktopPluginService"/>.
+	/// </description>
+	/// </item>
 	/// <item>
 	/// <term>
 	/// <see cref="T:drive_desktop.ViewModels.MainWindowViewModel"/> <see cref="RootViewModel"/><br/>or using <see cref="Resolve{T}()"/> method: <c>Resolve&lt;drive_desktop.ViewModels.MainWindowViewModel&gt;()</c>
@@ -30,10 +39,10 @@ namespace drive_desktop
 	/// </list>
 	/// </para>
 	/// <example>
-	/// This example shows how to get an instance of type <see cref="T:drive_desktop.ViewModels.MainWindowViewModel"/> using the composition root <see cref="RootViewModel"/>:
+	/// This example shows how to get an instance of type <see cref="T:drive_desktop.Services.Plugins.DesktopPluginService"/> using the composition root <see cref="Plugins"/>:
 	/// <code>
 	/// var composition = new Composition();
-	/// var instance = composition.RootViewModel;
+	/// var instance = composition.Plugins;
 	/// </code>
 	/// See also:
 	/// <br/><see cref="Pure.DI.DI.Setup"/>
@@ -51,37 +60,190 @@ namespace drive_desktop
 	partial class Composition
 	{
 #if NET9_0_OR_GREATER
-		[global::System.NonSerializedAttribute] private readonly global::System.Threading.Lock _lock252d = new global::System.Threading.Lock();
+		[global::System.NonSerializedAttribute] private readonly global::System.Threading.Lock _lock261d = new global::System.Threading.Lock();
 #else
-		[global::System.NonSerializedAttribute] private readonly global::System.Object _lock252d = new global::System.Object();
+		[global::System.NonSerializedAttribute] private readonly global::System.Object _lock261d = new global::System.Object();
 #endif
 		
-		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.UserInfoService? _singletonUserInfoService252d68;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.ThemeService? _singletonThemeService252d60;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.ThemeSwitchViewModel? _singletonThemeSwitchViewModel252d62;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.AppConfigService? _singletonAppConfigService252d61;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.WebApiService? _singletonWebApiService252d66;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.ConstantResourceService? _singletonConstantResourceService252d67;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.AiChatViewModel? _singletonAiChatViewModel252d86;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.SettingPageViewModel? _singletonSettingPageViewModel252d85;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.StatisticsDashboardPageViewModel? _singletonStatisticsDashboardPageViewModel252d84;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.DocumentViewDialogViewModel? _singletonDocumentViewDialogViewModel252d83;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.FileSharePageViewModel? _singletonFileSharePageViewModel252d82;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.FileTransmissionViewModel? _singletonFileTransmissionViewModel252d80;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.SearchPageViewModel? _singletonSearchPageViewModel252d79;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.ShareFileDialogViewModel? _singletonShareFileDialogViewModel252d75;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.TextViewDialogViewModel? _singletonTextViewDialogViewModel252d77;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.FilePropertiesDialogViewModel? _singletonFilePropertiesDialogViewModel252d76;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.MoveFilesViewModel? _singletonMoveFilesViewModel252d73;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.FilePageViewModel? _singletonFilePageViewModel252d72;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.SidebarViewModel? _singletonSidebarViewModel252d63;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.CustomViewEditViewModel? _singletonCustomViewEditViewModel252d65;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.TopBarViewModel? _singletonTopBarViewModel252d64;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.TopLevelProvider? _singletonTopLevelProvider252d78;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.SearchViewModel? _singletonSearchViewModel252d69;
-		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.FileTransmissionService? _singletonFileTransmissionService252d81;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.UserInfoService? _singletonUserInfoService261d68;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.ThemeService? _singletonThemeService261d60;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.ThemeSwitchViewModel? _singletonThemeSwitchViewModel261d62;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.AppConfigService? _singletonAppConfigService261d61;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.WebApiService? _singletonWebApiService261d66;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.SearchViewModel? _singletonSearchViewModel261d69;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.AiChatViewModel? _singletonAiChatViewModel261d86;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.SettingPageViewModel? _singletonSettingPageViewModel261d85;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.StatisticsDashboardPageViewModel? _singletonStatisticsDashboardPageViewModel261d84;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.DocumentViewDialogViewModel? _singletonDocumentViewDialogViewModel261d83;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.FileSharePageViewModel? _singletonFileSharePageViewModel261d82;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.FileTransmissionViewModel? _singletonFileTransmissionViewModel261d80;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.SearchPageViewModel? _singletonSearchPageViewModel261d79;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.ShareFileDialogViewModel? _singletonShareFileDialogViewModel261d75;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.TextViewDialogViewModel? _singletonTextViewDialogViewModel261d77;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.FilePropertiesDialogViewModel? _singletonFilePropertiesDialogViewModel261d76;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.MoveFilesViewModel? _singletonMoveFilesViewModel261d73;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.FilePageViewModel? _singletonFilePageViewModel261d72;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.SidebarViewModel? _singletonSidebarViewModel261d63;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.CustomViewEditViewModel? _singletonCustomViewEditViewModel261d65;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.ViewModels.TopBarViewModel? _singletonTopBarViewModel261d64;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.Plugins.DesktopPluginService? _singletonDesktopPluginService261d91;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.ConstantResourceService? _singletonConstantResourceService261d67;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.TopLevelProvider? _singletonTopLevelProvider261d78;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.Plugins.PluginHostAdapter? _singletonPluginHostAdapter261d90;
+		[global::System.NonSerializedAttribute] private global::drive_desktop.Services.FileTransmissionService? _singletonFileTransmissionService261d81;
 		
 		#region Roots
+		/// <summary>
+		/// <para>
+		/// Provides a composition root of type <see cref="T:drive_desktop.Services.Plugins.DesktopPluginService"/>.
+		/// </para>
+		/// <example>
+		/// This example shows how to get an instance of type <see cref="T:drive_desktop.Services.Plugins.DesktopPluginService"/>:
+		/// <code>
+		/// var composition = new Composition();
+		/// var instance = composition.Plugins;
+		/// </code>
+		/// </example>
+		/// </summary>
+		public global::drive_desktop.Services.Plugins.DesktopPluginService Plugins
+		{
+			[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
+			get
+			{
+				if (_singletonDesktopPluginService261d91 is null)
+					lock (_lock261d)
+						if (_singletonDesktopPluginService261d91 is null)
+						{
+							if (_singletonPluginHostAdapter261d90 is null)
+							{
+								EnsureWebApiServiceExists261d1();
+								EnsureUserInfoServiceExists261d1();
+								EnsureThemeServiceExists261d1();
+								System.Func<global::drive_desktop.Services.FileTransmissionService> perBlockFunc261d36 = new System.Func<global::drive_desktop.Services.FileTransmissionService>([global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256) ]() =>
+								{
+									if (_singletonFileTransmissionService261d81 is null)
+										lock (_lock261d)
+											if (_singletonFileTransmissionService261d81 is null)
+											{
+												EnsureUserInfoServiceExists261d1();
+												EnsureFilePageViewModelExists261d1();
+												EnsureWebApiServiceExists261d1();
+												EnsureAppConfigServiceExists261d1();
+												_singletonFileTransmissionService261d81 = new global::drive_desktop.Services.FileTransmissionService(_singletonUserInfoService261d68, _singletonFilePageViewModel261d72, _singletonWebApiService261d66, _singletonAppConfigService261d61);
+											}
+									
+									return _singletonFileTransmissionService261d81;
+								});
+								System.Func<global::drive_desktop.ViewModels.FilePageViewModel> perBlockFunc261d37 = new System.Func<global::drive_desktop.ViewModels.FilePageViewModel>([global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256) ]() =>
+								{
+									EnsureFilePageViewModelExists261d1();
+									return _singletonFilePageViewModel261d72;
+								});
+								_singletonPluginHostAdapter261d90 = new global::drive_desktop.Services.Plugins.PluginHostAdapter(_singletonWebApiService261d66, _singletonUserInfoService261d68, _singletonAppConfigService261d61, _singletonThemeService261d60, perBlockFunc261d36, perBlockFunc261d37);
+							}
+							
+							EnsureUserInfoServiceExists261d1();
+							System.Func<global::drive_desktop.ViewModels.FilePageViewModel> perBlockFunc261d35 = new System.Func<global::drive_desktop.ViewModels.FilePageViewModel>([global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256) ]() =>
+							{
+								EnsureFilePageViewModelExists261d1();
+								return _singletonFilePageViewModel261d72;
+							});
+							_singletonDesktopPluginService261d91 = new global::drive_desktop.Services.Plugins.DesktopPluginService(_singletonPluginHostAdapter261d90, _singletonUserInfoService261d68, perBlockFunc261d35);
+						}
+				
+				return _singletonDesktopPluginService261d91;
+				
+				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
+				void EnsureUserInfoServiceExists261d1()
+				{
+					if (_singletonUserInfoService261d68 is null)
+						lock (_lock261d)
+							if (_singletonUserInfoService261d68 is null)
+							{
+								EnsureThemeServiceExists261d1();
+								_singletonUserInfoService261d68 = new global::drive_desktop.Services.UserInfoService(_singletonWebApiService261d66, _singletonThemeService261d60);
+							}
+							
+				}
+				
+				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
+				void EnsureThemeServiceExists261d1()
+				{
+					if (_singletonThemeService261d60 is null)
+						lock (_lock261d)
+							if (_singletonThemeService261d60 is null)
+							{
+								EnsureAppConfigServiceExists261d1();
+								_singletonThemeService261d60 = new global::drive_desktop.Services.ThemeService(_singletonAppConfigService261d61);
+							}
+							
+				}
+				
+				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
+				void EnsureAppConfigServiceExists261d1()
+				{
+					if (_singletonAppConfigService261d61 is null)
+						lock (_lock261d)
+							if (_singletonAppConfigService261d61 is null)
+							{
+								_singletonAppConfigService261d61 = new global::drive_desktop.Services.AppConfigService();
+							}
+							
+				}
+				
+				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
+				void EnsureWebApiServiceExists261d1()
+				{
+					if (_singletonWebApiService261d66 is null)
+						lock (_lock261d)
+							if (_singletonWebApiService261d66 is null)
+							{
+								EnsureAppConfigServiceExists261d1();
+								_singletonWebApiService261d66 = new global::drive_desktop.Services.WebApiService(_singletonAppConfigService261d61);
+							}
+							
+				}
+				
+				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
+				void EnsureFilePageViewModelExists261d1()
+				{
+					if (_singletonFilePageViewModel261d72 is null)
+						lock (_lock261d)
+							if (_singletonFilePageViewModel261d72 is null)
+							{
+								EnsureUserInfoServiceExists261d1();
+								EnsureWebApiServiceExists261d1();
+								EnsureAppConfigServiceExists261d1();
+								if (_singletonTopBarViewModel261d64 is null)
+								{
+									EnsureWebApiServiceExists261d1();
+									EnsureUserInfoServiceExists261d1();
+									if (_singletonThemeSwitchViewModel261d62 is null)
+									{
+										EnsureThemeServiceExists261d1();
+										_singletonThemeSwitchViewModel261d62 = new global::drive_desktop.ViewModels.ThemeSwitchViewModel(_singletonThemeService261d60);
+									}
+									
+									if (_singletonSearchViewModel261d69 is null)
+									{
+										_singletonSearchViewModel261d69 = new global::drive_desktop.ViewModels.SearchViewModel();
+									}
+									
+									_singletonTopBarViewModel261d64 = new global::drive_desktop.ViewModels.TopBarViewModel(_singletonWebApiService261d66, _singletonUserInfoService261d68, _singletonThemeSwitchViewModel261d62, _singletonSearchViewModel261d69);
+								}
+								
+								if (_singletonTopLevelProvider261d78 is null)
+								{
+									_singletonTopLevelProvider261d78 = new global::drive_desktop.Services.TopLevelProvider();
+								}
+								
+								_singletonFilePageViewModel261d72 = new global::drive_desktop.ViewModels.FilePageViewModel(_singletonUserInfoService261d68, _singletonWebApiService261d66, _singletonAppConfigService261d61, _singletonTopBarViewModel261d64, _singletonTopLevelProvider261d78);
+							}
+							
+				}
+			}
+		}
+		
 		/// <summary>
 		/// <para>
 		/// Provides a composition root of type <see cref="T:drive_desktop.ViewModels.MainWindowViewModel"/>.
@@ -99,288 +261,328 @@ namespace drive_desktop
 			[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
 			get
 			{
-				EnsureUserInfoServiceExists252d();
-				EnsureThemeServiceExists252d();
-				EnsureThemeSwitchViewModelExists252d();
-				EnsureWebApiServiceExists252d();
-				System.Func<global::drive_desktop.ViewModels.HomeViewModel> perBlockFunc252d6 = new System.Func<global::drive_desktop.ViewModels.HomeViewModel>([global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256) ]() =>
+				EnsureUserInfoServiceExists261d();
+				EnsureThemeServiceExists261d();
+				EnsureThemeSwitchViewModelExists261d();
+				EnsureWebApiServiceExists261d();
+				System.Func<global::drive_desktop.ViewModels.HomeViewModel> perBlockFunc261d6 = new System.Func<global::drive_desktop.ViewModels.HomeViewModel>([global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256) ]() =>
 				{
-					EnsureUserInfoServiceExists252d();
-					if (_singletonCustomViewEditViewModel252d65 is null)
-						lock (_lock252d)
-							if (_singletonCustomViewEditViewModel252d65 is null)
+					if (_singletonFilePropertiesDialogViewModel261d76 is null)
+						lock (_lock261d)
+							if (_singletonFilePropertiesDialogViewModel261d76 is null)
 							{
-								EnsureConstantResourceServiceExists252d();
-								EnsureWebApiServiceExists252d();
-								_singletonCustomViewEditViewModel252d65 = new global::drive_desktop.ViewModels.CustomViewEditViewModel(_singletonConstantResourceService252d67, _singletonWebApiService252d66);
+								EnsureWebApiServiceExists261d();
+								_singletonFilePropertiesDialogViewModel261d76 = new global::drive_desktop.ViewModels.FilePropertiesDialogViewModel(_singletonWebApiService261d66);
 							}
 					
-					EnsureAppConfigServiceExists252d();
-					EnsureWebApiServiceExists252d();
-					EnsureFilePageViewModelExists252d();
-					if (_singletonMoveFilesViewModel252d73 is null)
-						lock (_lock252d)
-							if (_singletonMoveFilesViewModel252d73 is null)
+					EnsureTopBarViewModelExists261d();
+					if (_singletonCustomViewEditViewModel261d65 is null)
+						lock (_lock261d)
+							if (_singletonCustomViewEditViewModel261d65 is null)
 							{
-								EnsureUserInfoServiceExists252d();
-								EnsureFilePageViewModelExists252d();
-								EnsureWebApiServiceExists252d();
-								EnsureTopBarViewModelExists252d();
-								_singletonMoveFilesViewModel252d73 = new global::drive_desktop.ViewModels.MoveFilesViewModel(_singletonUserInfoService252d68, _singletonFilePageViewModel252d72, _singletonWebApiService252d66, _singletonTopBarViewModel252d64);
+								EnsureConstantResourceServiceExists261d();
+								EnsureWebApiServiceExists261d();
+								_singletonCustomViewEditViewModel261d65 = new global::drive_desktop.ViewModels.CustomViewEditViewModel(_singletonConstantResourceService261d67, _singletonWebApiService261d66);
 							}
 					
-					if (_singletonFilePropertiesDialogViewModel252d76 is null)
-						lock (_lock252d)
-							if (_singletonFilePropertiesDialogViewModel252d76 is null)
+					if (_singletonSidebarViewModel261d63 is null)
+						lock (_lock261d)
+							if (_singletonSidebarViewModel261d63 is null)
 							{
-								EnsureWebApiServiceExists252d();
-								_singletonFilePropertiesDialogViewModel252d76 = new global::drive_desktop.ViewModels.FilePropertiesDialogViewModel(_singletonWebApiService252d66);
+								EnsureThemeServiceExists261d();
+								EnsureUserInfoServiceExists261d();
+								EnsureAppConfigServiceExists261d();
+								EnsureWebApiServiceExists261d();
+								EnsureConstantResourceServiceExists261d();
+								_singletonSidebarViewModel261d63 = new global::drive_desktop.ViewModels.SidebarViewModel(_singletonThemeService261d60, _singletonUserInfoService261d68, _singletonAppConfigService261d61, _singletonWebApiService261d66, _singletonConstantResourceService261d67);
 							}
 					
-					EnsureTopBarViewModelExists252d();
-					EnsureThemeServiceExists252d();
-					if (_singletonTextViewDialogViewModel252d77 is null)
-						lock (_lock252d)
-							if (_singletonTextViewDialogViewModel252d77 is null)
+					EnsureThemeServiceExists261d();
+					EnsureAppConfigServiceExists261d();
+					EnsureWebApiServiceExists261d();
+					EnsureFilePageViewModelExists261d();
+					if (_singletonMoveFilesViewModel261d73 is null)
+						lock (_lock261d)
+							if (_singletonMoveFilesViewModel261d73 is null)
 							{
-								EnsureWebApiServiceExists252d();
-								_singletonTextViewDialogViewModel252d77 = new global::drive_desktop.ViewModels.TextViewDialogViewModel(_singletonWebApiService252d66);
+								EnsureUserInfoServiceExists261d();
+								EnsureFilePageViewModelExists261d();
+								EnsureWebApiServiceExists261d();
+								EnsureTopBarViewModelExists261d();
+								_singletonMoveFilesViewModel261d73 = new global::drive_desktop.ViewModels.MoveFilesViewModel(_singletonUserInfoService261d68, _singletonFilePageViewModel261d72, _singletonWebApiService261d66, _singletonTopBarViewModel261d64);
 							}
 					
-					if (_singletonSearchPageViewModel252d79 is null)
-						lock (_lock252d)
-							if (_singletonSearchPageViewModel252d79 is null)
+					EnsureUserInfoServiceExists261d();
+					if (_singletonDesktopPluginService261d91 is null)
+						lock (_lock261d)
+							if (_singletonDesktopPluginService261d91 is null)
 							{
-								EnsureTopLevelProviderExists252d();
-								EnsureAppConfigServiceExists252d();
-								EnsureWebApiServiceExists252d();
-								_singletonSearchPageViewModel252d79 = new global::drive_desktop.ViewModels.SearchPageViewModel(_singletonTopLevelProvider252d78, _singletonAppConfigService252d61, _singletonWebApiService252d66);
-							}
-					
-					if (_singletonFileTransmissionViewModel252d80 is null)
-						lock (_lock252d)
-							if (_singletonFileTransmissionViewModel252d80 is null)
-							{
-								EnsureAppConfigServiceExists252d();
-								EnsureTopLevelProviderExists252d();
-								if (_singletonFileTransmissionService252d81 is null)
+								if (_singletonPluginHostAdapter261d90 is null)
 								{
-									EnsureUserInfoServiceExists252d();
-									EnsureFilePageViewModelExists252d();
-									EnsureWebApiServiceExists252d();
-									EnsureAppConfigServiceExists252d();
-									_singletonFileTransmissionService252d81 = new global::drive_desktop.Services.FileTransmissionService(_singletonUserInfoService252d68, _singletonFilePageViewModel252d72, _singletonWebApiService252d66, _singletonAppConfigService252d61);
+									EnsureWebApiServiceExists261d();
+									EnsureUserInfoServiceExists261d();
+									EnsureAppConfigServiceExists261d();
+									EnsureThemeServiceExists261d();
+									System.Func<global::drive_desktop.Services.FileTransmissionService> perBlockFunc261d32 = new System.Func<global::drive_desktop.Services.FileTransmissionService>([global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256) ]() =>
+									{
+										EnsureFileTransmissionServiceExists261d();
+										return _singletonFileTransmissionService261d81;
+									});
+									System.Func<global::drive_desktop.ViewModels.FilePageViewModel> perBlockFunc261d33 = new System.Func<global::drive_desktop.ViewModels.FilePageViewModel>([global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256) ]() =>
+									{
+										EnsureFilePageViewModelExists261d();
+										return _singletonFilePageViewModel261d72;
+									});
+									_singletonPluginHostAdapter261d90 = new global::drive_desktop.Services.Plugins.PluginHostAdapter(_singletonWebApiService261d66, _singletonUserInfoService261d68, _singletonAppConfigService261d61, _singletonThemeService261d60, perBlockFunc261d32, perBlockFunc261d33);
 								}
 								
-								EnsureUserInfoServiceExists252d();
-								EnsureWebApiServiceExists252d();
-								_singletonFileTransmissionViewModel252d80 = new global::drive_desktop.ViewModels.FileTransmissionViewModel(_singletonAppConfigService252d61, _singletonTopLevelProvider252d78, _singletonFileTransmissionService252d81, _singletonUserInfoService252d68, _singletonWebApiService252d66);
+								EnsureUserInfoServiceExists261d();
+								System.Func<global::drive_desktop.ViewModels.FilePageViewModel> perBlockFunc261d31 = new System.Func<global::drive_desktop.ViewModels.FilePageViewModel>([global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256) ]() =>
+								{
+									EnsureFilePageViewModelExists261d();
+									return _singletonFilePageViewModel261d72;
+								});
+								_singletonDesktopPluginService261d91 = new global::drive_desktop.Services.Plugins.DesktopPluginService(_singletonPluginHostAdapter261d90, _singletonUserInfoService261d68, perBlockFunc261d31);
 							}
 					
-					if (_singletonFileSharePageViewModel252d82 is null)
-						lock (_lock252d)
-							if (_singletonFileSharePageViewModel252d82 is null)
+					if (_singletonTextViewDialogViewModel261d77 is null)
+						lock (_lock261d)
+							if (_singletonTextViewDialogViewModel261d77 is null)
 							{
-								EnsureAppConfigServiceExists252d();
-								EnsureUserInfoServiceExists252d();
-								EnsureTopLevelProviderExists252d();
-								EnsureWebApiServiceExists252d();
-								_singletonFileSharePageViewModel252d82 = new global::drive_desktop.ViewModels.FileSharePageViewModel(_singletonAppConfigService252d61, _singletonUserInfoService252d68, _singletonTopLevelProvider252d78, _singletonWebApiService252d66);
+								EnsureWebApiServiceExists261d();
+								_singletonTextViewDialogViewModel261d77 = new global::drive_desktop.ViewModels.TextViewDialogViewModel(_singletonWebApiService261d66);
 							}
 					
-					if (_singletonDocumentViewDialogViewModel252d83 is null)
-						lock (_lock252d)
-							if (_singletonDocumentViewDialogViewModel252d83 is null)
+					if (_singletonShareFileDialogViewModel261d75 is null)
+						lock (_lock261d)
+							if (_singletonShareFileDialogViewModel261d75 is null)
 							{
-								EnsureWebApiServiceExists252d();
-								_singletonDocumentViewDialogViewModel252d83 = new global::drive_desktop.ViewModels.DocumentViewDialogViewModel(_singletonWebApiService252d66);
+								EnsureTopLevelProviderExists261d();
+								EnsureAppConfigServiceExists261d();
+								EnsureWebApiServiceExists261d();
+								_singletonShareFileDialogViewModel261d75 = new global::drive_desktop.ViewModels.ShareFileDialogViewModel(_singletonTopLevelProvider261d78, _singletonAppConfigService261d61, _singletonWebApiService261d66);
 							}
 					
-					if (_singletonStatisticsDashboardPageViewModel252d84 is null)
-						lock (_lock252d)
-							if (_singletonStatisticsDashboardPageViewModel252d84 is null)
+					if (_singletonSearchPageViewModel261d79 is null)
+						lock (_lock261d)
+							if (_singletonSearchPageViewModel261d79 is null)
 							{
-								EnsureWebApiServiceExists252d();
-								_singletonStatisticsDashboardPageViewModel252d84 = new global::drive_desktop.ViewModels.StatisticsDashboardPageViewModel(_singletonWebApiService252d66);
+								EnsureTopLevelProviderExists261d();
+								EnsureAppConfigServiceExists261d();
+								EnsureWebApiServiceExists261d();
+								_singletonSearchPageViewModel261d79 = new global::drive_desktop.ViewModels.SearchPageViewModel(_singletonTopLevelProvider261d78, _singletonAppConfigService261d61, _singletonWebApiService261d66);
 							}
 					
-					if (_singletonSettingPageViewModel252d85 is null)
-						lock (_lock252d)
-							if (_singletonSettingPageViewModel252d85 is null)
+					if (_singletonFileTransmissionViewModel261d80 is null)
+						lock (_lock261d)
+							if (_singletonFileTransmissionViewModel261d80 is null)
 							{
-								EnsureAppConfigServiceExists252d();
-								EnsureUserInfoServiceExists252d();
-								EnsureTopLevelProviderExists252d();
-								EnsureWebApiServiceExists252d();
-								EnsureTopBarViewModelExists252d();
-								_singletonSettingPageViewModel252d85 = new global::drive_desktop.ViewModels.SettingPageViewModel(_singletonAppConfigService252d61, _singletonUserInfoService252d68, _singletonTopLevelProvider252d78, _singletonWebApiService252d66, _singletonTopBarViewModel252d64);
+								EnsureAppConfigServiceExists261d();
+								EnsureTopLevelProviderExists261d();
+								EnsureFileTransmissionServiceExists261d();
+								EnsureUserInfoServiceExists261d();
+								EnsureWebApiServiceExists261d();
+								_singletonFileTransmissionViewModel261d80 = new global::drive_desktop.ViewModels.FileTransmissionViewModel(_singletonAppConfigService261d61, _singletonTopLevelProvider261d78, _singletonFileTransmissionService261d81, _singletonUserInfoService261d68, _singletonWebApiService261d66);
 							}
 					
-					if (_singletonAiChatViewModel252d86 is null)
-						lock (_lock252d)
-							if (_singletonAiChatViewModel252d86 is null)
+					if (_singletonFileSharePageViewModel261d82 is null)
+						lock (_lock261d)
+							if (_singletonFileSharePageViewModel261d82 is null)
 							{
-								EnsureAppConfigServiceExists252d();
-								EnsureUserInfoServiceExists252d();
-								EnsureWebApiServiceExists252d();
-								_singletonAiChatViewModel252d86 = new global::drive_desktop.ViewModels.AiChatViewModel(_singletonAppConfigService252d61, _singletonUserInfoService252d68, _singletonWebApiService252d66);
+								EnsureAppConfigServiceExists261d();
+								EnsureUserInfoServiceExists261d();
+								EnsureTopLevelProviderExists261d();
+								EnsureWebApiServiceExists261d();
+								_singletonFileSharePageViewModel261d82 = new global::drive_desktop.ViewModels.FileSharePageViewModel(_singletonAppConfigService261d61, _singletonUserInfoService261d68, _singletonTopLevelProvider261d78, _singletonWebApiService261d66);
 							}
 					
-					if (_singletonShareFileDialogViewModel252d75 is null)
-						lock (_lock252d)
-							if (_singletonShareFileDialogViewModel252d75 is null)
+					if (_singletonDocumentViewDialogViewModel261d83 is null)
+						lock (_lock261d)
+							if (_singletonDocumentViewDialogViewModel261d83 is null)
 							{
-								EnsureTopLevelProviderExists252d();
-								EnsureAppConfigServiceExists252d();
-								EnsureWebApiServiceExists252d();
-								_singletonShareFileDialogViewModel252d75 = new global::drive_desktop.ViewModels.ShareFileDialogViewModel(_singletonTopLevelProvider252d78, _singletonAppConfigService252d61, _singletonWebApiService252d66);
+								EnsureWebApiServiceExists261d();
+								_singletonDocumentViewDialogViewModel261d83 = new global::drive_desktop.ViewModels.DocumentViewDialogViewModel(_singletonWebApiService261d66);
 							}
 					
-					if (_singletonSidebarViewModel252d63 is null)
-						lock (_lock252d)
-							if (_singletonSidebarViewModel252d63 is null)
+					if (_singletonStatisticsDashboardPageViewModel261d84 is null)
+						lock (_lock261d)
+							if (_singletonStatisticsDashboardPageViewModel261d84 is null)
 							{
-								EnsureThemeServiceExists252d();
-								EnsureUserInfoServiceExists252d();
-								EnsureAppConfigServiceExists252d();
-								EnsureWebApiServiceExists252d();
-								EnsureConstantResourceServiceExists252d();
-								_singletonSidebarViewModel252d63 = new global::drive_desktop.ViewModels.SidebarViewModel(_singletonThemeService252d60, _singletonUserInfoService252d68, _singletonAppConfigService252d61, _singletonWebApiService252d66, _singletonConstantResourceService252d67);
+								EnsureWebApiServiceExists261d();
+								_singletonStatisticsDashboardPageViewModel261d84 = new global::drive_desktop.ViewModels.StatisticsDashboardPageViewModel(_singletonWebApiService261d66);
 							}
 					
-					EnsureWebApiServiceExists252d();
-					EnsureWebApiServiceExists252d();
-					EnsureUserInfoServiceExists252d();
-					EnsureFilePageViewModelExists252d();
-					EnsureWebApiServiceExists252d();
-					EnsureAppConfigServiceExists252d();
-					return new global::drive_desktop.ViewModels.HomeViewModel(new global::drive_desktop.ViewModels.MusicDialogViewModel(_singletonWebApiService252d66, _singletonAppConfigService252d61), _singletonAiChatViewModel252d86, _singletonSettingPageViewModel252d85, _singletonStatisticsDashboardPageViewModel252d84, _singletonDocumentViewDialogViewModel252d83, _singletonFileSharePageViewModel252d82, _singletonFileTransmissionViewModel252d80, _singletonSearchPageViewModel252d79, _singletonShareFileDialogViewModel252d75, _singletonTextViewDialogViewModel252d77, new global::drive_desktop.ViewModels.ImageViewModel(_singletonWebApiService252d66), _singletonFilePropertiesDialogViewModel252d76, _singletonMoveFilesViewModel252d73, _singletonFilePageViewModel252d72, _singletonWebApiService252d66, _singletonAppConfigService252d61, new global::drive_desktop.ViewModels.NewFolderDialogViewModel(_singletonWebApiService252d66, _singletonUserInfoService252d68, _singletonFilePageViewModel252d72), _singletonThemeService252d60, _singletonSidebarViewModel252d63, _singletonCustomViewEditViewModel252d65, _singletonTopBarViewModel252d64, _singletonUserInfoService252d68);
+					if (_singletonSettingPageViewModel261d85 is null)
+						lock (_lock261d)
+							if (_singletonSettingPageViewModel261d85 is null)
+							{
+								EnsureAppConfigServiceExists261d();
+								EnsureUserInfoServiceExists261d();
+								EnsureTopLevelProviderExists261d();
+								EnsureWebApiServiceExists261d();
+								EnsureTopBarViewModelExists261d();
+								_singletonSettingPageViewModel261d85 = new global::drive_desktop.ViewModels.SettingPageViewModel(_singletonAppConfigService261d61, _singletonUserInfoService261d68, _singletonTopLevelProvider261d78, _singletonWebApiService261d66, _singletonTopBarViewModel261d64);
+							}
+					
+					if (_singletonAiChatViewModel261d86 is null)
+						lock (_lock261d)
+							if (_singletonAiChatViewModel261d86 is null)
+							{
+								EnsureAppConfigServiceExists261d();
+								EnsureUserInfoServiceExists261d();
+								EnsureWebApiServiceExists261d();
+								_singletonAiChatViewModel261d86 = new global::drive_desktop.ViewModels.AiChatViewModel(_singletonAppConfigService261d61, _singletonUserInfoService261d68, _singletonWebApiService261d66);
+							}
+					
+					EnsureWebApiServiceExists261d();
+					EnsureUserInfoServiceExists261d();
+					EnsureFilePageViewModelExists261d();
+					EnsureWebApiServiceExists261d();
+					EnsureWebApiServiceExists261d();
+					EnsureAppConfigServiceExists261d();
+					return new global::drive_desktop.ViewModels.HomeViewModel(new global::drive_desktop.ViewModels.MusicDialogViewModel(_singletonWebApiService261d66, _singletonAppConfigService261d61), _singletonAiChatViewModel261d86, _singletonSettingPageViewModel261d85, _singletonStatisticsDashboardPageViewModel261d84, _singletonDocumentViewDialogViewModel261d83, _singletonFileSharePageViewModel261d82, _singletonFileTransmissionViewModel261d80, _singletonSearchPageViewModel261d79, _singletonShareFileDialogViewModel261d75, _singletonTextViewDialogViewModel261d77, new global::drive_desktop.ViewModels.ImageViewModel(_singletonWebApiService261d66), _singletonFilePropertiesDialogViewModel261d76, _singletonMoveFilesViewModel261d73, _singletonFilePageViewModel261d72, _singletonWebApiService261d66, _singletonAppConfigService261d61, new global::drive_desktop.ViewModels.NewFolderDialogViewModel(_singletonWebApiService261d66, _singletonUserInfoService261d68, _singletonFilePageViewModel261d72), _singletonThemeService261d60, _singletonSidebarViewModel261d63, _singletonCustomViewEditViewModel261d65, _singletonTopBarViewModel261d64, _singletonUserInfoService261d68, _singletonDesktopPluginService261d91);
 				});
-				return new global::drive_desktop.ViewModels.MainWindowViewModel(_singletonUserInfoService252d68, _singletonThemeService252d60, _singletonThemeSwitchViewModel252d62, _singletonAppConfigService252d61, _singletonWebApiService252d66, perBlockFunc252d6);
+				return new global::drive_desktop.ViewModels.MainWindowViewModel(_singletonUserInfoService261d68, _singletonThemeService261d60, _singletonThemeSwitchViewModel261d62, _singletonAppConfigService261d61, _singletonWebApiService261d66, perBlockFunc261d6);
 				
 				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
-				void EnsureUserInfoServiceExists252d()
+				void EnsureUserInfoServiceExists261d()
 				{
-					if (_singletonUserInfoService252d68 is null)
-						lock (_lock252d)
-							if (_singletonUserInfoService252d68 is null)
+					if (_singletonUserInfoService261d68 is null)
+						lock (_lock261d)
+							if (_singletonUserInfoService261d68 is null)
 							{
-								EnsureWebApiServiceExists252d();
-								EnsureThemeServiceExists252d();
-								_singletonUserInfoService252d68 = new global::drive_desktop.Services.UserInfoService(_singletonWebApiService252d66, _singletonThemeService252d60);
+								EnsureWebApiServiceExists261d();
+								EnsureThemeServiceExists261d();
+								_singletonUserInfoService261d68 = new global::drive_desktop.Services.UserInfoService(_singletonWebApiService261d66, _singletonThemeService261d60);
 							}
 					
 				}
 				
 				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
-				void EnsureThemeServiceExists252d()
+				void EnsureThemeServiceExists261d()
 				{
-					if (_singletonThemeService252d60 is null)
-						lock (_lock252d)
-							if (_singletonThemeService252d60 is null)
+					if (_singletonThemeService261d60 is null)
+						lock (_lock261d)
+							if (_singletonThemeService261d60 is null)
 							{
-								EnsureAppConfigServiceExists252d();
-								_singletonThemeService252d60 = new global::drive_desktop.Services.ThemeService(_singletonAppConfigService252d61);
+								EnsureAppConfigServiceExists261d();
+								_singletonThemeService261d60 = new global::drive_desktop.Services.ThemeService(_singletonAppConfigService261d61);
 							}
 							
 				}
 				
 				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
-				void EnsureThemeSwitchViewModelExists252d()
+				void EnsureThemeSwitchViewModelExists261d()
 				{
-					if (_singletonThemeSwitchViewModel252d62 is null)
-						lock (_lock252d)
-							if (_singletonThemeSwitchViewModel252d62 is null)
+					if (_singletonThemeSwitchViewModel261d62 is null)
+						lock (_lock261d)
+							if (_singletonThemeSwitchViewModel261d62 is null)
 							{
-								_singletonThemeSwitchViewModel252d62 = new global::drive_desktop.ViewModels.ThemeSwitchViewModel(_singletonThemeService252d60);
+								_singletonThemeSwitchViewModel261d62 = new global::drive_desktop.ViewModels.ThemeSwitchViewModel(_singletonThemeService261d60);
 							}
 					
 				}
 				
 				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
-				void EnsureAppConfigServiceExists252d()
+				void EnsureAppConfigServiceExists261d()
 				{
-					if (_singletonAppConfigService252d61 is null)
-						lock (_lock252d)
-							if (_singletonAppConfigService252d61 is null)
+					if (_singletonAppConfigService261d61 is null)
+						lock (_lock261d)
+							if (_singletonAppConfigService261d61 is null)
 							{
-								_singletonAppConfigService252d61 = new global::drive_desktop.Services.AppConfigService();
+								_singletonAppConfigService261d61 = new global::drive_desktop.Services.AppConfigService();
 							}
 							
 				}
 				
 				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
-				void EnsureWebApiServiceExists252d()
+				void EnsureWebApiServiceExists261d()
 				{
-					if (_singletonWebApiService252d66 is null)
-						lock (_lock252d)
-							if (_singletonWebApiService252d66 is null)
+					if (_singletonWebApiService261d66 is null)
+						lock (_lock261d)
+							if (_singletonWebApiService261d66 is null)
 							{
-								EnsureAppConfigServiceExists252d();
-								_singletonWebApiService252d66 = new global::drive_desktop.Services.WebApiService(_singletonAppConfigService252d61);
+								EnsureAppConfigServiceExists261d();
+								_singletonWebApiService261d66 = new global::drive_desktop.Services.WebApiService(_singletonAppConfigService261d61);
 							}
 							
 				}
 				
 				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
-				void EnsureConstantResourceServiceExists252d()
+				void EnsureFilePageViewModelExists261d()
 				{
-					if (_singletonConstantResourceService252d67 is null)
-						lock (_lock252d)
-							if (_singletonConstantResourceService252d67 is null)
+					if (_singletonFilePageViewModel261d72 is null)
+						lock (_lock261d)
+							if (_singletonFilePageViewModel261d72 is null)
 							{
-								_singletonConstantResourceService252d67 = new global::drive_desktop.Services.ConstantResourceService();
-							}
-							
-				}
-				
-				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
-				void EnsureFilePageViewModelExists252d()
-				{
-					if (_singletonFilePageViewModel252d72 is null)
-						lock (_lock252d)
-							if (_singletonFilePageViewModel252d72 is null)
-							{
-								EnsureUserInfoServiceExists252d();
-								EnsureWebApiServiceExists252d();
-								EnsureAppConfigServiceExists252d();
-								EnsureTopBarViewModelExists252d();
-								EnsureTopLevelProviderExists252d();
-								_singletonFilePageViewModel252d72 = new global::drive_desktop.ViewModels.FilePageViewModel(_singletonUserInfoService252d68, _singletonWebApiService252d66, _singletonAppConfigService252d61, _singletonTopBarViewModel252d64, _singletonTopLevelProvider252d78);
+								EnsureUserInfoServiceExists261d();
+								EnsureWebApiServiceExists261d();
+								EnsureAppConfigServiceExists261d();
+								EnsureTopBarViewModelExists261d();
+								EnsureTopLevelProviderExists261d();
+								_singletonFilePageViewModel261d72 = new global::drive_desktop.ViewModels.FilePageViewModel(_singletonUserInfoService261d68, _singletonWebApiService261d66, _singletonAppConfigService261d61, _singletonTopBarViewModel261d64, _singletonTopLevelProvider261d78);
 							}
 					
 				}
 				
 				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
-				void EnsureTopBarViewModelExists252d()
+				void EnsureTopBarViewModelExists261d()
 				{
-					if (_singletonTopBarViewModel252d64 is null)
-						lock (_lock252d)
-							if (_singletonTopBarViewModel252d64 is null)
+					if (_singletonTopBarViewModel261d64 is null)
+						lock (_lock261d)
+							if (_singletonTopBarViewModel261d64 is null)
 							{
-								EnsureWebApiServiceExists252d();
-								EnsureUserInfoServiceExists252d();
-								EnsureThemeSwitchViewModelExists252d();
-								if (_singletonSearchViewModel252d69 is null)
+								EnsureWebApiServiceExists261d();
+								EnsureUserInfoServiceExists261d();
+								EnsureThemeSwitchViewModelExists261d();
+								if (_singletonSearchViewModel261d69 is null)
 								{
-									_singletonSearchViewModel252d69 = new global::drive_desktop.ViewModels.SearchViewModel();
+									_singletonSearchViewModel261d69 = new global::drive_desktop.ViewModels.SearchViewModel();
 								}
 								
-								_singletonTopBarViewModel252d64 = new global::drive_desktop.ViewModels.TopBarViewModel(_singletonWebApiService252d66, _singletonUserInfoService252d68, _singletonThemeSwitchViewModel252d62, _singletonSearchViewModel252d69);
+								_singletonTopBarViewModel261d64 = new global::drive_desktop.ViewModels.TopBarViewModel(_singletonWebApiService261d66, _singletonUserInfoService261d68, _singletonThemeSwitchViewModel261d62, _singletonSearchViewModel261d69);
+							}
+					
+				}
+				
+				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
+				void EnsureConstantResourceServiceExists261d()
+				{
+					if (_singletonConstantResourceService261d67 is null)
+						lock (_lock261d)
+							if (_singletonConstantResourceService261d67 is null)
+							{
+								_singletonConstantResourceService261d67 = new global::drive_desktop.Services.ConstantResourceService();
 							}
 							
 				}
 				
 				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
-				void EnsureTopLevelProviderExists252d()
+				void EnsureTopLevelProviderExists261d()
 				{
-					if (_singletonTopLevelProvider252d78 is null)
-						lock (_lock252d)
-							if (_singletonTopLevelProvider252d78 is null)
+					if (_singletonTopLevelProvider261d78 is null)
+						lock (_lock261d)
+							if (_singletonTopLevelProvider261d78 is null)
 							{
-								_singletonTopLevelProvider252d78 = new global::drive_desktop.Services.TopLevelProvider();
+								_singletonTopLevelProvider261d78 = new global::drive_desktop.Services.TopLevelProvider();
 							}
 							
+				}
+				
+				[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
+				void EnsureFileTransmissionServiceExists261d()
+				{
+					if (_singletonFileTransmissionService261d81 is null)
+						lock (_lock261d)
+							if (_singletonFileTransmissionService261d81 is null)
+							{
+								EnsureUserInfoServiceExists261d();
+								EnsureFilePageViewModelExists261d();
+								EnsureWebApiServiceExists261d();
+								EnsureAppConfigServiceExists261d();
+								_singletonFileTransmissionService261d81 = new global::drive_desktop.Services.FileTransmissionService(_singletonUserInfoService261d68, _singletonFilePageViewModel261d72, _singletonWebApiService261d66, _singletonAppConfigService261d61);
+							}
+					
 				}
 			}
 		}
@@ -403,7 +605,7 @@ namespace drive_desktop
 		[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
 		public T Resolve<T>()
 		{
-			return Resolver252d<T>.Value.Resolve(this);
+			return Resolver261d<T>.Value.Resolve(this);
 		}
 		
 		/// <summary>
@@ -423,7 +625,7 @@ namespace drive_desktop
 		[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)256)]
 		public T Resolve<T>(object? tag)
 		{
-			return Resolver252d<T>.Value.ResolveByTag(this, tag);
+			return Resolver261d<T>.Value.ResolveByTag(this, tag);
 		}
 		
 		/// <summary>
@@ -443,28 +645,28 @@ namespace drive_desktop
 		public object Resolve(global::System.Type type)
 		{
 			#if NETCOREAPP3_0_OR_GREATER
-			var index = (int)(_bucketSize252d * (((uint)type.TypeHandle.GetHashCode()) % 1));
+			var index = (int)(_bucketSize261d * (((uint)type.TypeHandle.GetHashCode()) % 4));
 			#else
-			var index = (int)(_bucketSize252d * (((uint)global::System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(type)) % 1));
+			var index = (int)(_bucketSize261d * (((uint)global::System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(type)) % 4));
 			#endif
-			ref var pair = ref _buckets252d[index];
-			return global::System.Object.ReferenceEquals(pair.Key, type) ? pair.Value.Resolve(this) : Resolve252d(type, index);
+			ref var pair = ref _buckets261d[index];
+			return global::System.Object.ReferenceEquals(pair.Key, type) ? pair.Value.Resolve(this) : Resolve261d(type, index);
 		}
 		
 		[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)8)]
-		private object Resolve252d(global::System.Type type, int index)
+		private object Resolve261d(global::System.Type type, int index)
 		{
-			var finish = index + _bucketSize252d;
+			var finish = index + _bucketSize261d;
 			while (++index < finish)
 			{
-				ref var pair = ref _buckets252d[index];
+				ref var pair = ref _buckets261d[index];
 				if (global::System.Object.ReferenceEquals(pair.Key, type))
 				{
 					return pair.Value.Resolve(this);
 				}
 			}
 			
-			throw new global::Pure.DI.CannotResolveException($"{CannotResolveMessage252d} {OfTypeMessage252d} {type}.", type, null);
+			throw new global::Pure.DI.CannotResolveException($"{CannotResolveMessage261d} {OfTypeMessage261d} {type}.", type, null);
 		}
 		
 		/// <summary>
@@ -485,67 +687,90 @@ namespace drive_desktop
 		public object Resolve(global::System.Type type, object? tag)
 		{
 			#if NETCOREAPP3_0_OR_GREATER
-			var index = (int)(_bucketSize252d * (((uint)type.TypeHandle.GetHashCode()) % 1));
+			var index = (int)(_bucketSize261d * (((uint)type.TypeHandle.GetHashCode()) % 4));
 			#else
-			var index = (int)(_bucketSize252d * (((uint)global::System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(type)) % 1));
+			var index = (int)(_bucketSize261d * (((uint)global::System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(type)) % 4));
 			#endif
-			ref var pair = ref _buckets252d[index];
-			return global::System.Object.ReferenceEquals(pair.Key, type) ? pair.Value.ResolveByTag(this, tag) : Resolve252d(type, tag, index);
+			ref var pair = ref _buckets261d[index];
+			return global::System.Object.ReferenceEquals(pair.Key, type) ? pair.Value.ResolveByTag(this, tag) : Resolve261d(type, tag, index);
 		}
 		
 		[global::System.Runtime.CompilerServices.MethodImpl((global::System.Runtime.CompilerServices.MethodImplOptions)8)]
-		private object Resolve252d(global::System.Type type, object? tag, int index)
+		private object Resolve261d(global::System.Type type, object? tag, int index)
 		{
-			var finish = index + _bucketSize252d;
+			var finish = index + _bucketSize261d;
 			while (++index < finish)
 			{
-				ref var pair = ref _buckets252d[index];
+				ref var pair = ref _buckets261d[index];
 				if (global::System.Object.ReferenceEquals(pair.Key, type))
 				{
 					return pair.Value.ResolveByTag(this, tag);
 				}
 			}
 			
-			throw new global::Pure.DI.CannotResolveException($"{CannotResolveMessage252d} \"{tag}\" {OfTypeMessage252d} {type}.", type, tag);
+			throw new global::Pure.DI.CannotResolveException($"{CannotResolveMessage261d} \"{tag}\" {OfTypeMessage261d} {type}.", type, tag);
 		}
 		#endregion
 		
-		private readonly static uint _bucketSize252d;
-		private readonly static global::Pure.DI.Pair<global::Pure.DI.IResolver<Composition, object>>[] _buckets252d;
+		private readonly static uint _bucketSize261d;
+		private readonly static global::Pure.DI.Pair<global::Pure.DI.IResolver<Composition, object>>[] _buckets261d;
 		
 		static Composition()
 		{
-			var valResolver252d_0000 = new Resolver252d_0000();
-			Resolver252d<global::drive_desktop.ViewModels.MainWindowViewModel>.Value = valResolver252d_0000;
-			_buckets252d = global::Pure.DI.Buckets<global::Pure.DI.IResolver<Composition, object>>.Create(
-				1,
-				out _bucketSize252d,
-				new global::Pure.DI.Pair<global::Pure.DI.IResolver<Composition, object>>[1]
+			var valResolver261d_0000 = new Resolver261d_0000();
+			Resolver261d<global::drive_desktop.Services.Plugins.DesktopPluginService>.Value = valResolver261d_0000;
+			var valResolver261d_0001 = new Resolver261d_0001();
+			Resolver261d<global::drive_desktop.ViewModels.MainWindowViewModel>.Value = valResolver261d_0001;
+			_buckets261d = global::Pure.DI.Buckets<global::Pure.DI.IResolver<Composition, object>>.Create(
+				4,
+				out _bucketSize261d,
+				new global::Pure.DI.Pair<global::Pure.DI.IResolver<Composition, object>>[2]
 				{
-					 new global::Pure.DI.Pair<global::Pure.DI.IResolver<Composition, object>>(typeof(global::drive_desktop.ViewModels.MainWindowViewModel), valResolver252d_0000)
+					 new global::Pure.DI.Pair<global::Pure.DI.IResolver<Composition, object>>(typeof(global::drive_desktop.Services.Plugins.DesktopPluginService), valResolver261d_0000)
+					,new global::Pure.DI.Pair<global::Pure.DI.IResolver<Composition, object>>(typeof(global::drive_desktop.ViewModels.MainWindowViewModel), valResolver261d_0001)
 				});
 		}
 		
 		#region Resolvers
-		private const string CannotResolveMessage252d = "Cannot resolve composition root ";
-		private const string OfTypeMessage252d = "of type ";
+		private const string CannotResolveMessage261d = "Cannot resolve composition root ";
+		private const string OfTypeMessage261d = "of type ";
 		
-		private class Resolver252d<T>: global::Pure.DI.IResolver<Composition, T>
+		private class Resolver261d<T>: global::Pure.DI.IResolver<Composition, T>
 		{
-			public static global::Pure.DI.IResolver<Composition, T> Value = new Resolver252d<T>();
+			public static global::Pure.DI.IResolver<Composition, T> Value = new Resolver261d<T>();
 			
 			public virtual T Resolve(Composition composite)
 			{
-				throw new global::Pure.DI.CannotResolveException($"{CannotResolveMessage252d}{OfTypeMessage252d}{typeof(T)}.", typeof(T), null);
+				throw new global::Pure.DI.CannotResolveException($"{CannotResolveMessage261d}{OfTypeMessage261d}{typeof(T)}.", typeof(T), null);
 			}
 			
 			public virtual T ResolveByTag(Composition composite, object tag)
 			{
-				throw new global::Pure.DI.CannotResolveException($"{CannotResolveMessage252d}\"{tag}\" {OfTypeMessage252d}{typeof(T)}.", typeof(T), tag);
+				throw new global::Pure.DI.CannotResolveException($"{CannotResolveMessage261d}\"{tag}\" {OfTypeMessage261d}{typeof(T)}.", typeof(T), tag);
 			}
 		}
 		
-		private sealed class Resolver252d_0000: Resolver252d<global::drive_desktop.ViewModels.MainWindowViewModel>
+		private sealed class Resolver261d_0000: Resolver261d<global::drive_desktop.Services.Plugins.DesktopPluginService>
+		{
+			public override global::drive_desktop.Services.Plugins.DesktopPluginService Resolve(Composition composition)
+			{
+				return composition.Plugins;
+			}
+			
+			public override global::drive_desktop.Services.Plugins.DesktopPluginService ResolveByTag(Composition composition, object tag)
+			{
+				switch (tag)
+				{
+					case null:
+						return composition.Plugins;
+					
+					default:
+						return base.ResolveByTag(composition, tag);
+				}
+			}
+		}
+		
+		private sealed class Resolver261d_0001: Resolver261d<global::drive_desktop.ViewModels.MainWindowViewModel>
 		{
 			public override global::drive_desktop.ViewModels.MainWindowViewModel Resolve(Composition composition)
 			{

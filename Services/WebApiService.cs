@@ -55,7 +55,7 @@ public class WebApiService
         };
         
         UserApi = RestService.For<ICloudDriveUserApi>(httpClient,settings);
-        FileApi = RestService.For<ICloudDriveFileApi>(httpClient,settings);
+        FileApi = new Plugins.PluginFileApiDecorator(RestService.For<ICloudDriveFileApi>(httpClient,settings));
     }
     /// <summary>
     /// 表单验证校验弹窗提示

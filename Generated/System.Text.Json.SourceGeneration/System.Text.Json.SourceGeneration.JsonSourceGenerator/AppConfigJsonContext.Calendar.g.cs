@@ -34,6 +34,8 @@ namespace drive_desktop.Services
                     ConstructorParameterMetadataInitializer = null,
                     ConstructorAttributeProviderFactory = null,
                     SerializeHandler = CalendarSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::System.Globalization.Calendar>(options, objectInfo);

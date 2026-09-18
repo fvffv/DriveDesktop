@@ -34,6 +34,8 @@ namespace drive_desktop.Services
                     ConstructorParameterMetadataInitializer = null,
                     ConstructorAttributeProviderFactory = static () => typeof(global::drive_desktop.Models.FileShareDataDTO).GetConstructor(InstanceMemberBindingFlags, binder: null, global::System.Array.Empty<global::System.Type>(), modifiers: null),
                     SerializeHandler = FileShareDataDTOSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::drive_desktop.Models.FileShareDataDTO>(options, objectInfo);

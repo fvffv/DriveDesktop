@@ -13,6 +13,7 @@
         <Setter Property="IsHitTestVisible" Value="False" />
         <Setter Property="MinWidth" Value="450" />
         <Setter Property="MinHeight" Value="130" />
+        <Setter Property="CacheMode" Value="BitmapCache"/>
         <Setter Property="Transitions">
             <Transitions>
                 <DoubleTransition Property="Opacity" Duration="0:0:0.2" Easing="CubicEaseOut"/>
@@ -29,6 +30,7 @@
                     <Border x:Name="PART_DialogCard"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
+                          
                             Background="{DynamicResource HomeBg}"
                             CornerRadius="12"
                             Padding="24"

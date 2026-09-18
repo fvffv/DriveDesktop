@@ -29,7 +29,9 @@ namespace drive_desktop.Services
                 var info = new global::System.Text.Json.Serialization.Metadata.JsonCollectionInfoValues<global::System.Collections.Generic.List<global::drive_desktop.Models.ChatMessage>>
                 {
                     ObjectCreator = () => new global::System.Collections.Generic.List<global::drive_desktop.Models.ChatMessage>(),
-                    SerializeHandler = ListChatMessageSerializeHandler
+                    SerializeHandler = ListChatMessageSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateListInfo<global::System.Collections.Generic.List<global::drive_desktop.Models.ChatMessage>, global::drive_desktop.Models.ChatMessage>(options, info);

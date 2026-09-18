@@ -29,7 +29,9 @@ namespace drive_desktop.Services
                 var info = new global::System.Text.Json.Serialization.Metadata.JsonCollectionInfoValues<global::System.Collections.Generic.IReadOnlyDictionary<global::System.Globalization.CultureInfo, string>>
                 {
                     ObjectCreator = () => new global::System.Collections.Generic.Dictionary<global::System.Globalization.CultureInfo, string>(),
-                    SerializeHandler = null
+                    SerializeHandler = null,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateIReadOnlyDictionaryInfo<global::System.Collections.Generic.IReadOnlyDictionary<global::System.Globalization.CultureInfo, string>, global::System.Globalization.CultureInfo, string>(options, info);

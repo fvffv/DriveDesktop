@@ -1,0 +1,75 @@
+<Project>
+  <!-- 外部插件在发布之后才安装，静态分析无法知道它们将使用哪些框架 API。
+       保留共享库的完整 IL、类型转发、属性、资源及非公开反射元数据，只裁剪 Runner 成员。
+       框架的预编译机器码在 ILLink 完成之后单独移除，由普通 .NET JIT 编译完整 IL。
+       不使用已失效的 TrimmerDefaultAction，也不逐个猜测插件需要的类型。 -->
+  <PropertyGroup>
+    <!-- false 将框架完整重写为 IL，去掉已有的 ReadyToRun 机器码；true 可保留启动预编译优化。 -->
+    <RunnerKeepFrameworkReadyToRun Condition="'$(RunnerKeepFrameworkReadyToRun)' == ''">false</RunnerKeepFrameworkReadyToRun>
+    <!-- 恢复裁剪 SDK 默认关闭、但普通托管插件可以使用的功能。 -->
+    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
+    <CustomResourceTypesSupport>true</CustomResourceTypesSupport>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <EnableGeneratedComInterfaceComImportInterop>true</EnableGeneratedComInterfaceComImportInterop>
+    <EnableCppCLIHostActivation>true</EnableCppCLIHostActivation>
+    <StartupHookSupport>true</StartupHookSupport>
+    <MetadataUpdaterSupport>true</MetadataUpdaterSupport>
+    <Http3Support>true</Http3Support>
+    <_ComObjectDescriptorSupport>true</_ComObjectDescriptorSupport>
+    <_DesignerHostSupport>true</_DesignerHostSupport>
+    <_DefaultValueAttributeSupport>true</_DefaultValueAttributeSupport>
+    <_DataSetXmlSerializationSupport>true</_DataSetXmlSerializationSupport>
+    <VerifyDependencyInjectionOpenGenericServiceTrimmability>false</VerifyDependencyInjectionOpenGenericServiceTrimmability>
+
+    <!-- 不用禁用插件功能换取体积；UTF-7/BinaryFormatter 等不安全功能仍沿用 .NET 默认值。 -->
+    <DebuggerSupport>true</DebuggerSupport>
+    <EventSourceSupport>true</EventSourceSupport>
+    <MetricsSupport>true</MetricsSupport>
+    <HttpActivityPropagationSupport>true</HttpActivityPropagationSupport>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <UseSystemResourceKeys>false</UseSystemResourceKeys>
+  </PropertyGroup>
+
+  <!-- PrepareForILLink 是 SDK 提供的按程序集配置裁剪的扩展点。
+       copy（不是 copyused）保证未被 Runner 引用的 BCL 与 facade 也进入单文件包。 -->
+  <Target Name="ConfigureRunnerTrimming" AfterTargets="PrepareForILLink"
+          Condition="'$(PublishTrimmed)' == 'true'">
+    <!-- 配置切换必须使链接器重新从原始框架复制；否则增量构建可能复用上次已去 R2R 的文件。 -->
+    <WriteLinesToFile File="$(IntermediateOutputPath)runner-framework-mode.txt"
+                      Lines="KeepReadyToRun=$(RunnerKeepFrameworkReadyToRun)"
+                      Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <PropertyGroup>
+      <MSBuildAllProjects>$(MSBuildAllProjects);$(IntermediateOutputPath)runner-framework-mode.txt</MSBuildAllProjects>
+    </PropertyGroup>
+    <ItemGroup>
+      <ManagedAssemblyToLink Update="@(ManagedAssemblyToLink)" TrimMode="copy" />
+      <_RunnerFrameworkAssembly Include="@(RuntimePackAsset)"
+                                Condition="'$(RunnerKeepFrameworkReadyToRun)' != 'true' And '%(RuntimePackAsset.AssetType)' == 'runtime' And '%(RuntimePackAsset.Extension)' == '.dll'" />
+      <ManagedAssemblyToLink Update="@(ManagedAssemblyToLink)"
+                             Condition="'%(Filename)' == '$(AssemblyName)'" TrimMode="link" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(IntermediateOutputPath)runner-trimming-inputs.txt"
+                      Lines="@(ManagedAssemblyToLink->'%(FullPath)|%(TrimMode)')"
+                      Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <WriteLinesToFile File="$(IntermediateOutputPath)runner-framework-inputs.txt"
+                      Lines="@(_RunnerFrameworkAssembly->'%(FullPath)')"
+                      Overwrite="true" WriteOnlyWhenDifferent="true" />
+  </Target>
+
+  <!-- 使用当前 SDK 链接器配套的 Cecil，只处理 obj/linked 内的运行时副本。
+       不调用内部的 save 动作：当前 SDK 不接受该命令行动作。 -->
+  <UsingTask TaskName="StripFrameworkReadyToRun" TaskFactory="RoslynCodeTaskFactory"
+             AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+    <Task>
+      <Reference Include="$([System.IO.Path]::GetDirectoryName('$(ILLinkTasksAssembly)'))/Mono.Cecil.dll" />
+      <Code Type="Class" Language="cs" Source="$(MSBuildThisFileDirectory)../Build/StripFrameworkReadyToRun.cs" />
+    </Task>
+  </UsingTask>
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileDirectory)../Build/StripFrameworkReadyToRun.cs</MSBuildAllProjects>
+  </PropertyGroup>
+  <Target Name="StripRunnerFrameworkReadyToRun" AfterTargets="ILLink"
+          Condition="'$(PublishTrimmed)' == 'true' And '$(RunnerKeepFrameworkReadyToRun)' != 'true'">
+    <StripFrameworkReadyToRun Assemblies="@(_RunnerFrameworkAssembly)" Directory="$(IntermediateLinkDir)" />
+  </Target>
+</Project>

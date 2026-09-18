@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsAotCompatible>true</IsAotCompatible>
+    <IsTrimmable>true</IsTrimmable>
+    <PackageId>Drive.Plugin.Abi</PackageId>
+    <Description>Drive 插件平台的公共协议定义：权限、能力、操作编号、事件编号及错误码。由 Drive.Plugin.SDK 自动引用。</Description>
+    <PackageTags>Drive;Plugin;Protocol;IPC;net11</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>Copyright (c) 2026 Drive</Copyright>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarningsAsErrors>$(WarningsAsErrors);CS1591;CS1570;CS1572;CS1573;CS1574;CS1584</WarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- NuGet 展示文档与许可证随包交付，开发用 XML 注释继续由编译器生成。 -->
+    <None Update="README.md" Pack="true" PackagePath="/" />
+    <None Update="LICENSE.txt" Pack="true" PackagePath="/" />
+  </ItemGroup>
+</Project>

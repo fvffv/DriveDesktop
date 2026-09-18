@@ -28,12 +28,14 @@ namespace drive_desktop.Services
             {
                 var objectInfo = new global::System.Text.Json.Serialization.Metadata.JsonObjectInfoValues<global::Refit.ProblemDetails>
                 {
-                    ObjectCreator = null,
-                    ObjectWithParameterizedConstructorCreator = static args => new global::Refit.ProblemDetails(){ Errors = (global::System.Collections.Generic.Dictionary<string, string[]>)args[0], Extensions = (global::System.Collections.Generic.IDictionary<string, object>)args[1] },
+                    ObjectCreator = () => new global::Refit.ProblemDetails(),
+                    ObjectWithParameterizedConstructorCreator = null,
                     PropertyMetadataInitializer = _ => ProblemDetailsPropInit(options),
-                    ConstructorParameterMetadataInitializer = ProblemDetailsCtorParamInit,
+                    ConstructorParameterMetadataInitializer = null,
                     ConstructorAttributeProviderFactory = static () => typeof(global::Refit.ProblemDetails).GetConstructor(InstanceMemberBindingFlags, binder: null, global::System.Array.Empty<global::System.Type>(), modifiers: null),
                     SerializeHandler = null,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::Refit.ProblemDetails>(options, objectInfo);
@@ -56,7 +58,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::Refit.ProblemDetails),
                 Converter = null,
                 Getter = static obj => ((global::Refit.ProblemDetails)obj).Errors,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_ProblemDetails_Errors((global::Refit.ProblemDetails)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -78,7 +80,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::Refit.ProblemDetails),
                 Converter = null,
                 Getter = static obj => ((global::Refit.ProblemDetails)obj).Extensions,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_ProblemDetails_Extensions((global::Refit.ProblemDetails)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = true,
@@ -195,25 +197,9 @@ namespace drive_desktop.Services
             return properties;
         }
 
-        private static global::System.Text.Json.Serialization.Metadata.JsonParameterInfoValues[] ProblemDetailsCtorParamInit() => new global::System.Text.Json.Serialization.Metadata.JsonParameterInfoValues[]
-        {
-            new()
-            {
-                Name = "Errors",
-                ParameterType = typeof(global::System.Collections.Generic.Dictionary<string, string[]>),
-                Position = 0,
-                IsNullable = false,
-                IsMemberInitializer = true,
-            },
-
-            new()
-            {
-                Name = "Extensions",
-                ParameterType = typeof(global::System.Collections.Generic.IDictionary<string, object>),
-                Position = 1,
-                IsNullable = false,
-                IsMemberInitializer = true,
-            },
-        };
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_Errors")]
+        private static extern void __set_ProblemDetails_Errors(global::Refit.ProblemDetails obj, global::System.Collections.Generic.Dictionary<string, string[]> value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_Extensions")]
+        private static extern void __set_ProblemDetails_Extensions(global::Refit.ProblemDetails obj, global::System.Collections.Generic.IDictionary<string, object> value);
     }
 }

@@ -34,6 +34,8 @@ namespace drive_desktop.Services
                     ConstructorParameterMetadataInitializer = DefaultMsgCtorParamInit,
                     ConstructorAttributeProviderFactory = static () => typeof(global::drive_desktop.Models.DefaultMsg).GetConstructor(InstanceMemberBindingFlags, binder: null, new[] {typeof(int), typeof(string), typeof(object)}, modifiers: null),
                     SerializeHandler = null,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::drive_desktop.Models.DefaultMsg>(options, objectInfo);

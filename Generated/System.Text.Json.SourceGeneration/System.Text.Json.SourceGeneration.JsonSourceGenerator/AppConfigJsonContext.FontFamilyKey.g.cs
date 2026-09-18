@@ -34,6 +34,8 @@ namespace drive_desktop.Services
                     ConstructorParameterMetadataInitializer = FontFamilyKeyCtorParamInit,
                     ConstructorAttributeProviderFactory = static () => typeof(global::Avalonia.Media.Fonts.FontFamilyKey).GetConstructor(InstanceMemberBindingFlags, binder: null, new[] {typeof(global::System.Uri), typeof(global::System.Uri)}, modifiers: null),
                     SerializeHandler = FontFamilyKeySerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::Avalonia.Media.Fonts.FontFamilyKey>(options, objectInfo);

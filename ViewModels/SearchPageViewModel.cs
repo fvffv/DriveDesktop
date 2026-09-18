@@ -306,6 +306,11 @@ public partial class SearchPageViewModel : ViewModelBase
     [RelayCommand]
     private async Task OpenFile(UserFilesInfoItem item)
     {
+        Services.Plugins.PluginEventHub.Publish(new Drive.Plugin.SDK.DriveEvent
+        {
+            Id = Drive.Plugin.Abi.DriveEventId.FileOpened, FileIds = [item.Id],
+            Selection = [Services.Plugins.PluginDtoMapper.File(item)]
+        });
         if (item.FileTypeInfo.TypeName is "图片")
         {
             WeakReferenceMessenger.Default.Send(new DialogMessage("ImageViewDialog", true, item));

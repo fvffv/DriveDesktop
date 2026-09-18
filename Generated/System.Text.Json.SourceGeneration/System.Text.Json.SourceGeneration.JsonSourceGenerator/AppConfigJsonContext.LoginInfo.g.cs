@@ -34,6 +34,8 @@ namespace drive_desktop.Services
                     ConstructorParameterMetadataInitializer = LoginInfoCtorParamInit,
                     ConstructorAttributeProviderFactory = static () => typeof(global::drive_desktop.Models.LoginInfo).GetConstructor(InstanceMemberBindingFlags, binder: null, new[] {typeof(string), typeof(string)}, modifiers: null),
                     SerializeHandler = LoginInfoSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::drive_desktop.Models.LoginInfo>(options, objectInfo);
@@ -56,7 +58,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.LoginInfo),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.LoginInfo)obj).usernameOrEmail,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_LoginInfo_usernameOrEmail((global::drive_desktop.Models.LoginInfo)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -78,7 +80,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.LoginInfo),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.LoginInfo)obj).password,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_LoginInfo_password((global::drive_desktop.Models.LoginInfo)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -135,5 +137,10 @@ namespace drive_desktop.Services
                 IsNullable = false,
             },
         };
+
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_usernameOrEmail")]
+        private static extern void __set_LoginInfo_usernameOrEmail(global::drive_desktop.Models.LoginInfo obj, string value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_password")]
+        private static extern void __set_LoginInfo_password(global::drive_desktop.Models.LoginInfo obj, string value);
     }
 }

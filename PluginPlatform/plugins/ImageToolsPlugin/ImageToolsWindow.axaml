@@ -1,0 +1,189 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:ImageToolsPlugin" xmlns:core="using:ImageToolsPlugin.Core" xmlns:sdk="using:Drive.Plugin.SDK"
+        x:Class="ImageToolsPlugin.ImageToolsWindow" Title="图片处理"
+        Width="1180" Height="800" MinWidth="1020" MinHeight="720"
+        WindowDecorations="Full" Background="{DynamicResource HomeBg}" Foreground="{DynamicResource TextColor}">
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="HomeBg">#F4F6F9</SolidColorBrush>
+          <SolidColorBrush x:Key="SidebarBg">#FFFFFF</SolidColorBrush>
+          <SolidColorBrush x:Key="BrColor">#DCDFE6</SolidColorBrush>
+          <SolidColorBrush x:Key="TextColor">#1A1C23</SolidColorBrush>
+          <SolidColorBrush x:Key="SideTextColor">#687386</SolidColorBrush>
+          <SolidColorBrush x:Key="HoverBg">#F8FAFC</SolidColorBrush>
+          <SolidColorBrush x:Key="SelectedBg">#EBF2FE</SolidColorBrush>
+          <SolidColorBrush x:Key="ErrorColor">#C43B48</SolidColorBrush>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="HomeBg">#181A1D</SolidColorBrush>
+          <SolidColorBrush x:Key="SidebarBg">#242629</SolidColorBrush>
+          <SolidColorBrush x:Key="BrColor">#41454B</SolidColorBrush>
+          <SolidColorBrush x:Key="TextColor">#E8EAED</SolidColorBrush>
+          <SolidColorBrush x:Key="SideTextColor">#969BA3</SolidColorBrush>
+          <SolidColorBrush x:Key="HoverBg">#2B2E32</SolidColorBrush>
+          <SolidColorBrush x:Key="SelectedBg">#3A3F46</SolidColorBrush>
+          <SolidColorBrush x:Key="ErrorColor">#F05F72</SolidColorBrush>
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+      <SolidColorBrush x:Key="ThemeColor">#3B82F6</SolidColorBrush>
+      <FontFamily x:Key="IconFont">avares://ImageToolsPlugin/Assets/Fonts/fa-solid-900.otf#Font Awesome 6 Free</FontFamily>
+    </ResourceDictionary>
+  </Window.Resources>
+  <Window.Styles>
+    <Style Selector="TextBlock.muted"><Setter Property="Foreground" Value="{DynamicResource SideTextColor}" /></Style>
+    <Style Selector="TextBlock.icon"><Setter Property="FontFamily" Value="{StaticResource IconFont}" /><Setter Property="FontWeight" Value="Black" /><Setter Property="Foreground" Value="{DynamicResource ThemeColor}" /></Style>
+    <Style Selector="TextBlock.section"><Setter Property="FontWeight" Value="SemiBold" /><Setter Property="FontSize" Value="15" /></Style>
+    <Style Selector="Button">
+      <Setter Property="CornerRadius" Value="9" /><Setter Property="Padding" Value="12,9" /><Setter Property="Cursor" Value="Hand" />
+      <Setter Property="Background" Value="{DynamicResource SidebarBg}" /><Setter Property="Foreground" Value="{DynamicResource TextColor}" /><Setter Property="BorderBrush" Value="{DynamicResource BrColor}" />
+    </Style>
+    <Style Selector="Button.primary"><Setter Property="Background" Value="{DynamicResource ThemeColor}" /><Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" /><Setter Property="Foreground" Value="White" /></Style>
+    <Style Selector="TextBox"><Setter Property="CornerRadius" Value="8" /><Setter Property="Background" Value="{DynamicResource SidebarBg}" /><Setter Property="Foreground" Value="{DynamicResource TextColor}" /></Style>
+    <Style Selector="ListBox"><Setter Property="Background" Value="Transparent" /></Style>
+    <Style Selector="ListBoxItem"><Setter Property="Padding" Value="12,10" /><Setter Property="Margin" Value="4,2" /><Setter Property="CornerRadius" Value="8" /><Setter Property="Foreground" Value="{DynamicResource TextColor}" /></Style>
+    <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter"><Setter Property="Background" Value="{DynamicResource HoverBg}" /></Style>
+    <Style Selector="ListBoxItem:selected /template/ ContentPresenter"><Setter Property="Background" Value="{DynamicResource SelectedBg}" /></Style>
+  </Window.Styles>
+  <Grid>
+    <Grid Margin="24" RowDefinitions="Auto,*,Auto" RowSpacing="16">
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+        <Border Width="52" Height="52" CornerRadius="14" Background="#183B82F6"><TextBlock Classes="icon" Text="&#xf03e;" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" /></Border>
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+          <TextBlock Text="图片处理" FontSize="23" FontWeight="SemiBold" />
+          <TextBlock Text="裁剪、压缩、识别与文档导出" Classes="muted" />
+        </StackPanel>
+        <StackPanel x:Name="SourceButtons" Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+          <Button Content="选择云端图片" Click="CloudClick" />
+          <Button Content="添加本地图片" Classes="primary" Click="LocalClick" />
+        </StackPanel>
+      </Grid>
+      <Grid Grid.Row="1" ColumnDefinitions="206,*,286" ColumnSpacing="14">
+        <Border CornerRadius="14" Background="{DynamicResource SidebarBg}" BorderBrush="{DynamicResource BrColor}" BorderThickness="1">
+          <Grid RowDefinitions="Auto,*,Auto">
+            <TextBlock x:Name="CountText" Text="图片 · 0" Classes="section" Margin="14" />
+            <ListBox Grid.Row="1" x:Name="ImageList" SelectionChanged="ImageSelectionChanged">
+              <ListBox.ItemTemplate><DataTemplate x:DataType="core:ImageAsset">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                  <TextBlock Text="&#xf03e;" Classes="icon" FontSize="18" VerticalAlignment="Center" />
+                  <StackPanel Grid.Column="1" Spacing="4">
+                    <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Name}" />
+                    <TextBlock Text="{Binding Detail}" Classes="muted" FontSize="11" TextTrimming="CharacterEllipsis" />
+                  </StackPanel>
+                </Grid>
+              </DataTemplate></ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="6" Margin="10">
+              <Button x:Name="RemoveButton" Content="移除" Click="RemoveClick" />
+              <Button x:Name="MoveUpButton" Content="上移" Click="MoveUpClick" />
+            </StackPanel>
+          </Grid>
+        </Border>
+        <Grid Grid.Column="1" RowDefinitions="Auto,*,Auto" RowSpacing="10">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock x:Name="PreviewTitle" Text="图片预览" TextTrimming="CharacterEllipsis" Classes="section" />
+            <TextBlock Grid.Column="1" Text="拖拽框选裁剪区域" Classes="muted" FontSize="12" />
+          </Grid>
+          <Border Grid.Row="1" CornerRadius="14" Background="{DynamicResource SidebarBg}" BorderBrush="{DynamicResource BrColor}" BorderThickness="1" ClipToBounds="True">
+            <Grid>
+              <local:ImagePreview x:Name="Preview" Cursor="Cross" />
+              <StackPanel x:Name="EmptyHint" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="14" Margin="20">
+                <TextBlock Text="&#xf03e;" Classes="icon" FontSize="40" HorizontalAlignment="Center" />
+                <TextBlock Text="添加图片，开始处理" FontSize="18" HorizontalAlignment="Center" />
+                <TextBlock Text="选择云端或本地图片，也可从网盘图片菜单打开" Classes="muted" TextWrapping="Wrap" TextAlignment="Center" />
+                <TextBlock Text="PNG · JPEG · WebP · BMP · GIF · ICO" Classes="muted" FontSize="11" HorizontalAlignment="Center" />
+              </StackPanel>
+            </Grid>
+          </Border>
+          <Border Grid.Row="2" Background="{DynamicResource SidebarBg}" CornerRadius="12" Padding="12">
+            <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="8">
+              <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="6">
+                <TextBlock Text="识别文字" Classes="section" VerticalAlignment="Center" />
+                <Button Grid.Column="1" x:Name="CopyTextButton" Content="复制" Click="CopyTextClick" Padding="10,5" />
+                <Button Grid.Column="2" x:Name="SaveTextButton" Content="保存 TXT" Click="SaveTextClick" Padding="10,5" />
+              </Grid>
+              <TextBox Grid.Row="1" x:Name="OcrText" Height="100" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" PlaceholderText="点击右侧“提取文字”，识别当前图片中的中英文。" />
+              <TextBlock Grid.Row="2" Text="识别在本机完成；结果可复制并导出为可编辑文档。" Classes="muted" FontSize="11" TextWrapping="Wrap" />
+            </Grid>
+          </Border>
+        </Grid>
+        <Border Grid.Column="2" CornerRadius="14" Background="{DynamicResource SidebarBg}" BorderBrush="{DynamicResource BrColor}" BorderThickness="1">
+          <ScrollViewer>
+            <StackPanel x:Name="ToolsPanel" Margin="16" Spacing="12">
+              <Expander x:Name="CropExpander" Header="裁剪当前图片" HorizontalAlignment="Stretch">
+                <StackPanel Spacing="10">
+              <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="5">
+                <TextBlock Text="X / 像素" Classes="muted" /><TextBlock Grid.Column="1" Text="Y / 像素" Classes="muted" />
+                <NumericUpDown Grid.Row="1" x:Name="CropX" Minimum="0" Maximum="32000000" Value="0" FormatString="0" ValueChanged="CropValueChanged" />
+                <NumericUpDown Grid.Row="1" Grid.Column="1" x:Name="CropY" Minimum="0" Maximum="32000000" Value="0" FormatString="0" ValueChanged="CropValueChanged" />
+                <TextBlock Grid.Row="2" Text="宽 / 像素" Classes="muted" /><TextBlock Grid.Row="2" Grid.Column="1" Text="高 / 像素" Classes="muted" />
+                <NumericUpDown Grid.Row="3" x:Name="CropWidth" Minimum="1" Maximum="32000000" Value="1" FormatString="0" ValueChanged="CropValueChanged" />
+                <NumericUpDown Grid.Row="3" Grid.Column="1" x:Name="CropHeight" Minimum="1" Maximum="32000000" Value="1" FormatString="0" ValueChanged="CropValueChanged" />
+              </Grid>
+              <Grid ColumnDefinitions="*,*" ColumnSpacing="8"><Button Content="应用裁剪" Click="CropClick" HorizontalAlignment="Stretch" /><Button Grid.Column="1" Content="恢复原图" Click="ResetClick" HorizontalAlignment="Stretch" /></Grid>
+                </StackPanel>
+              </Expander>
+              <Separator />
+              <Expander Header="压缩与格式设置" HorizontalAlignment="Stretch">
+                <StackPanel Spacing="10">
+              <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10"><TextBlock Text="格式" VerticalAlignment="Center" Classes="muted" /><ComboBox Grid.Column="1" x:Name="FormatBox" SelectedIndex="0" HorizontalAlignment="Stretch" SelectionChanged="FormatChanged"><ComboBoxItem Content="JPEG" /><ComboBoxItem Content="PNG" /><ComboBoxItem Content="WebP" /></ComboBox></Grid>
+              <Grid ColumnDefinitions="*,Auto"><TextBlock Text="画质" Classes="muted" /><TextBlock Grid.Column="1" Text="{Binding #QualitySlider.Value, StringFormat='{}{0:0}%'}" Classes="muted" /></Grid>
+              <Slider x:Name="QualitySlider" Minimum="10" Maximum="100" Value="85" TickFrequency="1" IsSnapToTickEnabled="True" />
+              <TextBlock Text="最长边 / 像素（0 = 保持尺寸）" Classes="muted" FontSize="12" />
+              <NumericUpDown x:Name="MaxSideBox" Minimum="0" Maximum="32000" Value="0" FormatString="0" />
+              <TextBlock x:Name="FormatHelp" Text="JPEG 会将透明区域填充为白色。PNG 为无损格式。" Classes="muted" FontSize="11" TextWrapping="Wrap" />
+                </StackPanel>
+              </Expander>
+              <Separator />
+              <TextBlock Text="导出与文字识别" Classes="section" />
+              <ComboBox x:Name="ScopeBox" SelectedIndex="0" HorizontalAlignment="Stretch"><ComboBoxItem Content="全部图片（按左侧顺序）" /><ComboBoxItem Content="仅当前图片" /></ComboBox>
+              <ComboBox x:Name="OfficeMode" SelectedIndex="0" HorizontalAlignment="Stretch"><ComboBoxItem Content="Word / Excel：嵌入图片" /><ComboBoxItem Content="Word / Excel：识别为可编辑内容" /></ComboBox>
+              <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+                <Button Content="压缩 / 转换" Click="ExportImagesClick" HorizontalAlignment="Stretch" /><Button Grid.Column="1" Content="提取文字" Click="OcrClick" HorizontalAlignment="Stretch" />
+                <Button Grid.Row="1" Content="转 PDF" Click="ExportPdfClick" HorizontalAlignment="Stretch" /><Button Grid.Row="1" Grid.Column="1" Content="转 Word" Click="ExportWordClick" HorizontalAlignment="Stretch" />
+                <Button Grid.Row="2" Content="转 Excel" Click="ExportExcelClick" HorizontalAlignment="Stretch" />
+              </Grid>
+              <TextBlock Text="PDF 每图一页；Excel 每图一表。复杂表格的识别行列需核对。" Classes="muted" FontSize="11" TextWrapping="Wrap" />
+            </StackPanel>
+          </ScrollViewer>
+        </Border>
+      </Grid>
+      <Grid Grid.Row="2" RowDefinitions="Auto,Auto,Auto" RowSpacing="7">
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+          <TextBlock Text="保存位置" Classes="muted" VerticalAlignment="Center" />
+          <TextBox Grid.Column="1" x:Name="OutputPathBox" PlaceholderText="默认使用主程序下载目录" />
+          <Button Grid.Column="2" x:Name="ChooseOutputButton" Content="更改目录" Click="ChooseOutputClick" />
+          <Button Grid.Column="3" x:Name="CancelButton" Content="取消" Click="CancelClick" IsEnabled="False" />
+        </Grid>
+        <TextBlock Grid.Row="1" x:Name="StatusText" Text="就绪 · 原图不会被覆盖，GIF 处理首帧。" Classes="muted" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding #StatusText.Text}" />
+        <ProgressBar Grid.Row="2" x:Name="WorkProgress" Height="3" IsVisible="False" IsIndeterminate="True" Foreground="{DynamicResource ThemeColor}" />
+      </Grid>
+    </Grid>
+    <Border x:Name="CloudOverlay" IsVisible="False" Background="#88000000">
+      <Border Width="650" Height="540" CornerRadius="16" Padding="20" Background="{DynamicResource SidebarBg}" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="12">
+          <Grid ColumnDefinitions="*,Auto"><TextBlock Text="选择云端图片" FontSize="20" FontWeight="SemiBold" /><Button Grid.Column="1" Content="关闭" Click="CloseCloudClick" /></Grid>
+          <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8">
+            <Button x:Name="CloudBack" Content="返回" Click="CloudBackClick" /><Button Content="根目录" Click="CloudRootClick" />
+            <TextBlock Grid.Column="2" x:Name="CloudLocation" Text="当前网盘目录" Classes="muted" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+            <Button Grid.Column="3" x:Name="CloudNext" Content="下一页" Click="CloudNextClick" />
+          </Grid>
+          <ListBox Grid.Row="2" x:Name="CloudList" SelectionMode="Multiple,Toggle" DoubleTapped="CloudDoubleTapped">
+            <ListBox.ItemTemplate><DataTemplate x:DataType="sdk:FileEntry">
+              <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                <Panel Width="22"><TextBlock Classes="icon" Text="&#xf03e;" IsVisible="{Binding !IsFolder}" /><TextBlock Classes="icon" Text="&#xf07b;" IsVisible="{Binding IsFolder}" /></Panel>
+                <TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+              </Grid>
+            </DataTemplate></ListBox.ItemTemplate>
+          </ListBox>
+          <Grid Grid.Row="3" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+            <TextBlock x:Name="CloudHelp" Text="双击文件夹进入，选择图片后添加。" Classes="muted" TextWrapping="Wrap" VerticalAlignment="Center" />
+            <Button Grid.Column="1" Content="上一页" x:Name="CloudPrevious" Click="CloudPreviousClick" />
+            <Button Grid.Column="2" Content="添加选中图片" Classes="primary" Click="AddCloudClick" />
+          </Grid>
+        </Grid>
+      </Border>
+    </Border>
+  </Grid>
+</Window>

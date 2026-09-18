@@ -1,0 +1,53 @@
+<Project>
+  <!-- 仅调整发布清单；编译输出和 NuGet 包继续保留 XML 注释与调试信息。 -->
+  <PropertyGroup>
+    <PublishDocumentationFiles>false</PublishDocumentationFiles>
+    <PublishReferencesDocumentationFiles>false</PublishReferencesDocumentationFiles>
+    <PublishReferencesSymbols>false</PublishReferencesSymbols>
+    <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
+    <_DriveNonRuntimePublishPattern>(?i)^\.(xml|md|pdb|lib|exp|a|dbg)$</_DriveNonRuntimePublishPattern>
+  </PropertyGroup>
+
+  <!-- 单文件打包之前排除原生包夹带的符号/链接文件和说明文档。
+       必须同时处理包内文件和未打包的旁文件，不能只在发布结束后删除。 -->
+  <Target Name="ExcludeDriveNonRuntimeBundleFiles" AfterTargets="PrepareForBundle">
+    <ItemGroup>
+      <FilesToBundle Remove="@(FilesToBundle)"
+        Condition="'%(FilesToBundle.DriveKeepForPublish)' != 'true' And $([System.Text.RegularExpressions.Regex]::IsMatch('%(FilesToBundle.Extension)', '$(_DriveNonRuntimePublishPattern)'))" />
+      <_DriveRequiredPublishFiles Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.DriveKeepForPublish)' == 'true'" />
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+        Condition="'%(ResolvedFileToPublish.DriveKeepForPublish)' != 'true' And $([System.Text.RegularExpressions.Regex]::IsMatch('%(ResolvedFileToPublish.Extension)', '$(_DriveNonRuntimePublishPattern)'))" />
+    </ItemGroup>
+  </Target>
+
+  <!-- 普通插件与 NativeAOT 宿主的发布清单；保留 JSON、模型、字典、字体和许可证。
+       如有真正用于运行的 XML 等文件，可在对应 ResolvedFileToPublish 项上标记 DriveKeepForPublish=true。 -->
+  <Target Name="ExcludeDriveNonRuntimePublishFiles" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <_DriveRequiredPublishFiles Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.DriveKeepForPublish)' == 'true'" />
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+        Condition="'%(ResolvedFileToPublish.DriveKeepForPublish)' != 'true' And $([System.Text.RegularExpressions.Regex]::IsMatch('%(ResolvedFileToPublish.Extension)', '$(_DriveNonRuntimePublishPattern)'))" />
+    </ItemGroup>
+  </Target>
+
+  <!-- 主项目须在部署目标之后导入本文件，使清理发生在插件复制完成之后。
+       只删除发布目录中上述扩展名的残留文件，不清理 bin/obj、源码或 NuGet 缓存。 -->
+  <Target Name="RemoveDriveStalePublishFiles" AfterTargets="Publish"
+          Condition="'$(IsPublishable)' == 'true' And '$(PublishDir)' != '' And '$(DesignTimeBuild)' != 'true'">
+    <PropertyGroup>
+      <_DrivePublishRoot>$([MSBuild]::EnsureTrailingSlash($([System.IO.Path]::GetFullPath('$(PublishDir)', '$(MSBuildProjectDirectory)'))))</_DrivePublishRoot>
+      <_DrivePublishProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(MSBuildProjectDirectory)'))</_DrivePublishProjectRoot>
+    </PropertyGroup>
+    <Error Condition="$([System.String]::Copy('$(_DrivePublishProjectRoot)').StartsWith('$(_DrivePublishRoot)', System.StringComparison.OrdinalIgnoreCase))"
+           Text="发布目录不能是项目目录或其父目录，避免发布清理删除源码文档。请指定独立的发布目录。" />
+    <ItemGroup>
+      <_DrivePublishCleanupCandidates Include="$(_DrivePublishRoot)**/*"
+        Exclude="@(_DriveRequiredPublishFiles->'$(_DrivePublishRoot)%(RelativePath)')" />
+      <_DriveStalePublishFiles Include="@(_DrivePublishCleanupCandidates)"
+        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(_DrivePublishCleanupCandidates.Extension)', '$(_DriveNonRuntimePublishPattern)'))" />
+    </ItemGroup>
+    <Delete Files="@(_DriveStalePublishFiles)" />
+    <Message Condition="'@(_DriveStalePublishFiles)' != ''" Importance="High"
+             Text="发布清理：移除 @(_DriveStalePublishFiles->Count()) 个文档、调试或链接文件。" />
+  </Target>
+</Project>

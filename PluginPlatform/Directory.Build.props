@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Version>2.1.2</Version>
+    <Authors>Drive</Authors>
+    <Description>Managed out-of-process plugin platform for Drive desktop.</Description>
+    <RepositoryType>git</RepositoryType>
+    <Deterministic>true</Deterministic>
+    <!-- 解决方案只发布客户端；运行器和内置插件由客户端的部署目标统一发布。
+         显式发布某个 .csproj 时仍可独立发布，避免与嵌套发布争用相同中间文件。 -->
+    <IsPublishable Condition="'$(BuildingSolutionFile)' == 'true'">false</IsPublishable>
+  </PropertyGroup>
+</Project>

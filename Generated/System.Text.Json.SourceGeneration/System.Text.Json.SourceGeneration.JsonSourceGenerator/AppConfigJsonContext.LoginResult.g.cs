@@ -34,6 +34,8 @@ namespace drive_desktop.Services
                     ConstructorParameterMetadataInitializer = LoginResultCtorParamInit,
                     ConstructorAttributeProviderFactory = static () => typeof(global::drive_desktop.Models.LoginResult).GetConstructor(InstanceMemberBindingFlags, binder: null, new[] {typeof(string), typeof(global::drive_desktop.Models.UserPreferences)}, modifiers: null),
                     SerializeHandler = LoginResultSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::drive_desktop.Models.LoginResult>(options, objectInfo);
@@ -56,7 +58,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.LoginResult),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.LoginResult)obj).token,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_LoginResult_token((global::drive_desktop.Models.LoginResult)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -78,7 +80,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.LoginResult),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.LoginResult)obj).userPreferences,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_LoginResult_userPreferences((global::drive_desktop.Models.LoginResult)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -136,5 +138,10 @@ namespace drive_desktop.Services
                 IsNullable = false,
             },
         };
+
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_token")]
+        private static extern void __set_LoginResult_token(global::drive_desktop.Models.LoginResult obj, string value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_userPreferences")]
+        private static extern void __set_LoginResult_userPreferences(global::drive_desktop.Models.LoginResult obj, global::drive_desktop.Models.UserPreferences value);
     }
 }

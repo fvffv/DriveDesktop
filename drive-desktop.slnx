@@ -1,3 +1,16 @@
 <Solution>
   <Project Path="drive-desktop.csproj" />
+  <Folder Name="/PluginPlatform/">
+    <Project Path="PluginPlatform/Drive.Plugin.Abi/Drive.Plugin.Abi.csproj" />
+    <Project Path="PluginPlatform/Drive.Plugin.SDK/Drive.Plugin.SDK.csproj" />
+    <Project Path="PluginPlatform/Drive.Plugin.Runner/Drive.Plugin.Runner.csproj" />
+    <Project Path="PluginPlatform/Drive.Plugin.Hosting/Drive.Plugin.Hosting.csproj" />
+    <Project Path="PluginPlatform/Drive.Plugin.Avalonia/Drive.Plugin.Avalonia.csproj" />
+    <Project Path="PluginPlatform/Templates/Drive.Plugin.Templates.csproj" />
+  </Folder>
+  <Folder Name="/PluginPlatform/plugins/">
+    <Project Path="PluginPlatform/plugins/ArchivePreviewPlugin/ArchivePreviewPlugin.csproj" />
+    <Project Path="PluginPlatform/plugins/ImageToolsPlugin/ImageToolsPlugin.csproj" />
+    <Project Path="PluginPlatform/plugins/PortraitRetouchPlugin/PortraitRetouchPlugin.csproj" />
+  </Folder>
 </Solution>

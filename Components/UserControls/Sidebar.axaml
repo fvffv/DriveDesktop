@@ -402,7 +402,7 @@
         <Grid RowDefinitions="Auto,*,Auto">
 
             <!--上-->
-            <StackPanel Spacing="10" x:Name="LogoStackPanel"  Margin="20,30,20,30">
+            <StackPanel Spacing="10" x:Name="LogoStackPanel"  Margin="20,30,20,15">
                 <!--logo-->
                 <TextBlock  Foreground="#0078D4"
                            x:Name="DriveIcon"
@@ -463,10 +463,14 @@
                                  Tag="&#xf0e7;" HorizontalAlignment="Stretch" Classes="SidebarRadioButton" />
                     <RadioButton CommandParameter="3" Command="{Binding SwitchViewCommand}" Content="分享管理"
                                  Tag="&#xf1e0;" HorizontalAlignment="Stretch" Classes="SidebarRadioButton" />
+                    <RadioButton CommandParameter="6" Command="{Binding SwitchViewCommand}" Content="插件应用" Tag="&#xf12e;"
+                                 HorizontalAlignment="Stretch" Classes="SidebarRadioButton" />
                     <RadioButton CommandParameter="4" Command="{Binding SwitchViewCommand}" Content="统计看板"
                                  Tag="&#xf200;" HorizontalAlignment="Stretch" Classes="SidebarRadioButton" />
+ 
                     <RadioButton CommandParameter="5" Command="{Binding SwitchViewCommand}" Content="设置" Tag="&#xf013;"
                                  HorizontalAlignment="Stretch" Classes="SidebarRadioButton" />
+                   
                 </StackPanel>
             </ScrollViewer>
             <!--存储控件和切换主题-->

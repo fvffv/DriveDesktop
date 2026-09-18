@@ -1,0 +1,132 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:ArchivePreviewPlugin" xmlns:sdk="using:Drive.Plugin.SDK"
+        x:Class="ArchivePreviewPlugin.ArchiveWindow"
+        Title="压缩包预览器" Width="1000" Height="720" MinWidth="800" MinHeight="560"
+        WindowStartupLocation="CenterScreen" WindowDecorations="Full"
+        Background="{DynamicResource HomeBg}" Foreground="{DynamicResource TextColor}">
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="HomeBg">#F4F6F9</SolidColorBrush>
+          <SolidColorBrush x:Key="SidebarBg">#FFFFFF</SolidColorBrush>
+          <SolidColorBrush x:Key="SideBarBrColor">#EEF0F5</SolidColorBrush>
+          <SolidColorBrush x:Key="BrColor">#DCDFE6</SolidColorBrush>
+          <SolidColorBrush x:Key="TextColor">#1A1C23</SolidColorBrush>
+          <SolidColorBrush x:Key="SideTextColor">#687386</SolidColorBrush>
+          <SolidColorBrush x:Key="HoverBg">#F8FAFC</SolidColorBrush>
+          <SolidColorBrush x:Key="SelectedBg">#EBF2FE</SolidColorBrush>
+          <SolidColorBrush x:Key="ErrorColor">#C43B48</SolidColorBrush>
+          <SolidColorBrush x:Key="FolderIconColor">#D69A12</SolidColorBrush>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="HomeBg">#181A1D</SolidColorBrush>
+          <SolidColorBrush x:Key="SidebarBg">#242629</SolidColorBrush>
+          <SolidColorBrush x:Key="SideBarBrColor">#303338</SolidColorBrush>
+          <SolidColorBrush x:Key="BrColor">#41454B</SolidColorBrush>
+          <SolidColorBrush x:Key="TextColor">#E8EAED</SolidColorBrush>
+          <SolidColorBrush x:Key="SideTextColor">#969BA3</SolidColorBrush>
+          <SolidColorBrush x:Key="HoverBg">#2B2E32</SolidColorBrush>
+          <SolidColorBrush x:Key="SelectedBg">#3A3F46</SolidColorBrush>
+          <SolidColorBrush x:Key="ErrorColor">#F05F72</SolidColorBrush>
+          <SolidColorBrush x:Key="FolderIconColor">#FACC15</SolidColorBrush>
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+      <SolidColorBrush x:Key="ThemeColor">#3B82F6</SolidColorBrush>
+      <FontFamily x:Key="ArchiveIconFont">avares://ArchivePreviewPlugin/Assets/Fonts/fa-solid-900.otf#Font Awesome 6 Free</FontFamily>
+    </ResourceDictionary>
+  </Window.Resources>
+  <Window.Styles>
+    <Style Selector="TextBlock.muted"><Setter Property="Foreground" Value="{DynamicResource SideTextColor}" /></Style>
+    <Style Selector="TextBlock.archiveIcon"><Setter Property="Foreground" Value="{DynamicResource ThemeColor}" /></Style>
+    <Style Selector="TextBlock.archiveIcon.folder"><Setter Property="Foreground" Value="{DynamicResource FolderIconColor}" /></Style>
+    <Style Selector="Button">
+      <Setter Property="CornerRadius" Value="9" /><Setter Property="Padding" Value="14,9" />
+      <Setter Property="Cursor" Value="Hand" /><Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+      <Setter Property="Foreground" Value="{DynamicResource TextColor}" /><Setter Property="BorderBrush" Value="{DynamicResource BrColor}" />
+    </Style>
+    <Style Selector="Button.primary"><Setter Property="Background" Value="{DynamicResource ThemeColor}" /><Setter Property="BorderBrush" Value="{DynamicResource ThemeColor}" /><Setter Property="Foreground" Value="White" /></Style>
+    <Style Selector="TextBox"><Setter Property="CornerRadius" Value="9" /><Setter Property="Background" Value="{DynamicResource SidebarBg}" /><Setter Property="Foreground" Value="{DynamicResource TextColor}" /></Style>
+    <Style Selector="ListBoxItem"><Setter Property="Padding" Value="12,10" /><Setter Property="Margin" Value="5,2" /><Setter Property="CornerRadius" Value="8" /><Setter Property="Foreground" Value="{DynamicResource TextColor}" /></Style>
+    <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter"><Setter Property="Background" Value="{DynamicResource HoverBg}" /></Style>
+    <Style Selector="ListBoxItem:selected /template/ ContentPresenter"><Setter Property="Background" Value="{DynamicResource SelectedBg}" /></Style>
+  </Window.Styles>
+  <Grid Margin="24" RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="16">
+    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+      <Border Background="#183B82F6" Width="52" Height="52" CornerRadius="14">
+        <PathIcon Width="27" Height="27" Foreground="{DynamicResource ThemeColor}" Data="M4,3 L17,3 23,9 23,29 4,29 Z M17,3 L17,9 23,9 M10,4 L13,4 M10,7 L13,7 M10,10 L13,10 M10,13 L13,13 M10,16 L13,16 M10,19 L13,19 13,24 10,24 Z" />
+      </Border>
+      <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+        <TextBlock x:Name="ArchiveTitle" Text="压缩包预览器" FontSize="23" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+        <TextBlock x:Name="ArchiveSubtitle" Text="浏览压缩包内容，只提取需要的文件" Classes="muted" TextTrimming="CharacterEllipsis" />
+      </StackPanel>
+      <Button Grid.Column="2" x:Name="ChooseButton" Content="选择网盘压缩包" Click="ChooseArchiveClick" VerticalAlignment="Center" />
+    </Grid>
+    <Border Grid.Row="1" x:Name="PickerPanel" IsVisible="False" Background="{DynamicResource SidebarBg}" CornerRadius="12" Padding="14">
+      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+        <ComboBox x:Name="ArchiveChoices" HorizontalAlignment="Stretch" PlaceholderText="主程序当前目录中的压缩包">
+          <ComboBox.ItemTemplate><DataTemplate x:DataType="sdk:FileEntry"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate>
+        </ComboBox>
+        <Button Grid.Column="1" Content="打开" Click="OpenChoiceClick" />
+      </Grid>
+    </Border>
+    <Grid Grid.Row="2" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+      <TextBox x:Name="FilterBox" PlaceholderText="搜索压缩包内的文件或路径" TextChanged="FilterChanged" />
+      <TextBox Grid.Column="1" x:Name="PasswordBox" Width="155" PlaceholderText="密码（如有）" PasswordChar="●" />
+      <Button Grid.Column="2" x:Name="ReloadButton" Content="重新读取" Click="ReloadClick" />
+    </Grid>
+    <Border Grid.Row="3" Background="{DynamicResource SidebarBg}" BorderBrush="{DynamicResource SideBarBrColor}" BorderThickness="1" CornerRadius="16" ClipToBounds="True">
+      <Grid RowDefinitions="Auto,Auto,*,Auto">
+        <Grid Margin="14,12" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+          <Button x:Name="UpButton" Content="↑ 上一级" Click="UpClick" Padding="10,6" IsEnabled="False" />
+          <TextBlock Grid.Column="1" x:Name="Breadcrumb" Text="压缩包内容" VerticalAlignment="Center" Classes="muted" TextTrimming="CharacterEllipsis" />
+          <Button Grid.Column="2" x:Name="SelectAllButton" Content="全选当前列表" Click="SelectAllClick" Padding="10,6" />
+        </Grid>
+        <Border Grid.Row="1" Background="{DynamicResource HomeBg}" Padding="20,10">
+          <Grid ColumnDefinitions="*,110,140"><TextBlock Text="名称" Classes="muted" /><TextBlock Grid.Column="1" Text="大小" Classes="muted" /><TextBlock Grid.Column="2" Text="修改时间" Classes="muted" /></Grid>
+        </Border>
+        <ListBox Grid.Row="2" x:Name="EntryList" Background="Transparent" SelectionMode="Multiple,Toggle"
+                 SelectionChanged="EntriesSelectionChanged" DoubleTapped="EntryDoubleTapped" KeyDown="EntryKeyDown">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="local:ArchiveRow">
+              <Grid ColumnDefinitions="Auto,Auto,*,110,140" ColumnSpacing="10" ToolTip.Tip="{Binding Detail}">
+                <CheckBox IsChecked="{Binding $parent[ListBoxItem].IsSelected, Mode=OneWay}" IsHitTestVisible="False" Focusable="False" MinWidth="20" MinHeight="20" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Width="24" FontSize="20" FontWeight="Black"
+                           FontFamily="{StaticResource ArchiveIconFont}" Text="{Binding Icon}"
+                           Classes="archiveIcon" Classes.folder="{Binding IsFolder}"
+                           TextAlignment="Center" VerticalAlignment="Center" />
+                <StackPanel Grid.Column="2" Spacing="2" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                  <TextBlock Text="{Binding Hint}" Classes="muted" FontSize="11" IsVisible="{Binding HasHint}" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+                <TextBlock Grid.Column="3" Text="{Binding SizeText}" Classes="muted" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="4" Text="{Binding ModifiedText}" Classes="muted" VerticalAlignment="Center" />
+              </Grid>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Grid.Row="2" x:Name="EmptyPanel" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="530" Spacing="12" Margin="30">
+          <TextBlock x:Name="EmptyTitle" Text="从网盘文件菜单开始预览" FontSize="19" FontWeight="SemiBold" HorizontalAlignment="Center" />
+          <TextBlock x:Name="EmptyDescription" Text="在 ZIP、7z、RAR 或 TAR 文件菜单中点击“预览压缩包”，也可以选择当前网盘目录中的压缩包。" Classes="muted" TextWrapping="Wrap" TextAlignment="Center" />
+          <TextBlock Text="分段缓存上限 256 MiB · 七天未使用自动清理" FontSize="12" Classes="muted" HorizontalAlignment="Center" />
+        </StackPanel>
+        <Border Grid.Row="3" Padding="16,11" BorderBrush="{DynamicResource SideBarBrColor}" BorderThickness="0,1,0,0">
+          <Grid ColumnDefinitions="*,Auto"><TextBlock x:Name="SelectionText" Text="尚未打开压缩包" Classes="muted" /><TextBlock Grid.Column="1" x:Name="CacheText" Text="缓存按需生成" Classes="muted" FontSize="12" /></Grid>
+        </Border>
+      </Grid>
+    </Border>
+    <Grid Grid.Row="4" RowDefinitions="Auto,Auto,Auto" RowSpacing="9">
+      <TextBlock x:Name="FormatNotice" IsVisible="False" Foreground="{DynamicResource SideTextColor}" FontSize="12" TextWrapping="Wrap" />
+      <Grid Grid.Row="1" ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="10">
+        <StackPanel VerticalAlignment="Center" Spacing="5" Margin="0,0,10,0">
+          <TextBlock x:Name="StatusText" Text="就绪" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding #StatusText.Text}" />
+          <TextBlock x:Name="DestinationText" Text="文件将保存到网盘设置中的下载目录，保留包内路径" Classes="muted" FontSize="12" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding #DestinationText.Text}" />
+        </StackPanel>
+        <Button Grid.Column="1" x:Name="ClearCacheButton" Content="清理缓存" Click="ClearCacheClick" />
+        <Button Grid.Column="2" x:Name="CancelButton" Content="取消" Click="CancelClick" IsEnabled="False" />
+        <Button Grid.Column="3" x:Name="DownloadButton" Content="下载选中文件" Classes="primary" Click="DownloadClick" IsEnabled="False" />
+      </Grid>
+      <ProgressBar Grid.Row="2" x:Name="WorkProgress" Height="4" Minimum="0" Maximum="100" Foreground="{DynamicResource ThemeColor}" IsVisible="False" />
+    </Grid>
+  </Grid>
+</Window>

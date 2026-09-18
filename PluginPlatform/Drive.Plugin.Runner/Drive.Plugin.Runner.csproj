@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk"
+         TreatAsLocalProperty="PublishAot;IsAotCompatible;IsTrimmable;PublishSingleFile;SelfContained">
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <OutputType>WinExe</OutputType>
+
+    <!-- 动态插件需要普通 .NET 运行时；宿主的 NativeAOT 设置不能传入运行器。 -->
+    <PublishAot>false</PublishAot>
+    <IsAotCompatible>false</IsAotCompatible>
+    <PublishTrimmed Condition="'$(PublishTrimmed)' == ''">true</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
+    <IsTrimmable>true</IsTrimmable>
+
+    <PublishSingleFile>true</PublishSingleFile>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <SelfContained Condition="'$(RuntimeIdentifier)' != ''">true</SelfContained>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <IsPackable>false</IsPackable>
+    <ShouldBeValidatedAsExecutableReference>false</ShouldBeValidatedAsExecutableReference>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Drive.Plugin.SDK/Drive.Plugin.SDK.csproj" />
+    <ProjectReference Include="../Drive.Plugin.Avalonia/Drive.Plugin.Avalonia.csproj" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.2" />
+  </ItemGroup>
+
+  <Import Project="Trimming.targets" />
+
+  <Import Project="../Drive.Plugin.SDK/buildTransitive/Publish/RuntimeFiles.targets" />
+</Project>

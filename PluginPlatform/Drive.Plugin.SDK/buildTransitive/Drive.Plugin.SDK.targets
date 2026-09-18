@@ -1,0 +1,20 @@
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)Publish/RuntimeFiles.targets" Condition="'$(DrivePluginManaged)' == 'true'" />
+  <!-- 只影响明确声明为托管插件的项目，不影响 NativeAOT 主程序或运行器。 -->
+  <Target Name="ValidateDriveManagedPlugin" BeforeTargets="PrepareForBuild" Condition="'$(DrivePluginManaged)' == 'true'">
+    <Error Condition="'$(PublishAot)' == 'true' Or '$(PublishTrimmed)' == 'true' Or '$(PublishSingleFile)' == 'true' Or '$(SelfContained)' == 'true'"
+           Text="Drive 托管插件必须使用普通类库：PublishAot=false、PublishTrimmed=false、PublishSingleFile=false、SelfContained=false。自包含与裁剪由独立运行器负责。" />
+  </Target>
+  <Target Name="ExcludeDriveSharedBuildDependencies" AfterTargets="ResolveReferences" Condition="'$(DrivePluginManaged)' == 'true'">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)"
+        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)', '^(Avalonia($|\.)|Drive\.Plugin\.(SDK|Abi|Avalonia)$|SkiaSharp$|HarfBuzzSharp$|MicroCom\.Runtime$|Tmds\.DBus\.Protocol$|libSkiaSharp$|libHarfBuzzSharp$|libAvaloniaNative$|av_libglesv2$)'))" />
+    </ItemGroup>
+  </Target>
+  <Target Name="ExcludeDriveSharedPublishDependencies" AfterTargets="ComputeFilesToPublish" Condition="'$(DrivePluginManaged)' == 'true'">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)', '^(Avalonia($|\.)|Drive\.Plugin\.(SDK|Abi|Avalonia)$|SkiaSharp$|HarfBuzzSharp$|MicroCom\.Runtime$|Tmds\.DBus\.Protocol$|libSkiaSharp$|libHarfBuzzSharp$|libAvaloniaNative$|av_libglesv2$)'))" />
+    </ItemGroup>
+  </Target>
+</Project>

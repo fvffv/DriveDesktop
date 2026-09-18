@@ -15,7 +15,14 @@
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
     <ApplicationIcon>Assets\avalonia-logo.ico</ApplicationIcon>
-    <TargetFrameworks>net10.0</TargetFrameworks>
+    <TargetFramework>net11.0</TargetFramework>
+    
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Features>$(Features);runtime-async=on</Features>
+  
+    <DefaultItemExcludes>$(DefaultItemExcludes);PluginPlatform/**;artifacts/**</DefaultItemExcludes>
+
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="PluginPlatform\Drive.Plugin.SDK\Drive.Plugin.SDK.csproj" />
+    <ProjectReference Include="PluginPlatform\Drive.Plugin.Hosting\Drive.Plugin.Hosting.csproj" />
     <PackageReference Include="AsyncImageLoader.Avalonia" Version="3.8.0" />
     <PackageReference Include="Avalonia" Version="12.1.2" />
     <PackageReference Include="Avalonia.AvaloniaEdit" Version="12.0.0" />
@@ -49,7 +58,7 @@
     <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="2.2.0" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.1.0-dev-798" />
     <PackageReference Include="LiveMarkdown.Avalonia" Version="2.4.0" />
-    <PackageReference Include="NativeMedia.Avalonia" Version="1.0.13" />
+    <PackageReference Include="NativeMedia.Avalonia" Version="1.0.14" />
     <PackageReference Include="OfficeViewer.Avalonia" Version="0.1.5" />
     <PackageReference Include="Pure.DI" Version="2.4.2">
       <PrivateAssets>all</PrivateAssets>
@@ -69,10 +78,13 @@
     </PackageReference>
   </ItemGroup>
 
-  <!-- Project-local .NET 10/PublishAotCross linker compatibility shim. -->
-  <Import Project="build\PublishAotCrossCompat.targets" />
+
+  <Import Project="PluginPlatform\Deploy-Runner.targets" />
+  <Import Project="PluginPlatform\Deploy-Plugins.targets" />
 
   <ItemGroup>
     <AvaloniaXaml Remove="Components\TemplateControls\CodeView.axaml" />
   </ItemGroup>
+  <!-- 最后导入，发布清理在 Runner 和插件部署之后执行。 -->
+  <Import Project="PluginPlatform/Drive.Plugin.SDK/buildTransitive/Publish/RuntimeFiles.targets" />
 </Project>

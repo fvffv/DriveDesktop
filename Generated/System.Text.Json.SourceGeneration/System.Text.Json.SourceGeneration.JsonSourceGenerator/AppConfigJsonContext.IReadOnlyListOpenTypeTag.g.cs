@@ -29,7 +29,9 @@ namespace drive_desktop.Services
                 var info = new global::System.Text.Json.Serialization.Metadata.JsonCollectionInfoValues<global::System.Collections.Generic.IReadOnlyList<global::Avalonia.Media.Fonts.OpenTypeTag>>
                 {
                     ObjectCreator = null,
-                    SerializeHandler = IReadOnlyListOpenTypeTagSerializeHandler
+                    SerializeHandler = IReadOnlyListOpenTypeTagSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateIEnumerableInfo<global::System.Collections.Generic.IReadOnlyList<global::Avalonia.Media.Fonts.OpenTypeTag>, global::Avalonia.Media.Fonts.OpenTypeTag>(options, info);

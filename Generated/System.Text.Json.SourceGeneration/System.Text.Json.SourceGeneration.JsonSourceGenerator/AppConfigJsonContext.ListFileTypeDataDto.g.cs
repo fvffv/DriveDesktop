@@ -29,7 +29,9 @@ namespace drive_desktop.Services
                 var info = new global::System.Text.Json.Serialization.Metadata.JsonCollectionInfoValues<global::System.Collections.Generic.List<global::drive_desktop.Models.FileTypeDataDto>>
                 {
                     ObjectCreator = () => new global::System.Collections.Generic.List<global::drive_desktop.Models.FileTypeDataDto>(),
-                    SerializeHandler = ListFileTypeDataDtoSerializeHandler
+                    SerializeHandler = ListFileTypeDataDtoSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateListInfo<global::System.Collections.Generic.List<global::drive_desktop.Models.FileTypeDataDto>, global::drive_desktop.Models.FileTypeDataDto>(options, info);

@@ -1,0 +1,325 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:plugins="using:drive_desktop.Services.Plugins"
+             xmlns:hosting="using:Drive.Plugin.Hosting"
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+             xmlns:templateControls="clr-namespace:drive_desktop.Components.TemplateControls"
+             xmlns:transitionsAndConverter="clr-namespace:drive_desktop.Components.TransitionsAndConverter"
+             x:Class="drive_desktop.Components.UserControls.PluginApplications"
+             x:DataType="plugins:DesktopPluginService">
+    <UserControl.Styles>
+        <Style Selector="TextBlock.Title">
+            <Setter Property="Foreground" Value="{DynamicResource SideTextColor}" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style Selector="Button#AddPluginButton">
+            <Setter Property="Background" Value="{DynamicResource ThemeColor}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Margin="9" BoxShadow="0 4 12 0 #403B82F6" Height="45" CornerRadius="14"
+                            Padding="20,0" Background="{TemplateBinding Background}">
+                        <DockPanel HorizontalSpacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource FASolid}" FontSize="13"
+                                       Foreground="White" Text="&#xf067;" />
+                            <TextBlock VerticalAlignment="Center" Foreground="White" FontWeight="Bold" Text="添加插件" />
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Border.BorderTitle">
+            <Setter Property="Height" Value="27" />
+            <Setter Property="Padding" Value="12,0" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Background" Value="#21ffffff" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#30ffffff" />
+        </Style>
+        <Style Selector="Border.PluginItemBorder">
+            <Setter Property="ClipToBounds" Value="False" />
+            <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}" />
+            <Setter Property="MinWidth" Value="290"/>
+            
+            <Setter Property="MinHeight" Value="200" />
+       
+            <Setter Property="RenderTransform" Value="translate(0px, 0px)"/>
+            <Setter Property="Padding" Value="20" />
+            <Setter Property="Background" Value="{DynamicResource SidebarBg}" />
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SideBarBrColor}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <BrushTransition Property="Background" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.PluginItemBorder:pointerover">
+            <Setter Property="RenderTransform" Value="translate(0px, -5px)"/>
+        </Style>
+        
+        <Style Selector="Button.OpenPluginViewButton">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+               <ControlTemplate>
+                   <Border Transitions="{StaticResource CommonColorTransitions}" CornerRadius="10" Width="34" Height="34" Classes="OpenPluginViewButtonBorder">
+                       <TextBlock Transitions="{StaticResource CommonColorTransitionsTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="&#xf7d9;" FontFamily="{StaticResource FASolid}"/>
+                   </Border>
+               </ControlTemplate>
+           </Setter>
+        </Style>
+        <Style Selector="Border.OpenPluginViewButtonBorder">
+            <Setter Property="Background" Value="{DynamicResource HomeBg}" />
+            
+        </Style>
+       
+        <Style Selector="Border.OpenPluginViewButtonBorder TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource SideTextColor2}" />
+            
+        </Style>
+        <Style Selector="Border.OpenPluginViewButtonBorder:pointerover TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
+            
+        </Style>
+    </UserControl.Styles>
+    <Grid ColumnDefinitions="*,Auto" ClipToBounds="False">
+        <Border ClipToBounds="False">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <DockPanel VerticalSpacing="15" VerticalAlignment="Top" ClipToBounds="False" LastChildFill="False">
+                <!--最顶部-->
+                <DockPanel Margin="30,25,30,0"  DockPanel.Dock="Top">
+                    <StackPanel>
+                        <TextBlock Text="插件拓展" FontSize="24" FontWeight="700" />
+                        <TextBlock Margin="0,5,0,0" Text="扩展您的网盘功能，管理已经加载到客户端的插件" Classes="Title" />
+                    </StackPanel>
+
+                    <Button x:Name="AddPluginButton" DockPanel.Dock="Right" Command="{Binding OpenDirectoryCommand}"
+                            ToolTip.Tip="打开插件目录，复制插件后点击重新扫描"
+                            HorizontalAlignment="Right" />
+                    <templateControls:DefaultInput DockPanel.Dock="Right"
+                                                   HorizontalAlignment="Right"
+                                                   Background="{DynamicResource SidebarBg}"
+                                                   CornerRadius="16"
+                                                   IconFontSize="20"
+                                                   IconText="&#xf002;"
+                                                   Watermark="搜索插件..."
+                                                   Width="250"
+                                                   Text="{Binding SearchText, Mode=TwoWay}"
+                                                   IsShowIcon="True" />
+
+                </DockPanel>
+                <!--蓝色介绍卡片-->
+                <Border Margin="30,0"  ClipToBounds="False" DockPanel.Dock="Top" CornerRadius="25"
+                        BoxShadow="{DynamicResource AllShadow}">
+                    <Border.Background>
+                        <LinearGradientBrush
+                            StartPoint="21.3%,100%"
+                            EndPoint="78.7%,0%">
+
+                            <GradientStop Color="#247BF3" Offset="0" />
+                            <GradientStop Color="#228EF4" Offset="0.42" />
+                            <GradientStop Color="#49A8F2" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Panel Height="190" ClipToBounds="True">
+                        <TextBlock RenderTransform="rotate(25deg) translate(-200px, -40px)" VerticalAlignment="Center"
+                                   HorizontalAlignment="Right" Text="&#xf02d;" FontSize="50"
+                                   FontFamily="{StaticResource FASolid}" Foreground="White" Opacity="0.17" />
+
+                        <TextBlock RenderTransform="rotate(-25deg) translate(-200px, 40px)" VerticalAlignment="Center"
+                                   HorizontalAlignment="Right" Text="&#xf552;" FontSize="80"
+                                   FontFamily="{StaticResource FASolid}" Foreground="White" Opacity="0.17" />
+
+                        <TextBlock RenderTransform="rotate(25deg)" VerticalAlignment="Center"
+                                   HorizontalAlignment="Right" Text="&#xf12e;" FontSize="150"
+                                   FontFamily="{StaticResource FASolid}" Foreground="White" Opacity="0.17" />
+                        <Panel Margin="35,29">
+
+                            <StackPanel>
+                                <TextBlock Foreground="White" Text="让网盘拥有更多可能" FontSize="24" FontWeight="700" />
+                                <TextBlock LineHeight="25" HorizontalAlignment="Left" MaxWidth="550"
+                                           Foreground="#d9ffffff" TextWrapping="Wrap" Margin="0,5,0,0"
+                                           Text="插件可以调用网盘客户端提供的开放 API， 为文件管理、媒体播放、下载、同步以及自动化工作流提供更多能力。" Classes="Title" />
+                                <!--小title-->
+                                <StackPanel Spacing="10" Margin="0,20,0,0" Orientation="Horizontal">
+                                    <Border Classes="BorderTitle">
+                                        <TextBlock Foreground="White" FontSize="12" Text="托管 DLL 插件"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <Border Classes="BorderTitle">
+                                        <TextBlock Foreground="White" FontSize="12" Text="Avalonia UI"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <Border Classes="BorderTitle">
+                                        <TextBlock Foreground="White" FontSize="12" Text="开放 SDK"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+
+                        </Panel>
+                    </Panel>
+
+
+                </Border>
+                <!--插件列表 和日志-->
+                <Border DockPanel.Dock="Top" Margin="30,0" Transitions="{StaticResource CommonColorTransitions}"
+                        BorderThickness="0,0,0,2" BorderBrush="{DynamicResource SideBarBrColor}">
+                    <DockPanel LastChildFill="False" HorizontalSpacing="25">
+                        <RadioButton Command="{Binding SwitchPageCommand}" x:Name="DownloadingButton" IsChecked="True"
+                                     DockPanel.Dock="Left" Content="插件列表"
+                                     Tag="{Binding PluginCount}"
+                                     CommandParameter="0"
+                                     Background="#1a3b82f6" Foreground="{DynamicResource ThemeColor}"
+                                     Classes="RadioButtonTitleButton" />
+                        <RadioButton Command="{Binding SwitchPageCommand}" CommandParameter="1"
+                                     x:Name="UploadingButton" DockPanel.Dock="Left" Content="日志"
+                                     Tag="{Binding LogCount}"
+                                     Background="#1a3b82f6" Foreground="{DynamicResource ThemeColor}"
+                                     Classes="RadioButtonTitleButton" />
+                    </DockPanel>
+                </Border>
+                <DockPanel DockPanel.Dock="Top" Margin="30,-10,30,-30" LastChildFill="True">
+                    <Button DockPanel.Dock="Right" Content="重新扫描" Command="{Binding ScanCommand}" IsEnabled="{Binding !IsBusy}" />
+                    <TextBlock VerticalAlignment="Center" Classes="Title" Text="{Binding Message}" TextWrapping="Wrap" Margin="0,0,15,0" />
+                </DockPanel>
+                <!--tab-->
+                <Carousel  DockPanel.Dock="Top" ClipToBounds="False"     HorizontalAlignment="Stretch"
+                          SelectedIndex="{Binding PageIndex}">
+                    <Carousel.PageTransition>
+                        <transitionsAndConverter:SequentialFadeTransition Duration="0:0:0.1" />
+                    </Carousel.PageTransition>
+                    <!--插件列表-->
+                    <Grid>
+                    <TextBlock Margin="30,30" Classes="Title" IsVisible="{Binding HasNoPlugins}" Text="暂无匹配插件。点击添加插件打开目录，复制后重新扫描。" />
+                    <ItemsControl Margin="30,20" ClipToBounds="False"  ItemsSource="{Binding Plugins}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate >
+                                <UniformGrid ColumnSpacing="20" RowSpacing="20" Columns="3"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="plugins:PluginItemViewModel">
+
+                                <Border Classes="PluginItemBorder" ToolTip.Tip="{Binding ToggleHint}">
+                               
+                                    <StackPanel>
+                                        <Panel Margin="0,0,0,10">
+                                            <!--版本号-->
+                                            <Border Transitions="{StaticResource CommonColorTransitions}"  CornerRadius="7" HorizontalAlignment="Right" VerticalAlignment="Top" Background="{DynamicResource HomeBg}" Padding="7,3">
+                                                <TextBlock Foreground="{DynamicResource SideTextColor}" FontSize="11" Text="{Binding Version}" />
+                                            </Border>
+                                            <!--插件卡片上层-->
+                                            <DockPanel LastChildFill="False">
+                                                <Border VerticalAlignment="Top" DockPanel.Dock="Left" Width="67" Height="67" CornerRadius="17"
+                                                        Background="{Binding IconBackground}">
+                                                    <!-- ICO 图标来自插件 DLL 元信息 -->
+                                                    <Panel>
+                                                        <Image Source="{Binding Icon}" Width="44" Height="44" Stretch="Uniform" IsVisible="{Binding HasIcon}" />
+                                                        <TextBlock Text="&#xf12e;" FontFamily="{StaticResource FASolid}" Foreground="White" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding !HasIcon}" />
+                                                    </Panel>
+                                                </Border>
+                                                <!--插件介绍-->
+                                                <StackPanel Margin="21,0,0,0">
+                                                    <!--标题-->
+                                                    <TextBlock FontSize="20" FontWeight="Bold" Text="{Binding Name}" TextTrimming="CharacterEllipsis" Margin="0,0,65,0"/>
+                                                    <!--作者-->
+                                                    <TextBlock Margin="0,5,0,0" FontSize="12" Foreground="{DynamicResource SideTextColor}"  Text="{Binding Author}" TextTrimming="CharacterEllipsis"/>
+                                                    <!--简介-->
+                                                    <TextBlock Margin="0,8,0,0" TextWrapping="Wrap" FontSize="13" Foreground="{DynamicResource SideTextColor2}"  Text="{Binding Description}" MaxLines="2" TextTrimming="CharacterEllipsis"/>
+                                                </StackPanel>
+                                                
+                                            </DockPanel>
+                                        </Panel>
+                                        <!--横线分割-->
+                                        <Border  Classes="Br" Background="{DynamicResource SideTextColor}" Transitions="{StaticResource CommonColorTransitions}"/>
+                                       <DockPanel Margin="0,0,0,0" >
+                                           <!-- 标签由插件元信息提供 -->
+                                           <ItemsControl VerticalAlignment="Center" DockPanel.Dock="Left" ItemsSource="{Binding Tags}">
+                                               <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                               <ItemsControl.ItemTemplate>
+                                                   <DataTemplate x:DataType="sys:String">
+                                                       <Border Transitions="{StaticResource CommonColorTransitions}" Margin="0,0,8,4" CornerRadius="7" Background="{DynamicResource HomeBg}" Padding="7,3">
+                                                           <TextBlock Foreground="{DynamicResource SideTextColor}" FontSize="11" Text="{Binding .}" />
+                                                       </Border>
+                                                   </DataTemplate>
+                                               </ItemsControl.ItemTemplate>
+                                           </ItemsControl>
+                                           <Grid DockPanel.Dock="Right" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                                               <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                                                   <Border CornerRadius="50" Width="10" Height="10" Tag="{Binding IsRunning}">
+                                                       <Border.Styles>
+                                                           <Style Selector="Border"><Setter Property="Background" Value="{DynamicResource SideTextColor}" /></Style>
+                                                           <Style Selector="Border[Tag=True]"><Setter Property="Background" Value="#10ae80" /></Style>
+                                                       </Border.Styles>
+                                                   </Border>
+                                                   <TextBlock VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Text="{Binding Status}" Foreground="{DynamicResource SideTextColor}" />
+                                               </StackPanel>
+                                               <Button Grid.Column="1" x:Name="OpenPluginViewButton" Classes="OpenPluginViewButton" Command="{Binding OpenCommand}" ToolTip.Tip="打开插件应用" />
+                                               <ToggleSwitch Grid.Column="2" x:Name="PluginSwitch" OnContent="" OffContent="" IsChecked="{Binding IsEnabled, Mode=TwoWay}" IsEnabled="{Binding CanToggle}" ToolTip.Tip="{Binding ToggleHint}" />
+                                           </Grid>
+                                       </DockPanel>
+                                      
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    </Grid>
+                    <!--日志区-->
+                    <Border Margin="30,20" Background="{DynamicResource SidebarBg}" Transitions="{DynamicResource CommonColorTransitions}" CornerRadius="22" BorderThickness="1" BorderBrush="{DynamicResource SideBarBrColor}">
+                        <Grid Margin="18,15" RowDefinitions="Auto,Auto,*" RowSpacing="15">
+                            <DockPanel>
+                                <Button DockPanel.Dock="Right" Content="打开日志文件" Command="{Binding OpenLogCommand}" />
+                                <templateControls:DefaultInput HorizontalAlignment="Left"
+                                    Background="{DynamicResource HomeBg}" CornerRadius="16" IconFontSize="20" IconText="&#xf002;"
+                                    Watermark="搜索时间、等级、插件或内容..." Width="300" Text="{Binding LogSearchText, Mode=TwoWay}" IsShowIcon="True" />
+                            </DockPanel>
+                            <Grid Grid.Row="1" ColumnDefinitions="190,65,160,*" ColumnSpacing="12" Margin="8,0,24,0">
+                                <TextBlock Text="时间" Classes="Title" />
+                                <TextBlock Grid.Column="1" Text="等级" Classes="Title" />
+                                <TextBlock Grid.Column="2" Text="插件名" Classes="Title" />
+                                <TextBlock Grid.Column="3" Text="日志内容" Classes="Title" />
+                            </Grid>
+                            <Grid Grid.Row="2" MinHeight="180" MaxHeight="420">
+                                <TextBlock Margin="8,20" IsVisible="{Binding HasNoLogs}" Text="暂无匹配日志" Classes="Title" />
+                                <ListBox ItemsSource="{Binding Logs}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate x:DataType="hosting:PluginLogEntry">
+                                            <Grid ColumnDefinitions="190,65,160,*" ColumnSpacing="12" Margin="0,5" HorizontalAlignment="Stretch">
+                                                <TextBlock Text="{Binding TimeText}" FontSize="12" Foreground="{DynamicResource SideTextColor}" />
+                                                <TextBlock Grid.Column="1" Text="{Binding LevelText}" FontSize="12" Tag="{Binding LevelText}">
+                                                    <TextBlock.Styles>
+                                                        <Style Selector="TextBlock"><Setter Property="Foreground" Value="{DynamicResource SideTextColor}" /></Style>
+                                                        <Style Selector="TextBlock[Tag=警告]"><Setter Property="Foreground" Value="#D99120" /></Style>
+                                                        <Style Selector="TextBlock[Tag=错误]"><Setter Property="Foreground" Value="#E45858" /></Style>
+                                                    </TextBlock.Styles>
+                                                </TextBlock>
+                                                <TextBlock Grid.Column="2" Text="{Binding PluginName}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding PluginId}" FontSize="12" />
+                                                <SelectableTextBlock Grid.Column="3" Text="{Binding Message}" TextWrapping="Wrap" FontSize="12" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                    <ListBox.Styles><Style Selector="ListBoxItem"><Setter Property="HorizontalContentAlignment" Value="Stretch" /></Style></ListBox.Styles>
+                                </ListBox>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Carousel>
+
+            </DockPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

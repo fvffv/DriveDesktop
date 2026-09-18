@@ -29,7 +29,9 @@ namespace drive_desktop.Services
                 var info = new global::System.Text.Json.Serialization.Metadata.JsonCollectionInfoValues<global::System.Globalization.Calendar[]>
                 {
                     ObjectCreator = null,
-                    SerializeHandler = CalendarArraySerializeHandler
+                    SerializeHandler = CalendarArraySerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateArrayInfo<global::System.Globalization.Calendar>(options, info);

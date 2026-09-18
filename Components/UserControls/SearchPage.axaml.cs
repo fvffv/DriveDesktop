@@ -16,6 +16,7 @@ public partial class SearchPage : UserControl
     public SearchPage()
     {
         InitializeComponent();
+        Services.Plugins.PluginUiRegistry.Shared.AttachFileMenus(this);
     }
     private void Button_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -41,6 +42,12 @@ public partial class SearchPage : UserControl
             {
                 if (this.DataContext is SearchPageViewModel vm)
                 {
+                    Services.Plugins.PluginEventHub.Publish(new Drive.Plugin.SDK.DriveEvent
+                    {
+                        Id = Drive.Plugin.Abi.DriveEventId.FileDoubleClicked,
+                        FileIds = [clickedItem.Id], FolderId = clickedItem.FolderId ?? "",
+                        Selection = [Services.Plugins.PluginDtoMapper.File(clickedItem)]
+                    });
                     vm.OpenFileCommand.Execute(clickedItem);
                 }
             }

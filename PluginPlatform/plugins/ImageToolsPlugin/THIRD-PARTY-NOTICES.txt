@@ -1,0 +1,40 @@
+ImageToolsPlugin third-party components
+
+RapidOcrNet 4.2.0 — BobLd and RapidOCR contributors — Apache-2.0
+https://github.com/BobLd/RapidOcrNet
+See Licenses/RapidOcrNet.txt and Licenses/RapidOcrNet-NOTICE.txt.
+
+PaddleOCR PP-OCRv5 models and dictionary — PaddlePaddle Authors — Apache-2.0
+https://github.com/PaddlePaddle/PaddleOCR
+RapidOCR model distribution — RapidAI / RapidOCR Authors — Apache-2.0
+https://github.com/RapidAI/RapidOCR
+See Models/README.md, Licenses/PaddleOCR.txt and Licenses/RapidOCR.txt.
+
+Microsoft.ML.OnnxRuntime and Managed 1.29.0 — Microsoft Corporation — MIT
+https://github.com/microsoft/onnxruntime
+See Licenses/OnnxRuntime.txt and Licenses/OnnxRuntime-ThirdPartyNotices.txt.
+
+DocumentFormat.OpenXml and Framework 3.3.0 — .NET Foundation and Contributors — MIT
+https://github.com/dotnet/Open-XML-SDK
+See Licenses/OpenXML.txt.
+
+Clipper2 2.0.0 — Angus Johnson — Boost Software License 1.0
+https://github.com/AngusJohnson/Clipper2
+See Licenses/Clipper2.txt.
+
+System.IO.Packaging and System.Numerics.Tensors — .NET Foundation and Contributors — MIT
+https://github.com/dotnet/runtime
+See Licenses/DotNet.txt.
+
+Tmds.DBus.Protocol 0.94.1 — Tom Deseyn — MIT
+https://github.com/tmds/Tmds.DBus
+See Licenses/Tmds.DBus.txt.
+
+Font Awesome 6 Free font and derived image icon — Fonticons, Inc. — SIL OFL 1.1
+https://fontawesome.com/
+See Assets/Fonts/LICENSE.txt. The original font is unmodified; the plugin ICO
+is rendered from the image glyph.
+
+Avalonia and SkiaSharp are shared from Drive.Plugin.Runner and follow the
+licenses distributed with that runner. No shared graphics library is embedded
+into ImageToolsPlugin.dll.

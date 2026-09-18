@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="80"
              xmlns:vm="using:drive_desktop.ViewModels"
+             xmlns:plugins="using:drive_desktop.Services.Plugins"
              x:DataType="vm:TopBarViewModel"
              xmlns:tc="using:drive_desktop.Components.TemplateControls"
              x:Class="drive_desktop.Components.UserControls.TopBar">
@@ -128,7 +129,7 @@
                     Classes.slideIn="{Binding IsShowBorder}"
                     Padding="16,5,12,5"
                     CornerRadius="16"
-
+                    CacheMode="BitmapCache"
                     Background="{DynamicResource SidebarBg}">
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <TextBlock FontWeight="600" HorizontalAlignment="Center" FontSize="13"
@@ -192,6 +193,21 @@
                 </StackPanel>
             </Border>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+                <Button Content="插件工具" VerticalAlignment="Center"
+                        DataContext="{x:Static plugins:PluginUiRegistry.Shared}" x:DataType="plugins:PluginUiRegistry"
+                        IsVisible="{Binding HasToolbarActions}">
+                    <Button.Flyout>
+                        <Flyout>
+                            <ItemsControl ItemsSource="{Binding ToolbarActions}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="plugins:PluginMenuAction">
+                                        <Button Content="{Binding Title}" Command="{Binding Command}" HorizontalAlignment="Stretch" Margin="0,2" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
                 <!--搜索-->
                 <TextBox ClipToBounds="True" Classes="ModernSearchBox"
                          Padding="0,0,10,0"

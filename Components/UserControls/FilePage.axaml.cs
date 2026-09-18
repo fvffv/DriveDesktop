@@ -27,6 +27,7 @@ public partial class FilePage : UserControl
     public FilePage()
     {
         InitializeComponent();
+        Services.Plugins.PluginUiRegistry.Shared.AttachFileMenus(this);
 
         _officialSkeletonLightStyle =
             (IStyle)Resources["OfficialSkeletonLightStyle"]!;
@@ -169,6 +170,12 @@ public partial class FilePage : UserControl
             {
                 if (this.DataContext is FilePageViewModel vm)
                 {
+                    drive_desktop.Services.Plugins.PluginEventHub.Publish(new Drive.Plugin.SDK.DriveEvent
+                    {
+                        Id = Drive.Plugin.Abi.DriveEventId.FileDoubleClicked,
+                        FileIds = [clickedItem.Id], FolderId = clickedItem.FolderId ?? "",
+                        Selection = [drive_desktop.Services.Plugins.PluginDtoMapper.File(clickedItem)]
+                    });
                     vm.OpenFileCommand.Execute(clickedItem);
                 }
             }

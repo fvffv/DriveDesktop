@@ -34,6 +34,8 @@ namespace drive_desktop.Services
                     ConstructorParameterMetadataInitializer = MultipartUploadInitRequestCtorParamInit,
                     ConstructorAttributeProviderFactory = static () => typeof(global::drive_desktop.Models.MultipartUploadInitRequest).GetConstructor(InstanceMemberBindingFlags, binder: null, new[] {typeof(string), typeof(ulong), typeof(string)}, modifiers: null),
                     SerializeHandler = MultipartUploadInitRequestSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::drive_desktop.Models.MultipartUploadInitRequest>(options, objectInfo);
@@ -56,7 +58,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.MultipartUploadInitRequest),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.MultipartUploadInitRequest)obj).FileName,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_MultipartUploadInitRequest_FileName((global::drive_desktop.Models.MultipartUploadInitRequest)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -78,7 +80,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.MultipartUploadInitRequest),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.MultipartUploadInitRequest)obj).FileSizeInBytes,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_MultipartUploadInitRequest_FileSizeInBytes((global::drive_desktop.Models.MultipartUploadInitRequest)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -98,7 +100,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.MultipartUploadInitRequest),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.MultipartUploadInitRequest)obj).FileHash,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_MultipartUploadInitRequest_FileHash((global::drive_desktop.Models.MultipartUploadInitRequest)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -166,5 +168,12 @@ namespace drive_desktop.Services
                 IsNullable = false,
             },
         };
+
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_FileName")]
+        private static extern void __set_MultipartUploadInitRequest_FileName(global::drive_desktop.Models.MultipartUploadInitRequest obj, string value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_FileSizeInBytes")]
+        private static extern void __set_MultipartUploadInitRequest_FileSizeInBytes(global::drive_desktop.Models.MultipartUploadInitRequest obj, ulong value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_FileHash")]
+        private static extern void __set_MultipartUploadInitRequest_FileHash(global::drive_desktop.Models.MultipartUploadInitRequest obj, string value);
     }
 }

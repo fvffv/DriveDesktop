@@ -29,7 +29,9 @@ namespace drive_desktop.Services
                 var info = new global::System.Text.Json.Serialization.Metadata.JsonCollectionInfoValues<global::System.Collections.Generic.List<global::drive_desktop.Models.TrendDataDto>>
                 {
                     ObjectCreator = () => new global::System.Collections.Generic.List<global::drive_desktop.Models.TrendDataDto>(),
-                    SerializeHandler = ListTrendDataDtoSerializeHandler
+                    SerializeHandler = ListTrendDataDtoSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateListInfo<global::System.Collections.Generic.List<global::drive_desktop.Models.TrendDataDto>, global::drive_desktop.Models.TrendDataDto>(options, info);

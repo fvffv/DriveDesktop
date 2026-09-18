@@ -34,6 +34,8 @@ namespace drive_desktop.Services
                     ConstructorParameterMetadataInitializer = DefaultMsgDashboardStatisticsDtoCtorParamInit,
                     ConstructorAttributeProviderFactory = static () => typeof(global::drive_desktop.Models.DefaultMsg<global::drive_desktop.Models.DashboardStatisticsDto>).GetConstructor(InstanceMemberBindingFlags, binder: null, new[] {typeof(int), typeof(string), typeof(global::drive_desktop.Models.DashboardStatisticsDto)}, modifiers: null),
                     SerializeHandler = DefaultMsgDashboardStatisticsDtoSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::drive_desktop.Models.DefaultMsg<global::drive_desktop.Models.DashboardStatisticsDto>>(options, objectInfo);

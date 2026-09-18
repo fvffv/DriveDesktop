@@ -179,11 +179,15 @@ public partial class CustomViewEditViewModel : ViewModelBase
         var obj = CustomViewIconList.FirstOrDefault(x => x.IsChecked);
         TempCustomView.Icon = obj.Icon;
         TempCustomView.Color = obj.Color;
-        if (!IsEdit)
+        var isNewView = !IsEdit;
+        var editedView = TempCustomView;
+        var pluginView = Services.Plugins.PluginDtoMapper.View(editedView);
+        var viewsToSave = _customViews.ToList();
+        if (isNewView && !viewsToSave.Contains(editedView))
         {
-                _customViews.Add(TempCustomView);
+            viewsToSave.Add(editedView);
         }
-        var info = await _webApiService.UserApi.UpdateUserViewAsync(_customViews.Select(x => new CustomViewDto
+        var info = await _webApiService.UserApi.UpdateUserViewAsync(viewsToSave.Select(x => new CustomViewDto
         {
             Name = x.Name, Keywords = x.Keywords, Icon = _constantResourceService.GetSidebarClassName(x.Icon),
             Type = x.Type,
@@ -192,6 +196,11 @@ public partial class CustomViewEditViewModel : ViewModelBase
 
         if (info.Status == 0)
         {
+            if (isNewView)
+            {
+                if (!_customViews.Contains(editedView)) _customViews.Add(editedView);
+                Services.Plugins.PluginEventHub.Publish(new() { Id = Drive.Plugin.Abi.DriveEventId.ViewAdded, View = pluginView });
+            }
             CloseCustomView();
             Home.GlobalToastManager?.Show(
                 new Toast(info.Msg),

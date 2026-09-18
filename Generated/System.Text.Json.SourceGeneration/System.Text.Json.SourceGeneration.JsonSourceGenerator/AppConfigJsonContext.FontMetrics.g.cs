@@ -28,12 +28,14 @@ namespace drive_desktop.Services
             {
                 var objectInfo = new global::System.Text.Json.Serialization.Metadata.JsonObjectInfoValues<global::Avalonia.Media.FontMetrics>
                 {
-                    ObjectCreator = null,
-                    ObjectWithParameterizedConstructorCreator = static args => new global::Avalonia.Media.FontMetrics(){ DesignEmHeight = (ushort)args[0], IsFixedPitch = (bool)args[1], Ascent = (int)args[2], Descent = (int)args[3], LineGap = (int)args[4], UnderlinePosition = (int)args[5], UnderlineThickness = (int)args[6], StrikethroughPosition = (int)args[7], StrikethroughThickness = (int)args[8] },
+                    ObjectCreator = () => new global::Avalonia.Media.FontMetrics(),
+                    ObjectWithParameterizedConstructorCreator = null,
                     PropertyMetadataInitializer = _ => FontMetricsPropInit(options),
-                    ConstructorParameterMetadataInitializer = FontMetricsCtorParamInit,
+                    ConstructorParameterMetadataInitializer = null,
                     ConstructorAttributeProviderFactory = static () => typeof(global::Avalonia.Media.FontMetrics).GetConstructor(InstanceMemberBindingFlags, binder: null, global::System.Array.Empty<global::System.Type>(), modifiers: null),
                     SerializeHandler = FontMetricsSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::Avalonia.Media.FontMetrics>(options, objectInfo);
@@ -56,7 +58,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::Avalonia.Media.FontMetrics),
                 Converter = null,
                 Getter = static obj => ((global::Avalonia.Media.FontMetrics)obj).DesignEmHeight,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_FontMetrics_DesignEmHeight(ref global::System.Runtime.CompilerServices.Unsafe.Unbox<global::Avalonia.Media.FontMetrics>(obj), value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -76,7 +78,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::Avalonia.Media.FontMetrics),
                 Converter = null,
                 Getter = static obj => ((global::Avalonia.Media.FontMetrics)obj).IsFixedPitch,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_FontMetrics_IsFixedPitch(ref global::System.Runtime.CompilerServices.Unsafe.Unbox<global::Avalonia.Media.FontMetrics>(obj), value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -96,7 +98,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::Avalonia.Media.FontMetrics),
                 Converter = null,
                 Getter = static obj => ((global::Avalonia.Media.FontMetrics)obj).Ascent,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_FontMetrics_Ascent(ref global::System.Runtime.CompilerServices.Unsafe.Unbox<global::Avalonia.Media.FontMetrics>(obj), value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -116,7 +118,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::Avalonia.Media.FontMetrics),
                 Converter = null,
                 Getter = static obj => ((global::Avalonia.Media.FontMetrics)obj).Descent,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_FontMetrics_Descent(ref global::System.Runtime.CompilerServices.Unsafe.Unbox<global::Avalonia.Media.FontMetrics>(obj), value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -136,7 +138,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::Avalonia.Media.FontMetrics),
                 Converter = null,
                 Getter = static obj => ((global::Avalonia.Media.FontMetrics)obj).LineGap,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_FontMetrics_LineGap(ref global::System.Runtime.CompilerServices.Unsafe.Unbox<global::Avalonia.Media.FontMetrics>(obj), value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -176,7 +178,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::Avalonia.Media.FontMetrics),
                 Converter = null,
                 Getter = static obj => ((global::Avalonia.Media.FontMetrics)obj).UnderlinePosition,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_FontMetrics_UnderlinePosition(ref global::System.Runtime.CompilerServices.Unsafe.Unbox<global::Avalonia.Media.FontMetrics>(obj), value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -196,7 +198,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::Avalonia.Media.FontMetrics),
                 Converter = null,
                 Getter = static obj => ((global::Avalonia.Media.FontMetrics)obj).UnderlineThickness,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_FontMetrics_UnderlineThickness(ref global::System.Runtime.CompilerServices.Unsafe.Unbox<global::Avalonia.Media.FontMetrics>(obj), value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -216,7 +218,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::Avalonia.Media.FontMetrics),
                 Converter = null,
                 Getter = static obj => ((global::Avalonia.Media.FontMetrics)obj).StrikethroughPosition,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_FontMetrics_StrikethroughPosition(ref global::System.Runtime.CompilerServices.Unsafe.Unbox<global::Avalonia.Media.FontMetrics>(obj), value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -236,7 +238,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::Avalonia.Media.FontMetrics),
                 Converter = null,
                 Getter = static obj => ((global::Avalonia.Media.FontMetrics)obj).StrikethroughThickness,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_FontMetrics_StrikethroughThickness(ref global::System.Runtime.CompilerServices.Unsafe.Unbox<global::Avalonia.Media.FontMetrics>(obj), value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -271,88 +273,23 @@ namespace drive_desktop.Services
             writer.WriteEndObject();
         }
 
-        private static global::System.Text.Json.Serialization.Metadata.JsonParameterInfoValues[] FontMetricsCtorParamInit() => new global::System.Text.Json.Serialization.Metadata.JsonParameterInfoValues[]
-        {
-            new()
-            {
-                Name = "DesignEmHeight",
-                ParameterType = typeof(ushort),
-                Position = 0,
-                IsNullable = false,
-                IsMemberInitializer = true,
-            },
-
-            new()
-            {
-                Name = "IsFixedPitch",
-                ParameterType = typeof(bool),
-                Position = 1,
-                IsNullable = false,
-                IsMemberInitializer = true,
-            },
-
-            new()
-            {
-                Name = "Ascent",
-                ParameterType = typeof(int),
-                Position = 2,
-                IsNullable = false,
-                IsMemberInitializer = true,
-            },
-
-            new()
-            {
-                Name = "Descent",
-                ParameterType = typeof(int),
-                Position = 3,
-                IsNullable = false,
-                IsMemberInitializer = true,
-            },
-
-            new()
-            {
-                Name = "LineGap",
-                ParameterType = typeof(int),
-                Position = 4,
-                IsNullable = false,
-                IsMemberInitializer = true,
-            },
-
-            new()
-            {
-                Name = "UnderlinePosition",
-                ParameterType = typeof(int),
-                Position = 5,
-                IsNullable = false,
-                IsMemberInitializer = true,
-            },
-
-            new()
-            {
-                Name = "UnderlineThickness",
-                ParameterType = typeof(int),
-                Position = 6,
-                IsNullable = false,
-                IsMemberInitializer = true,
-            },
-
-            new()
-            {
-                Name = "StrikethroughPosition",
-                ParameterType = typeof(int),
-                Position = 7,
-                IsNullable = false,
-                IsMemberInitializer = true,
-            },
-
-            new()
-            {
-                Name = "StrikethroughThickness",
-                ParameterType = typeof(int),
-                Position = 8,
-                IsNullable = false,
-                IsMemberInitializer = true,
-            },
-        };
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_DesignEmHeight")]
+        private static extern void __set_FontMetrics_DesignEmHeight(ref global::Avalonia.Media.FontMetrics obj, ushort value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_IsFixedPitch")]
+        private static extern void __set_FontMetrics_IsFixedPitch(ref global::Avalonia.Media.FontMetrics obj, bool value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_Ascent")]
+        private static extern void __set_FontMetrics_Ascent(ref global::Avalonia.Media.FontMetrics obj, int value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_Descent")]
+        private static extern void __set_FontMetrics_Descent(ref global::Avalonia.Media.FontMetrics obj, int value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_LineGap")]
+        private static extern void __set_FontMetrics_LineGap(ref global::Avalonia.Media.FontMetrics obj, int value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_UnderlinePosition")]
+        private static extern void __set_FontMetrics_UnderlinePosition(ref global::Avalonia.Media.FontMetrics obj, int value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_UnderlineThickness")]
+        private static extern void __set_FontMetrics_UnderlineThickness(ref global::Avalonia.Media.FontMetrics obj, int value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_StrikethroughPosition")]
+        private static extern void __set_FontMetrics_StrikethroughPosition(ref global::Avalonia.Media.FontMetrics obj, int value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_StrikethroughThickness")]
+        private static extern void __set_FontMetrics_StrikethroughThickness(ref global::Avalonia.Media.FontMetrics obj, int value);
     }
 }

@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Drive",
+  "classifications": ["Managed", "Avalonia", "Plugin"],
+  "identity": "Drive.Plugin.Avalonia.Template",
+  "name": "Drive Managed Avalonia Plugin",
+  "description": ".NET 11 / Drive SDK 2.1 托管插件，包含完整宿主事件示例、XAML 窗口、宿主居中显示和中文文档注释。",
+  "shortName": "drive-plugin",
+  "sourceName": "DrivePluginApp",
+  "preferNameDirectory": true,
+  "tags": { "language": "C#", "type": "project" }
+}

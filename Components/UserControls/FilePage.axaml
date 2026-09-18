@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:drive_desktop.ViewModels"
+             xmlns:plugins="using:drive_desktop.Services.Plugins"
              xmlns:tc="using:drive_desktop.Components.TemplateControls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="950"
              xmlns:loader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
@@ -283,6 +284,7 @@
                                                                 <Button Classes="el-dropdown-item" Content="重命名"
                                                                         Command="{Binding $parent[UserControl].((vm:FilePageViewModel)DataContext).EditNameCommand}"
                                                                         CommandParameter="{Binding}" />
+                                                                <plugins:PluginMenuItems Location="FolderMenu" />
                                                                 <Border Height="1"
                                                                         Background="{DynamicResource CheckButtonCheckBg}"
                                                                         Margin="0,4" />
@@ -312,6 +314,7 @@
                                                                Foreground="#FACC15"
                                                                FontFamily="{StaticResource FASolid}"
                                                                Text="&#xf07b;"
+                                                               ClipToBounds="False"
                                                                HorizontalAlignment="Center" />
 
                                                     <!-- 名称 (居中截断) -->
@@ -384,7 +387,7 @@
                                                         <Flyout ShowMode="TransientWithDismissOnPointerMoveAway"
                                                                 Placement="Bottom"
                                                                 FlyoutPresenterClasses="el-dropdown-menu">
-                                                            <StackPanel Width="120" Spacing="2" Margin="-8,-4"
+                                                            <StackPanel MinWidth="120" Spacing="2" Margin="-8,-4"
                                                                         Button.Click="Button_OnClick">
                                                                 <Button Classes="el-dropdown-item" Content="下载"
                                                                         Command="{Binding $parent[UserControl].((vm:FilePageViewModel)DataContext).DownloadFileCommand}"
@@ -395,6 +398,7 @@
                                                                 <Button Classes="el-dropdown-item" Content="分享"
                                                                         Command="{Binding $parent[UserControl].((vm:FilePageViewModel)DataContext).OpenShareFileCommand}"
                                                                         CommandParameter="{Binding}" />
+                                                                <plugins:PluginMenuItems Location="FileMenu" />
                                                                 <Border Height="1"
                                                                         Background="{DynamicResource CheckButtonCheckBg}"
                                                                         Margin="0,4" />
@@ -433,6 +437,7 @@
                                                         <TextBlock x:Name="FallbackIcon"
                                                                    Classes="IconLarge"
                                                                    Margin="0"
+                                                                   ClipToBounds="False"
                                                                    IsVisible="{Binding #ThumbnailImage.Source, Converter={x:Static ObjectConverters.IsNull}}"
                                                                    FontFamily="{Binding FileTypeInfo.FontFamilyResource}"
                                                                    Foreground="{Binding FileTypeInfo.HexColor}"

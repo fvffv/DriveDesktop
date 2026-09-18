@@ -8,7 +8,7 @@
 
 namespace drive_desktop.Services
 {
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.Json.SourceGeneration", "10.0.14.37416")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.Json.SourceGeneration", "11.0.14.42628")]
     internal partial class AppConfigJsonContext
     {
         private readonly static global::System.Text.Json.JsonSerializerOptions s_defaultOptions = new();

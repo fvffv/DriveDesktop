@@ -20,17 +20,18 @@
                     <TextBlock Classes="close" FontFamily="{StaticResource FASolid}" FontSize="18" Text="&#xf00d;" />
                 </Button>
             </Panel>
-            <ToggleSwitch IsVisible="{Binding IsView}" IsChecked="{Binding !ShowMode,Mode=TwoWay}" HorizontalAlignment="Right" OnContent="预览" OffContent="代码" />
+            <ToggleSwitch IsVisible="{Binding IsView}" IsChecked="{Binding !ShowMode,Mode=TwoWay}"
+                          HorizontalAlignment="Right" OnContent="预览" OffContent="代码" />
             <Border MaxHeight="500" BorderBrush="{DynamicResource BrColor}" BorderThickness="1">
-                    <Panel>
-                        <!--代码预览-->
-                        <tc:TextMateCodeViewer IsVisible="{Binding ShowMode}"  Document="{Binding FileContentDocument}"
-                                               FileName="{Binding Title}" />
-                        <ScrollViewer  IsVisible="{Binding !ShowMode}">
-                            <!--md预览-->
-                            <md:MarkdownRenderer  MarkdownBuilder="{Binding MdText}" x:Name="MarkdownRenderer" />
-                        </ScrollViewer>
-                    </Panel>
+                <Panel>
+                    <!--代码预览-->
+                    <tc:TextMateCodeViewer IsVisible="{Binding ShowMode}" Document="{Binding FileContentDocument}"
+                                           FileName="{Binding Title}" />
+                    <ScrollViewer IsVisible="{Binding !ShowMode}">
+                        <!--md预览-->
+                        <md:MarkdownRenderer MarkdownBuilder="{Binding MdText}" x:Name="MarkdownRenderer" />
+                    </ScrollViewer>
+                </Panel>
             </Border>
 
         </StackPanel>

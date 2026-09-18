@@ -1,0 +1,32 @@
+<Project>
+  <PropertyGroup>
+    <_DriveRunnerProject>$(MSBuildThisFileDirectory)Drive.Plugin.Runner/Drive.Plugin.Runner.csproj</_DriveRunnerProject>
+  </PropertyGroup>
+  <!-- 运行器在下方独立还原、发布；不再先通过 ProjectReference 重复编译另一套 SDK 属性。 -->
+  <!-- 先在中间目录发布完整单文件；不把开发构建的公共 DLL 混入客户端输出。 -->
+  <Target Name="PrepareDrivePluginRunner" Condition="'$(SkipPluginRunner)' != 'true' And '$(IsCrossTargetingBuild)' != 'true' And '$(DesignTimeBuild)' != 'true'">
+    <PropertyGroup>
+      <_DriveRunnerRuntime Condition="'$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</_DriveRunnerRuntime>
+      <_DriveRunnerRuntime Condition="'$(_DriveRunnerRuntime)' == ''">$(NETCoreSdkRuntimeIdentifier)</_DriveRunnerRuntime>
+      <_DriveRunnerStageDirectory>$([System.IO.Path]::GetFullPath('$(BaseIntermediateOutputPath)drive-plugin-runner/$(Configuration)/$(_DriveRunnerRuntime)', '$(MSBuildProjectDirectory)'))</_DriveRunnerStageDirectory>
+      <_DriveRunnerArtifactsDirectory>$([System.IO.Path]::GetFullPath('$(BaseIntermediateOutputPath)drive-plugin-build/$(Configuration)/$(_DriveRunnerRuntime)/runner', '$(MSBuildProjectDirectory)'))</_DriveRunnerArtifactsDirectory>
+      <_DriveRunnerFileName Condition="$([System.String]::Copy('$(_DriveRunnerRuntime)').StartsWith('win-'))">Drive.Plugin.Runner.exe</_DriveRunnerFileName>
+      <_DriveRunnerFileName Condition="'$(_DriveRunnerFileName)' == ''">Drive.Plugin.Runner</_DriveRunnerFileName>
+    </PropertyGroup>
+    <!-- 独立发布隔离宿主属性；artifacts-path 同时隔离 SDK/运行器的 bin、obj 和还原资产，
+         避免与解决方案及 IDE 的普通构建争用 DLL、PDB 和 linked 目录。 -->
+    <Exec Command="dotnet publish &quot;$(_DriveRunnerProject)&quot; -c &quot;$(Configuration)&quot; -r &quot;$(_DriveRunnerRuntime)&quot; --artifacts-path &quot;$(_DriveRunnerArtifactsDirectory)&quot; --self-contained true -p:PublishAot=false -p:PublishTrimmed=true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o &quot;$(_DriveRunnerStageDirectory)&quot; --nologo" StdOutEncoding="utf-8" StdErrEncoding="utf-8" />
+    <Error Condition="!Exists('$(_DriveRunnerStageDirectory)/$(_DriveRunnerFileName)')" Text="未生成插件运行器启动文件。" />
+    <ItemGroup>
+      <_DriveRunnerDeployFiles Include="$(_DriveRunnerStageDirectory)/$(_DriveRunnerFileName)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CopyDrivePluginRunnerForDevelopment" AfterTargets="Build" DependsOnTargets="PrepareDrivePluginRunner"
+    Condition="'$(SkipPluginRunner)' != 'true' And '$(IsCrossTargetingBuild)' != 'true' And '$(DesignTimeBuild)' != 'true'">
+    <Copy SourceFiles="@(_DriveRunnerDeployFiles)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="PublishDrivePluginRunner" AfterTargets="Publish" DependsOnTargets="PrepareDrivePluginRunner"
+    Condition="'$(SkipPluginRunner)' != 'true' And '$(IsCrossTargetingBuild)' != 'true' And '$(DesignTimeBuild)' != 'true'">
+    <Copy SourceFiles="@(_DriveRunnerDeployFiles)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
+  </Target>
+</Project>

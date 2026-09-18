@@ -38,6 +38,7 @@
                     <Color x:Key="TextColor2">White</Color>
                     <Color x:Key="TextColor3">#606266</Color>
                     <Color x:Key="SideTextColor">#8D9095</Color>
+                    <Color x:Key="SideTextColor2">#687386</Color>
                     <Color x:Key="BrColor">#dcdfe6</Color>
                     <Color x:Key="SideBarBrColor">#eef0f5</Color>
                     <Color x:Key="SidebarBg">#FFFFFF</Color>
@@ -68,6 +69,7 @@
                     <Color x:Key="TextColor2">#181A1D</Color>
                     <Color x:Key="TextColor3">#D0D3D8</Color>
                     <Color x:Key="SideTextColor">#969BA3</Color>
+                    <Color x:Key="SideTextColor2">#4E5768</Color>
 
                     <!-- 边框 -->
                     <Color x:Key="SideBarBrColor">#303338</Color>
@@ -240,7 +242,7 @@
             <Setter Property="Margin" Value="2,5" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="20" />
-            
+
             <Setter Property="RenderTransform" Value="translateY(0px)" />
             <Setter Property="BoxShadow" Value="0 4 6 -1 #05000000, 0 2 4 -1 #05000000" />
             <Setter Property="Transitions">
@@ -447,7 +449,40 @@
             <Setter Property="Background" Value="{DynamicResource MenuColorBg}" />
             <Setter Property="Foreground" Value="{DynamicResource ThemeColor}" />
         </Style>
-
+        <Style Selector="RadioButton.RadioButtonTitleButton">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="GroupName" Value="RadioButtonTitleButton" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <StackPanel>
+                        <!--内部标题和数量展示-->
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock x:Name="RadioButtonTitleButtonTitle"
+                                       Foreground="{DynamicResource SideTextColor}" Margin="0,0,5,0" FontSize="16"
+                                       FontWeight="600" Text="{TemplateBinding Content}"
+                                       Transitions="{StaticResource CommonColorTransitionsTextBlock}" />
+                            <Border VerticalAlignment="Bottom" Padding="8,2" Background="{TemplateBinding Background}"
+                                    CornerRadius="50"
+                                    Transitions="{StaticResource CommonColorTransitions}">
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="600"
+                                           Foreground="{TemplateBinding Foreground}" FontSize="12"
+                                           Text="{TemplateBinding RadioButton.Tag}" />
+                            </Border>
+                        </StackPanel>
+                        <Border x:Name="RadioButtonTitleButtonSelectedGraphic" Margin="0,5,0,0" CornerRadius="50"
+                                Background="{DynamicResource HomeBg}"
+                                Transitions="{StaticResource CommonColorTransitions}" Height="2" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="RadioButton.RadioButtonTitleButton:checked /template/ TextBlock#RadioButtonTitleButtonTitle">
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
+        </Style>
+        <Style
+            Selector="RadioButton.RadioButtonTitleButton:checked /template/ Border#RadioButtonTitleButtonSelectedGraphic">
+            <Setter Property="Background" Value="{DynamicResource ThemeColor}" />
+        </Style>
         <Style Selector="Button.el-dropdown-item:disabled">
             <Setter Property="Foreground" Value="#C0C4CC" />
             <Setter Property="Cursor" Value="No" />

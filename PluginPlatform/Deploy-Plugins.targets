@@ -1,0 +1,42 @@
+<Project>
+  <PropertyGroup>
+    <_DriveArchivePluginProject>$(MSBuildThisFileDirectory)plugins/ArchivePreviewPlugin/ArchivePreviewPlugin.csproj</_DriveArchivePluginProject>
+    <_DriveImagePluginProject>$(MSBuildThisFileDirectory)plugins/ImageToolsPlugin/ImageToolsPlugin.csproj</_DriveImagePluginProject>
+    <_DrivePortraitPluginProject>$(MSBuildThisFileDirectory)plugins/PortraitRetouchPlugin/PortraitRetouchPlugin.csproj</_DrivePortraitPluginProject>
+  </PropertyGroup>
+  <!-- 插件由下方发布目标还原、编译，不再通过 ProjectReference 先重复构建。
+       SDK/Hosting 的主程序引用仍由主项目保留，插件程序集不链接到 NativeAOT 主程序。 -->
+  <Target Name="PrepareDriveBundledPlugins" Condition="'$(SkipBundledPlugins)' != 'true' And '$(IsCrossTargetingBuild)' != 'true' And '$(DesignTimeBuild)' != 'true'">
+    <PropertyGroup>
+      <_DriveArchivePluginStage>$([System.IO.Path]::GetFullPath('$(BaseIntermediateOutputPath)drive-bundled-plugins/$(Configuration)/ArchivePreviewPlugin', '$(MSBuildProjectDirectory)'))</_DriveArchivePluginStage>
+      <_DriveBundledPluginRuntime Condition="'$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</_DriveBundledPluginRuntime>
+      <_DriveBundledPluginRuntime Condition="'$(_DriveBundledPluginRuntime)' == ''">$(NETCoreSdkRuntimeIdentifier)</_DriveBundledPluginRuntime>
+      <_DriveBundledPluginArtifacts>$([System.IO.Path]::GetFullPath('$(BaseIntermediateOutputPath)drive-plugin-build/$(Configuration)/$(_DriveBundledPluginRuntime)/plugins', '$(MSBuildProjectDirectory)'))</_DriveBundledPluginArtifacts>
+      <_DriveImagePluginStage>$([System.IO.Path]::GetFullPath('$(BaseIntermediateOutputPath)drive-bundled-plugins/$(Configuration)/$(_DriveBundledPluginRuntime)/ImageToolsPlugin', '$(MSBuildProjectDirectory)'))</_DriveImagePluginStage>
+      <_DrivePortraitPluginStage>$([System.IO.Path]::GetFullPath('$(BaseIntermediateOutputPath)drive-bundled-plugins/$(Configuration)/$(_DriveBundledPluginRuntime)/PortraitRetouchPlugin', '$(MSBuildProjectDirectory)'))</_DrivePortraitPluginStage>
+    </PropertyGroup>
+    <!-- 顺序发布并隔离中间目录，避免与宿主/IDE 的编译抢占 SDK 文件。
+         SDK targets 自动排除运行器共享依赖。 -->
+    <Exec Command="dotnet publish &quot;$(_DriveArchivePluginProject)&quot; -c &quot;$(Configuration)&quot; --artifacts-path &quot;$(_DriveBundledPluginArtifacts)&quot; --self-contained false -p:PublishAot=false -p:PublishTrimmed=false -p:PublishSingleFile=false -o &quot;$(_DriveArchivePluginStage)&quot; --nologo" StdOutEncoding="utf-8" StdErrEncoding="utf-8" />
+    <Error Condition="!Exists('$(_DriveArchivePluginStage)/ArchivePreviewPlugin.dll')" Text="压缩包预览器编译失败，未找到插件入口 DLL。" />
+    <ItemGroup><_DriveArchivePluginFiles Include="$(_DriveArchivePluginStage)/**/*" /></ItemGroup>
+    <Exec Command="dotnet publish &quot;$(_DriveImagePluginProject)&quot; -c &quot;$(Configuration)&quot; -r &quot;$(_DriveBundledPluginRuntime)&quot; --artifacts-path &quot;$(_DriveBundledPluginArtifacts)&quot; --self-contained false -p:PublishAot=false -p:PublishTrimmed=false -p:PublishSingleFile=false -o &quot;$(_DriveImagePluginStage)&quot; --nologo" StdOutEncoding="utf-8" StdErrEncoding="utf-8" />
+    <Error Condition="!Exists('$(_DriveImagePluginStage)/ImageToolsPlugin.dll')" Text="图片处理插件编译失败，未找到插件入口 DLL。" />
+    <ItemGroup><_DriveImagePluginFiles Include="$(_DriveImagePluginStage)/**/*" /></ItemGroup>
+    <Exec Command="dotnet publish &quot;$(_DrivePortraitPluginProject)&quot; -c &quot;$(Configuration)&quot; -r &quot;$(_DriveBundledPluginRuntime)&quot; --artifacts-path &quot;$(_DriveBundledPluginArtifacts)&quot; --self-contained false -p:PublishAot=false -p:PublishTrimmed=false -p:PublishSingleFile=false -o &quot;$(_DrivePortraitPluginStage)&quot; --nologo" StdOutEncoding="utf-8" StdErrEncoding="utf-8" />
+    <Error Condition="!Exists('$(_DrivePortraitPluginStage)/PortraitRetouchPlugin.dll')" Text="人像精修编译失败，未找到插件入口 DLL。" />
+    <ItemGroup><_DrivePortraitPluginFiles Include="$(_DrivePortraitPluginStage)/**/*" /></ItemGroup>
+  </Target>
+  <Target Name="CopyDriveBundledPluginsForDevelopment" AfterTargets="Build" DependsOnTargets="PrepareDriveBundledPlugins"
+    Condition="'$(SkipBundledPlugins)' != 'true' And '$(IsCrossTargetingBuild)' != 'true' And '$(DesignTimeBuild)' != 'true'">
+    <Copy SourceFiles="@(_DriveArchivePluginFiles)" DestinationFiles="@(_DriveArchivePluginFiles->'$(TargetDir)Plugins/ArchivePreviewPlugin/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_DriveImagePluginFiles)" DestinationFiles="@(_DriveImagePluginFiles->'$(TargetDir)Plugins/ImageToolsPlugin/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_DrivePortraitPluginFiles)" DestinationFiles="@(_DrivePortraitPluginFiles->'$(TargetDir)Plugins/PortraitRetouchPlugin/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="PublishDriveBundledPlugins" AfterTargets="Publish" DependsOnTargets="PrepareDriveBundledPlugins"
+    Condition="'$(SkipBundledPlugins)' != 'true' And '$(IsCrossTargetingBuild)' != 'true' And '$(DesignTimeBuild)' != 'true'">
+    <Copy SourceFiles="@(_DriveArchivePluginFiles)" DestinationFiles="@(_DriveArchivePluginFiles->'$(PublishDir)Plugins/ArchivePreviewPlugin/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_DriveImagePluginFiles)" DestinationFiles="@(_DriveImagePluginFiles->'$(PublishDir)Plugins/ImageToolsPlugin/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_DrivePortraitPluginFiles)" DestinationFiles="@(_DrivePortraitPluginFiles->'$(PublishDir)Plugins/PortraitRetouchPlugin/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
+</Project>

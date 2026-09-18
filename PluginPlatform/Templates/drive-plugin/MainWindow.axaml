@@ -1,0 +1,8 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DrivePluginApp.MainWindow" Title="DrivePluginApp" Width="520" Height="280">
+  <StackPanel Margin="28" Spacing="18">
+    <TextBlock Text="我的网盘插件" FontSize="24" FontWeight="Bold" />
+    <TextBlock x:Name="StatusText" Text="点击按钮，通过 SDK 读取当前用户。" TextWrapping="Wrap" />
+    <Button Content="读取用户信息" Click="ReadUserClick" />
+  </StackPanel>
+</Window>

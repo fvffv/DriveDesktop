@@ -34,6 +34,8 @@ namespace drive_desktop.Services
                     ConstructorParameterMetadataInitializer = UserRegInfoCtorParamInit,
                     ConstructorAttributeProviderFactory = static () => typeof(global::drive_desktop.Models.UserRegInfo).GetConstructor(InstanceMemberBindingFlags, binder: null, new[] {typeof(string), typeof(string), typeof(string), typeof(string)}, modifiers: null),
                     SerializeHandler = UserRegInfoSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::drive_desktop.Models.UserRegInfo>(options, objectInfo);
@@ -56,7 +58,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.UserRegInfo),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.UserRegInfo)obj).UserName,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_UserRegInfo_UserName((global::drive_desktop.Models.UserRegInfo)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -78,7 +80,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.UserRegInfo),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.UserRegInfo)obj).PassWord,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_UserRegInfo_PassWord((global::drive_desktop.Models.UserRegInfo)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -100,7 +102,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.UserRegInfo),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.UserRegInfo)obj).Email,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_UserRegInfo_Email((global::drive_desktop.Models.UserRegInfo)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -122,7 +124,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.UserRegInfo),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.UserRegInfo)obj).code,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_UserRegInfo_code((global::drive_desktop.Models.UserRegInfo)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -201,5 +203,14 @@ namespace drive_desktop.Services
                 IsNullable = false,
             },
         };
+
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_UserName")]
+        private static extern void __set_UserRegInfo_UserName(global::drive_desktop.Models.UserRegInfo obj, string value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_PassWord")]
+        private static extern void __set_UserRegInfo_PassWord(global::drive_desktop.Models.UserRegInfo obj, string value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_Email")]
+        private static extern void __set_UserRegInfo_Email(global::drive_desktop.Models.UserRegInfo obj, string value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_code")]
+        private static extern void __set_UserRegInfo_code(global::drive_desktop.Models.UserRegInfo obj, string value);
     }
 }

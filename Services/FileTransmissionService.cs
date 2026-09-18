@@ -317,13 +317,17 @@ public partial class FileTransmissionService : ObservableObject
         return AddDownloadCore(item);
     }
 
-    private async Task AddDownloadCore(FileDownloadInfo item)
+    private async Task AddDownloadCore(FileDownloadInfo item, TaskCompletionSource<Guid>? accepted = null,
+        CancellationToken cancellationToken = default)
     {
+        await _databaseReadyTask;
+        cancellationToken.ThrowIfCancellationRequested();
         //检测是否重复下载
         if (FileDownloadInfos.Any(x =>
                 x.DownloadMode == item.DownloadMode &&
                 x.FileId == item.FileId))
         {
+            accepted?.TrySetResult(FileDownloadInfos.First(x => x.DownloadMode == item.DownloadMode && x.FileId == item.FileId).Id);
             Home.GlobalToastManager?.Show(
                 new Toast($"文件 {item.Name} 下载任务已存在"),
                 type: NotificationType.Warning);
@@ -360,6 +364,12 @@ public partial class FileTransmissionService : ObservableObject
         OnPropertyChanged(nameof(IsConditionMetDownload));
         //入库
         await _db.InsertAsync(item.ToFileTransmissionModel(), typeof(FileTransmissionModel));
+        accepted?.TrySetResult(item.Id);
+        Plugins.PluginEventHub.Publish(new Drive.Plugin.SDK.DriveEvent
+        {
+            Id = Drive.Plugin.Abi.DriveEventId.DownloadStarted,
+            Transfer = Plugins.PluginDtoMapper.Download(item, Drive.Plugin.SDK.TransferState.Queued)
+        });
         await _downloadSemaphore.WaitAsync();
         // 排到队发现被暂停  则返回 并且加入断点续传
         if (item.IsPause)
@@ -448,6 +458,11 @@ public partial class FileTransmissionService : ObservableObject
         dbItem.CurrentSizeBytes = download.CurrentSizeBytes;
         dbItem.ReasonFailure = failureReason;
         await _db.UpdateAsync(dbItem, typeof(FileTransmissionModel));
+        Plugins.PluginEventHub.Publish(new Drive.Plugin.SDK.DriveEvent
+        {
+            Id = Drive.Plugin.Abi.DriveEventId.DownloadFailed,
+            Transfer = Plugins.PluginDtoMapper.Download(download, Drive.Plugin.SDK.TransferState.Failed, failureReason)
+        });
 
         FileDownloadInfos.Remove(download);
         RemoveTransferTask(download.Id);
@@ -592,6 +607,13 @@ public partial class FileTransmissionService : ObservableObject
 
             OnPropertyChanged(nameof(IsConditionMetDownload));
             await _db.UpdateAsync(item, typeof(FileTransmissionModel));
+            Plugins.PluginEventHub.Publish(new Drive.Plugin.SDK.DriveEvent
+            {
+                Id = status == 0 ? Drive.Plugin.Abi.DriveEventId.FileDownloaded : status == 2
+                    ? Drive.Plugin.Abi.DriveEventId.DownloadCancelled : Drive.Plugin.Abi.DriveEventId.DownloadFailed,
+                Transfer = Plugins.PluginDtoMapper.Download(fdi, status == 0 ? Drive.Plugin.SDK.TransferState.Completed : status == 2
+                    ? Drive.Plugin.SDK.TransferState.Cancelled : Drive.Plugin.SDK.TransferState.Failed)
+            });
         }
         catch (Exception e)
         {
@@ -662,6 +684,8 @@ public partial class FileTransmissionService : ObservableObject
     /// </summary>
     public async Task DownloadCancelAsync(FileDownloadInfo fdi)
     {
+        // A cancelled item may still be waiting for a semaphore or a temporary URL.
+        SetPauseState(fdi, true);
         await DownloadComplete(fdi, 2);
         fdi.DownloadService.CancelAsync();
         await Task.Delay(3000);
@@ -747,13 +771,16 @@ public partial class FileTransmissionService : ObservableObject
     /// 添加上传任务
     /// </summary>
     /// <param name="ufi"></param>
-    public async Task AddUpload(FileUploadInfo fui)
+    public async Task AddUpload(FileUploadInfo fui, TaskCompletionSource<Guid>? accepted = null,
+        CancellationToken cancellationToken = default)
     {
-
+        await _databaseReadyTask;
+        cancellationToken.ThrowIfCancellationRequested();
 
         //检测是否重复上传
         if (FileUploadInfos.Any(x => x.Hash256 == fui.Hash256 && x.UploadFolderId == fui.UploadFolderId))
         {
+            accepted?.TrySetResult(FileUploadInfos.First(x => x.Hash256 == fui.Hash256 && x.UploadFolderId == fui.UploadFolderId).Id);
             Home.GlobalToastManager?.Show(
                 new Toast($"文件 {fui.Name} 上传任务已存在"),
                 type: NotificationType.Warning);
@@ -762,6 +789,7 @@ public partial class FileTransmissionService : ObservableObject
 
         if (!File.Exists(fui.Path))
         {
+            accepted?.TrySetException(new FileNotFoundException("上传文件不存在。", fui.Path));
             Home.GlobalToastManager?.Show(
                 new Toast($"文件 {fui.Name} 不存在"),
                 type: NotificationType.Error);
@@ -778,6 +806,13 @@ public partial class FileTransmissionService : ObservableObject
         OnPropertyChanged(nameof(IsConditionMetUpload));
         //入库
         await _db.InsertAsync(fui.ToFileTransmissionModel(), typeof(FileTransmissionModel));
+        accepted?.TrySetResult(fui.Id);
+        Plugins.PluginEventHub.Publish(new Drive.Plugin.SDK.DriveEvent
+        {
+            Id = Drive.Plugin.Abi.DriveEventId.UploadStarted,
+            FolderId = fui.UploadFolderId,
+            Transfer = Plugins.PluginDtoMapper.Upload(fui, Drive.Plugin.SDK.TransferState.Queued)
+        });
         await _uploadSemaphore.WaitAsync();
         // 排到队发现被暂停  则返回 并且加入断点续传
         if (fui.IsPause)
@@ -1032,6 +1067,7 @@ public partial class FileTransmissionService : ObservableObject
 
                     item.IsEnd = true;
                     item.EndTime = DateTime.Now;
+                    item.ReasonFailure = string.Empty;
                     await RemoveCompletedUploadFromListAsync(fud);
                     MarkTransferTaskCompleted(fud.Id);
                     break;
@@ -1051,6 +1087,7 @@ public partial class FileTransmissionService : ObservableObject
                 case 3:
                     item.IsEnd = true;
                     item.EndTime = DateTime.Now;
+                    item.ReasonFailure = string.Empty;
                     await RemoveCompletedUploadFromListAsync(fud);
                     MarkTransferTaskCompleted(fud.Id);
                     break;
@@ -1059,6 +1096,15 @@ public partial class FileTransmissionService : ObservableObject
             }
 
             await _db.UpdateAsync(item, typeof(FileTransmissionModel));
+            bool uploadFailed = status == 1 || (status == 0 && !string.IsNullOrEmpty(item.ReasonFailure));
+            Plugins.PluginEventHub.Publish(new Drive.Plugin.SDK.DriveEvent
+            {
+                Id = uploadFailed ? Drive.Plugin.Abi.DriveEventId.UploadFailed : status == 2
+                    ? Drive.Plugin.Abi.DriveEventId.UploadCancelled : Drive.Plugin.Abi.DriveEventId.FileUploaded,
+                FolderId = fud.UploadFolderId,
+                Transfer = Plugins.PluginDtoMapper.Upload(fud, uploadFailed ? Drive.Plugin.SDK.TransferState.Failed : status == 2
+                    ? Drive.Plugin.SDK.TransferState.Cancelled : Drive.Plugin.SDK.TransferState.Completed, item.ReasonFailure)
+            });
         }
         catch (Exception e)
         {
@@ -1140,6 +1186,7 @@ public partial class FileTransmissionService : ObservableObject
     /// </summary>
     public async Task UploadCancelAsync(FileUploadInfo fui)
     {
+        SetPauseState(fui, true);
         await UploadComplete(fui, 2);
         fui.UploadService.CancelAsync();
     }

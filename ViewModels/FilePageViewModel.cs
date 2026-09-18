@@ -203,6 +203,7 @@ public partial class FilePageViewModel : ViewModelBase
 
         TopBarViewModel.IsShowBorder = FileInfos.Any(x => x.IsChecked) || FolderInfos.Any(x => x.IsChecked);
         TopBarViewModel.SelectedNum = FileInfos.Count(x => x.IsChecked) + FolderInfos.Count(x => x.IsChecked);
+        PublishPluginSelection();
     }
 
     /// <summary>
@@ -216,6 +217,7 @@ public partial class FilePageViewModel : ViewModelBase
         //若有勾选 显示批量操作按钮
         TopBarViewModel.IsShowBorder = FileInfos.Any(x => x.IsChecked) || FolderInfos.Any(x => x.IsChecked);
         TopBarViewModel.SelectedNum = FileInfos.Count(x => x.IsChecked) + FolderInfos.Count(x => x.IsChecked);
+        PublishPluginSelection();
     }
 
     /// <summary>
@@ -229,6 +231,7 @@ public partial class FilePageViewModel : ViewModelBase
         //若有勾选 显示批量操作按钮
         TopBarViewModel.IsShowBorder = FileInfos.Any(x => x.IsChecked) || FolderInfos.Any(x => x.IsChecked);
         TopBarViewModel.SelectedNum = FileInfos.Count(x => x.IsChecked) + FolderInfos.Count(x => x.IsChecked);
+        PublishPluginSelection();
     }
 
     /// <summary>
@@ -241,6 +244,7 @@ public partial class FilePageViewModel : ViewModelBase
         //若有勾选 显示批量操作按钮
         TopBarViewModel.IsShowBorder = FileInfos.Any(x => x.IsChecked) || FolderInfos.Any(x => x.IsChecked);
         TopBarViewModel.SelectedNum = FileInfos.Count(x => x.IsChecked) + FolderInfos.Count(x => x.IsChecked);
+        PublishPluginSelection();
     }
 
     /// <summary>
@@ -299,8 +303,9 @@ public partial class FilePageViewModel : ViewModelBase
         //防止folderID是空
         if (string.IsNullOrEmpty(item.FolderId))
         {
+           
             item.FolderId = (await _webApiService.FileApi.GetFolderByPathStrictAsync(_userInfoService.ShowUserInfo.RootFolderId,
-                BreadcrumbPath)).Data.ToString();
+                BreadcrumbPath[..BreadcrumbPath.LastIndexOf('/')])).Data.ToString();
             if (!IsCurrentDirectoryRequest(requestVersion))
             {
                 return;
@@ -596,7 +601,7 @@ public partial class FilePageViewModel : ViewModelBase
 
         var fileIds = FileInfos.Where(x => x.IsChecked).Select(x => x.Id).ToArray();
         var folderIds = FolderInfos.Where(x => x.IsChecked).Select(x => x.Id).ToArray();
-
+        using var pluginDeletionBatch = Services.Plugins.PluginEventHub.BeginDeletionBatch();
       
         void ShowToast(int status, string msg, string typeName)
         {
@@ -639,6 +644,11 @@ public partial class FilePageViewModel : ViewModelBase
     [RelayCommand]
     private async Task OpenFile(UserFilesInfoItem item)
     {
+        Services.Plugins.PluginEventHub.Publish(new Drive.Plugin.SDK.DriveEvent
+        {
+            Id = Drive.Plugin.Abi.DriveEventId.FileOpened, FileIds = [item.Id],
+            Selection = [Services.Plugins.PluginDtoMapper.File(item)]
+        });
         if (item.FileTypeInfo.TypeName is "图片")
         {
             WeakReferenceMessenger.Default.Send(new DialogMessage("ImageViewDialog", true,item));

@@ -34,6 +34,8 @@ namespace drive_desktop.Services
                     ConstructorParameterMetadataInitializer = SortVersionCtorParamInit,
                     ConstructorAttributeProviderFactory = static () => typeof(global::System.Globalization.SortVersion).GetConstructor(InstanceMemberBindingFlags, binder: null, new[] {typeof(int), typeof(global::System.Guid)}, modifiers: null),
                     SerializeHandler = SortVersionSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::System.Globalization.SortVersion>(options, objectInfo);

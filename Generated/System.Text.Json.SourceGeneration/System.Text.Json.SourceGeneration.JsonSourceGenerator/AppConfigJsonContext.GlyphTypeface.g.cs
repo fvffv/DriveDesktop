@@ -34,6 +34,8 @@ namespace drive_desktop.Services
                     ConstructorParameterMetadataInitializer = GlyphTypefaceCtorParamInit,
                     ConstructorAttributeProviderFactory = static () => typeof(global::Avalonia.Media.GlyphTypeface).GetConstructor(InstanceMemberBindingFlags, binder: null, new[] {typeof(global::Avalonia.Media.IPlatformTypeface), typeof(global::Avalonia.Media.FontSimulations)}, modifiers: null),
                     SerializeHandler = GlyphTypefaceSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::Avalonia.Media.GlyphTypeface>(options, objectInfo);

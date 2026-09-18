@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <Features>$(Features);runtime-async=on</Features>
+    <OutputType>Library</OutputType>
+    <DrivePluginManaged>true</DrivePluginManaged>
+    <PublishAot>false</PublishAot>
+    <PublishTrimmed>false</PublishTrimmed>
+    <PublishSingleFile>false</PublishSingleFile>
+    <SelfContained>false</SelfContained>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Drive.Plugin.SDK/Drive.Plugin.SDK.csproj" />
+    <ProjectReference Include="../../Drive.Plugin.Avalonia/Drive.Plugin.Avalonia.csproj" />
+    <PackageReference Include="SharpCompress" Version="0.50.4" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <AvaloniaResource Include="Assets/**" />
+    <None Update="Assets/Fonts/LICENSE.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="README.md;THIRD-PARTY-NOTICES.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Import Project="../../Drive.Plugin.SDK/buildTransitive/Drive.Plugin.SDK.targets" />
+</Project>

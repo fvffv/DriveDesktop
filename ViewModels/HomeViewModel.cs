@@ -18,6 +18,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using drive_desktop.Models;
 using drive_desktop.Services;
+using drive_desktop.Services.Plugins;
 using drive_desktop.Views;
 using LiveMarkdown.Avalonia;
 using Ursa.Controls;
@@ -131,6 +132,7 @@ public partial class HomeViewModel : ViewModelBase
     public SettingPageViewModel SettingPageViewModel { get; }
     public MusicDialogViewModel MusicDialogViewModel { get; }
     public AiChatViewModel AiChatViewModel { get; }
+    public DesktopPluginService Plugins { get; }
     public HomeViewModel(MusicDialogViewModel musicDialogViewModel,AiChatViewModel aiChatViewModel,SettingPageViewModel settingPageViewModel,StatisticsDashboardPageViewModel statisticsDashboardPageViewModel,DocumentViewDialogViewModel documentViewDialogViewModel,FileSharePageViewModel fileSharePageViewModel,FileTransmissionViewModel fileTransmissionViewModel, SearchPageViewModel searchPageViewModel,
         ShareFileDialogViewModel shareFileDialogViewModel, TextViewDialogViewModel textViewDialogViewModel,
         ImageViewModel imageViewModel, FilePropertiesDialogViewModel filePropertiesDialogViewModel,
@@ -138,8 +140,9 @@ public partial class HomeViewModel : ViewModelBase
         AppConfigService appConfigService,
         NewFolderDialogViewModel newFolderDialogViewModel, IThemeService themeService, SidebarViewModel sidebarVM,
         CustomViewEditViewModel customViewEditViewModel, TopBarViewModel topBarViewModel,
-        UserInfoService userInfoService)
+        UserInfoService userInfoService, DesktopPluginService plugins)
     {
+        Plugins = plugins;
         MusicDialogViewModel = musicDialogViewModel;
         AiChatViewModel = aiChatViewModel;
         TopBarViewModel = topBarViewModel;

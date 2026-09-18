@@ -1,5 +1,6 @@
 using drive_desktop.Components.UserControls;
 using drive_desktop.Services;
+using drive_desktop.Services.Plugins;
 using drive_desktop.ViewModels;
 using Pure.DI;
 
@@ -69,6 +70,9 @@ public partial class Composition
         .Bind<MusicDialog>().As(Lifetime.Singleton).To<MusicDialog>()
         //声明根节点
         .Bind<HomeViewModel>().As(Lifetime.Transient).To<HomeViewModel>()
+        .Bind<PluginHostAdapter>().As(Lifetime.Singleton).To<PluginHostAdapter>()
+        .Bind<DesktopPluginService>().As(Lifetime.Singleton).To<DesktopPluginService>()
+        .Root<DesktopPluginService>("Plugins")
         .Root<MainWindowViewModel>("RootViewModel");
 
 }

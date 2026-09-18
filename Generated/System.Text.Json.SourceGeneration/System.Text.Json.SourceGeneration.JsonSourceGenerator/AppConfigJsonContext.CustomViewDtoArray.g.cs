@@ -29,7 +29,9 @@ namespace drive_desktop.Services
                 var info = new global::System.Text.Json.Serialization.Metadata.JsonCollectionInfoValues<global::drive_desktop.Models.CustomViewDto[]>
                 {
                     ObjectCreator = null,
-                    SerializeHandler = CustomViewDtoArraySerializeHandler
+                    SerializeHandler = CustomViewDtoArraySerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateArrayInfo<global::drive_desktop.Models.CustomViewDto>(options, info);

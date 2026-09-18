@@ -1,0 +1,206 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="using:PortraitRetouchPlugin" xmlns:sdk="using:Drive.Plugin.SDK"
+ x:Class="PortraitRetouchPlugin.PortraitWindow" Title="人像精修 · PORTRAIT" Width="1280" Height="820" MinWidth="1040" MinHeight="680"
+ RequestedThemeVariant="Dark" Background="#171817" Foreground="#EAE8E1" FontSize="14" KeyDown="WindowKeyDown">
+ <Window.Resources>
+  <Color x:Key="SystemAccentColor">#D9BA83</Color><Color x:Key="SystemAccentColorLight1">#E9D1A9</Color><Color x:Key="SystemAccentColorLight2">#E9D1A9</Color><Color x:Key="SystemAccentColorDark1">#BD9D67</Color>
+  <SolidColorBrush x:Key="Accent">#D9BA83</SolidColorBrush>
+  <FontFamily x:Key="IconFont">avares://PortraitRetouchPlugin/Assets/Fonts/fa-solid-900.otf#Font Awesome 6 Free</FontFamily>
+ </Window.Resources>
+ <Window.Styles>
+  <Style Selector="TextBlock.muted"><Setter Property="Foreground" Value="#999C95"/><Setter Property="FontSize" Value="12"/></Style>
+  <Style Selector="TextBlock.icon"><Setter Property="FontFamily" Value="{StaticResource IconFont}"/><Setter Property="FontWeight" Value="Black"/></Style>
+  <Style Selector="Button, ToggleButton"><Setter Property="CornerRadius" Value="5"/><Setter Property="Padding" Value="14,9"/><Setter Property="Background" Value="#242522"/><Setter Property="Foreground" Value="#EAE8E1"/><Setter Property="BorderBrush" Value="#393B35"/><Setter Property="BorderThickness" Value="1"/><Setter Property="Cursor" Value="Hand"/></Style>
+  <Style Selector="Button.gold"><Setter Property="Background" Value="#D9BA83"/><Setter Property="Foreground" Value="#201E17"/><Setter Property="BorderBrush" Value="#D9BA83"/></Style>
+  <Style Selector="ToggleButton:checked"><Setter Property="BorderBrush" Value="#D9BA83"/><Setter Property="Foreground" Value="#E9D1A9"/></Style>
+  <Style Selector="ToggleButton.preset"><Setter Property="Padding" Value="2"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="2"/></Style>
+  <Style Selector="Slider:horizontal">
+   <Setter Property="Foreground" Value="#D9BA83"/><Setter Property="MinHeight" Value="30"/><Setter Property="Height" Value="30"/>
+   <Setter Property="Template"><ControlTemplate><Border Background="Transparent" Padding="0,5"><Grid>
+    <Border Height="2" Margin="8,0" VerticalAlignment="Center" Background="#50534B" IsHitTestVisible="False"/>
+    <Track x:Name="PART_Track" Minimum="{TemplateBinding Minimum}" Maximum="{TemplateBinding Maximum}"
+     Value="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" Orientation="Horizontal" IsDirectionReversed="False" IgnoreThumbDrag="False">
+     <Track.DecreaseButton><RepeatButton x:Name="PART_DecreaseButton" Focusable="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinWidth="0" MinHeight="0" Padding="0"><RepeatButton.Template><ControlTemplate><Border Background="Transparent"/></ControlTemplate></RepeatButton.Template></RepeatButton></Track.DecreaseButton>
+     <Track.IncreaseButton><RepeatButton x:Name="PART_IncreaseButton" Focusable="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinWidth="0" MinHeight="0" Padding="0"><RepeatButton.Template><ControlTemplate><Border Background="Transparent"/></ControlTemplate></RepeatButton.Template></RepeatButton></Track.IncreaseButton>
+     <Track.Thumb><Thumb x:Name="PART_Thumb" Width="16" Height="16" VerticalAlignment="Center"><Thumb.Template><ControlTemplate><Ellipse Fill="#D9BA83" Width="14" Height="14"/></ControlTemplate></Thumb.Template></Thumb></Track.Thumb>
+    </Track>
+   </Grid></Border></ControlTemplate></Setter>
+  </Style>
+  <Style Selector="Slider:disabled"><Setter Property="Opacity" Value="0.35"/></Style>
+  <Style Selector="TabItem"><Setter Property="FontSize" Value="16"/><Setter Property="Padding" Value="12,8"/></Style>
+  <Style Selector="ToggleButton:checked /template/ ContentPresenter"><Setter Property="Background" Value="#3A352A"/><Setter Property="BorderBrush" Value="#D9BA83"/><Setter Property="Foreground" Value="#E9D1A9"/></Style>
+  <Style Selector="ScrollViewer"><Setter Property="AllowAutoHide" Value="True"/></Style>
+  <Style Selector="ComboBox, TextBox, NumericUpDown"><Setter Property="Background" Value="#20211F"/><Setter Property="Foreground" Value="#EAE8E1"/><Setter Property="CornerRadius" Value="4"/></Style>
+  <Style Selector="ListBox"><Setter Property="Background" Value="#20211F"/></Style>
+  <Style Selector="ListBoxItem"><Setter Property="Padding" Value="12,10"/></Style>
+ </Window.Styles>
+ <Grid>
+  <Grid RowDefinitions="Auto,*,Auto" RowSpacing="12" Margin="18,12,18,10">
+   <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+    <StackPanel Spacing="4"><TextBlock Text="P O R T R A I T" FontSize="20" FontWeight="Medium"/><TextBlock Text="人 像 精 修" Classes="muted"/></StackPanel>
+    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" x:Name="SourceButtons">
+     <Button Content="云端图片" Click="CloudClick"/><Button Content="打开图片" Click="LocalClick"/><Button x:Name="ExportButton" Content="导出作品" Classes="gold" Click="OpenExportClick"/>
+    </StackPanel>
+   </Grid>
+   <Grid Grid.Row="1" ColumnDefinitions="*,332" ColumnSpacing="14">
+    <Grid RowDefinitions="*,Auto" RowSpacing="12">
+     <Border BorderBrush="#30322E" BorderThickness="1" CornerRadius="5" ClipToBounds="True">
+      <Grid RowDefinitions="*,Auto">
+       <Grid ClipToBounds="True">
+        <local:RetouchCanvas x:Name="Canvas"/>
+        <Grid x:Name="CompareLabels" IsVisible="False" Margin="16" VerticalAlignment="Top" ColumnDefinitions="*,Auto" IsHitTestVisible="False">
+         <Border Background="#AA171817" Padding="10,5" HorizontalAlignment="Left" CornerRadius="3"><TextBlock Text="原图" FontSize="12"/></Border>
+         <Border Grid.Column="1" Background="#AA171817" Padding="10,5" CornerRadius="3"><TextBlock Text="效果" FontSize="12"/></Border>
+        </Grid>
+        <StackPanel x:Name="EmptyHint" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="18" MaxWidth="420" Margin="20">
+         <TextBlock Classes="icon" Text="&#xf4ff;" FontSize="42" Foreground="#D9BA83" HorizontalAlignment="Center"/>
+         <TextBlock Text="保留自然，精修细节。" FontSize="25" HorizontalAlignment="Center"/>
+         <TextBlock Text="打开一张人像，调节肤色与光影。&#10;从原图开始，每一步都可以撤销。" Classes="muted" TextAlignment="Center" LineHeight="23"/>
+         <Button Content="试用示例人像" Click="DemoClick" HorizontalAlignment="Center"/>
+         <TextBlock Text="示例为 AI 生成的虚构成年人肖像" Classes="muted" FontSize="11" HorizontalAlignment="Center"/>
+        </StackPanel>
+       </Grid>
+       <Grid Grid.Row="1" Background="#20211F" ColumnDefinitions="*,Auto" Margin="0" Height="46">
+        <TextBlock x:Name="FileTitle" Text="尚未打开图片" Classes="muted" Margin="12,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+        <StackPanel x:Name="CanvasTools" Grid.Column="1" Orientation="Horizontal" Spacing="5" Margin="8,5">
+         <Button Content="适应" Click="FitClick" Padding="9,5"/><Button Content="−" Click="ZoomOutClick" Padding="9,5" AutomationProperties.Name="缩小预览"/>
+         <TextBlock x:Name="ZoomText" Text="1.0×" Classes="muted" VerticalAlignment="Center" Width="34" TextAlignment="Center"/>
+         <Button Content="+" Click="ZoomInClick" Padding="9,5" AutomationProperties.Name="放大预览"/>
+         <ToggleButton x:Name="CompareToggle" Content="对比" Click="CompareClick" Padding="9,5"/>
+         <ToggleButton x:Name="OriginalToggle" Content="原图" Click="OriginalClick" Padding="9,5" ToolTip.Tip="也可按住空格查看原图"/>
+        </StackPanel>
+       </Grid>
+      </Grid>
+     </Border>
+     <ItemsControl Grid.Row="1" x:Name="PresetList">
+      <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="10"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate><DataTemplate x:DataType="local:PresetChoice">
+       <StackPanel Spacing="5"><ToggleButton Classes="preset" IsChecked="{Binding Selected, Mode=OneWay}" Click="PresetClick" AutomationProperties.Name="{Binding Name}">
+        <Image Source="{Binding Thumbnail}" Width="100" Height="57" Stretch="UniformToFill"/></ToggleButton>
+        <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" FontSize="12"/>
+       </StackPanel>
+      </DataTemplate></ItemsControl.ItemTemplate>
+     </ItemsControl>
+    </Grid>
+    <Border Grid.Column="1" BorderBrush="#30322E" BorderThickness="1" CornerRadius="5" Background="#1E201D">
+     <Grid RowDefinitions="Auto,*,Auto" Margin="16" RowSpacing="12">
+      <Grid RowDefinitions="Auto,Auto" RowSpacing="10">
+       <Grid ColumnDefinitions="*,Auto"><TextBlock Text="精修面板" FontSize="18"/><TextBlock x:Name="FaceStatus" Grid.Column="1" Text="等待图片" Classes="muted" VerticalAlignment="Center"/></Grid>
+       <ComboBox Grid.Row="1" x:Name="FaceChoice" HorizontalAlignment="Stretch" SelectionChanged="FaceChoiceChanged" AutomationProperties.Name="美颜作用人脸"/>
+      </Grid>
+      <TabControl Grid.Row="1" x:Name="EditTabs" Background="Transparent">
+       <TabItem Header="人像">
+        <ScrollViewer><StackPanel x:Name="BeautyPanel" Spacing="5" Margin="0,8,12,0">
+        <Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="自然磨皮" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="SmoothSlider" AutomationProperties.Name="自然磨皮" Minimum="0" Maximum="100" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #SmoothSlider.Value, StringFormat='{}{0:0}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid>
+<Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="肤色提亮" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="WhitenSlider" AutomationProperties.Name="肤色提亮" Minimum="0" Maximum="100" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #WhitenSlider.Value, StringFormat='{}{0:0}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid>
+<Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="红润" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="BlushSlider" AutomationProperties.Name="红润" Minimum="0" Maximum="100" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #BlushSlider.Value, StringFormat='{}{0:0}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid>
+<Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="瘦脸" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="SlimSlider" AutomationProperties.Name="瘦脸" Minimum="0" Maximum="100" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #SlimSlider.Value, StringFormat='{}{0:0}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid>
+<Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="大眼" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="EyesSlider" AutomationProperties.Name="大眼" Minimum="0" Maximum="100" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #EyesSlider.Value, StringFormat='{}{0:0}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid>
+<Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="亮眼" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="EyeLightSlider" AutomationProperties.Name="亮眼" Minimum="0" Maximum="100" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #EyeLightSlider.Value, StringFormat='{}{0:0}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid>
+<Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="美齿" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="TeethSlider" AutomationProperties.Name="美齿" Minimum="0" Maximum="100" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #TeethSlider.Value, StringFormat='{}{0:0}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid>
+        <Separator Margin="0,10"/><TextBlock Text="局部修复" FontSize="15"/>
+        <ToggleSwitch x:Name="HealToggle" Content="祛痘修复画笔" OffContent="关闭" OnContent="修复中" IsCheckedChanged="HealChanged"/>
+        <Grid ColumnDefinitions="*,40"><TextBlock Text="画笔直径 / 原图像素" Classes="muted"/><TextBlock Grid.Column="1" Text="{Binding #BrushSize.Value, StringFormat='{}{0:0}'}" Classes="muted" HorizontalAlignment="Right"/></Grid>
+        <Slider x:Name="BrushSize" Minimum="4" Maximum="160" Value="36" ValueChanged="BrushSizeChanged"/>
+        <TextBlock Text="点击或涂抹小瑕疵，用周围颜色柔化修复。&#10;放大后操作更精确；每次笔触都可以撤销。" Classes="muted" TextWrapping="Wrap" LineHeight="19"/>
+        </StackPanel></ScrollViewer>
+       </TabItem>
+       <TabItem Header="调色"><ScrollViewer><StackPanel Spacing="5" Margin="0,8,12,0"><Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="曝光" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="ExposureSlider" AutomationProperties.Name="曝光" Minimum="-2" Maximum="2" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #ExposureSlider.Value, StringFormat='{}{0:0.00}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid>
+<Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="对比度" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="ContrastSlider" AutomationProperties.Name="对比度" Minimum="-100" Maximum="100" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #ContrastSlider.Value, StringFormat='{}{0:0}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid>
+<Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="高光" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="HighlightsSlider" AutomationProperties.Name="高光" Minimum="-100" Maximum="100" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #HighlightsSlider.Value, StringFormat='{}{0:0}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid>
+<Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="阴影" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="ShadowsSlider" AutomationProperties.Name="阴影" Minimum="-100" Maximum="100" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #ShadowsSlider.Value, StringFormat='{}{0:0}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid>
+<Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="饱和度" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="SaturationSlider" AutomationProperties.Name="饱和度" Minimum="-100" Maximum="100" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #SaturationSlider.Value, StringFormat='{}{0:0}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid>
+<Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="冷暖" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="WarmthSlider" AutomationProperties.Name="冷暖" Minimum="-100" Maximum="100" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #WarmthSlider.Value, StringFormat='{}{0:0}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid>
+<Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="细节" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="SharpnessSlider" AutomationProperties.Name="细节" Minimum="0" Maximum="100" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #SharpnessSlider.Value, StringFormat='{}{0:0}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid>
+<Grid ColumnDefinitions="82,*,36" ColumnSpacing="8" Height="42">
+ <TextBlock Text="暗角" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="VignetteSlider" AutomationProperties.Name="暗角" Minimum="0" Maximum="100" Value="0" ValueChanged="AdjustmentChanged" />
+ <TextBlock Grid.Column="2" Text="{Binding #VignetteSlider.Value, StringFormat='{}{0:0}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Classes="muted"/>
+</Grid><TextBlock Text="调色作用于整张图片，人像美颜只作用于选中人脸。" Classes="muted" TextWrapping="Wrap" Margin="0,14,0,0"/></StackPanel></ScrollViewer></TabItem>
+      </TabControl>
+      <Grid Grid.Row="2" ColumnDefinitions="*,*,*" ColumnSpacing="8">
+       <Button x:Name="UndoButton" Content="撤销" Click="UndoClick" HorizontalAlignment="Stretch"/>
+       <Button x:Name="RedoButton" Grid.Column="1" Content="重做" Click="RedoClick" HorizontalAlignment="Stretch"/>
+       <Button x:Name="ResetButton" Grid.Column="2" Content="重置" Click="ResetClick" HorizontalAlignment="Stretch"/>
+      </Grid>
+     </Grid>
+    </Border>
+   </Grid>
+   <Grid Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+    <TextBlock x:Name="StatusText" Text="本地处理 · 原图始终保留" Classes="muted" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding #StatusText.Text}" VerticalAlignment="Center"/>
+    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+     <ProgressBar x:Name="WorkProgress" IsVisible="False" IsIndeterminate="True" Width="80" Height="3" Foreground="#D9BA83" VerticalAlignment="Center"/>
+     <Button x:Name="CancelButton" IsVisible="False" Content="取消" Click="CancelClick" Padding="8,3"/>
+    </StackPanel>
+   </Grid>
+  </Grid>
+  <Border x:Name="ExportOverlay" IsVisible="False" Background="#B0000000">
+   <Border Background="#242522" BorderBrush="#45483F" BorderThickness="1" CornerRadius="8" Width="510" Padding="26" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <StackPanel Spacing="18">
+     <Grid ColumnDefinitions="*,Auto"><TextBlock Text="导出作品" FontSize="23"/><Button Grid.Column="1" Content="关闭" Click="CloseExportClick"/></Grid>
+     <TextBlock x:Name="ExportInfo" Classes="muted" TextWrapping="Wrap"/>
+     <ComboBox x:Name="FormatChoice" SelectedIndex="0" HorizontalAlignment="Stretch" SelectionChanged="FormatChanged"><ComboBoxItem Content="JPEG · 适合分享"/><ComboBoxItem Content="PNG · 无损保留透明"/><ComboBoxItem Content="WebP · 较小体积"/></ComboBox>
+     <Grid ColumnDefinitions="Auto,*,45" ColumnSpacing="12"><TextBlock Text="画质" VerticalAlignment="Center"/><Slider Grid.Column="1" x:Name="ExportQuality" Minimum="40" Maximum="100" Value="95"/><TextBlock Grid.Column="2" Text="{Binding #ExportQuality.Value, StringFormat='{}{0:0}%'}" VerticalAlignment="Center"/></Grid>
+     <TextBlock Text="保存目录" Classes="muted"/>
+     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8"><TextBox x:Name="OutputDirectory" PlaceholderText="默认使用网盘下载目录"/><Button Grid.Column="1" Content="选择" Click="ChooseOutputClick"/></Grid>
+     <TextBlock Text="按原图尺寸导出；同名文件自动加序号。JPEG 透明部分会填白。" Classes="muted" TextWrapping="Wrap"/>
+     <Button x:Name="SaveButton" Content="保存精修图片" Classes="gold" Click="SaveClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+    </StackPanel>
+   </Border>
+  </Border>
+  <Border x:Name="CloudOverlay" IsVisible="False" Background="#B0000000">
+   <Border Background="#242522" BorderBrush="#45483F" BorderThickness="1" CornerRadius="8" Width="630" Height="510" Padding="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="14">
+     <Grid ColumnDefinitions="*,Auto"><TextBlock Text="选择云端人像" FontSize="22"/><Button Grid.Column="1" Content="关闭" Click="CloseCloudClick"/></Grid>
+     <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8"><Button x:Name="CloudBack" Content="返回" Click="CloudBackClick"/><Button Content="根目录" Click="CloudRootClick"/><TextBlock x:Name="CloudLocation" Grid.Column="2" Classes="muted" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/><Button x:Name="CloudNext" Grid.Column="3" Content="下一页" Click="CloudNextClick"/></Grid>
+     <ListBox Grid.Row="2" x:Name="CloudList" DoubleTapped="CloudDoubleTapped">
+      <ListBox.ItemTemplate><DataTemplate x:DataType="sdk:FileEntry"><Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+       <Panel Width="20"><TextBlock Classes="icon" Text="&#xf03e;" IsVisible="{Binding !IsFolder}" Foreground="#D9BA83"/><TextBlock Classes="icon" Text="&#xf07b;" IsVisible="{Binding IsFolder}" Foreground="#D9BA83"/></Panel><TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
+      </Grid></DataTemplate></ListBox.ItemTemplate>
+     </ListBox>
+     <Grid Grid.Row="3" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8"><TextBlock x:Name="CloudHelp" Text="双击文件夹进入，选择一张图片后打开。" Classes="muted" TextWrapping="Wrap" VerticalAlignment="Center"/><Button x:Name="CloudPrevious" Grid.Column="1" Content="上一页" Click="CloudPreviousClick"/><Button Grid.Column="2" Content="打开选中图片" Classes="gold" Click="ChooseCloudClick"/></Grid>
+    </Grid>
+   </Border>
+  </Border>
+ </Grid>
+</Window>

@@ -34,6 +34,8 @@ namespace drive_desktop.Services
                     ConstructorParameterMetadataInitializer = FileTypeInfoCtorParamInit,
                     ConstructorAttributeProviderFactory = static () => typeof(global::drive_desktop.Models.FileTypeInfo).GetConstructor(InstanceMemberBindingFlags, binder: null, new[] {typeof(string), typeof(global::Avalonia.Media.FontFamily), typeof(string), typeof(bool), typeof(string)}, modifiers: null),
                     SerializeHandler = FileTypeInfoSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::drive_desktop.Models.FileTypeInfo>(options, objectInfo);
@@ -56,7 +58,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.FileTypeInfo),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.FileTypeInfo)obj).IconCode,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_FileTypeInfo_IconCode((global::drive_desktop.Models.FileTypeInfo)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -78,7 +80,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.FileTypeInfo),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.FileTypeInfo)obj).FontFamilyResource,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_FileTypeInfo_FontFamilyResource((global::drive_desktop.Models.FileTypeInfo)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -100,7 +102,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.FileTypeInfo),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.FileTypeInfo)obj).HexColor,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_FileTypeInfo_HexColor((global::drive_desktop.Models.FileTypeInfo)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -122,7 +124,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.FileTypeInfo),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.FileTypeInfo)obj).IsImg,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_FileTypeInfo_IsImg((global::drive_desktop.Models.FileTypeInfo)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -142,7 +144,7 @@ namespace drive_desktop.Services
                 DeclaringType = typeof(global::drive_desktop.Models.FileTypeInfo),
                 Converter = null,
                 Getter = static obj => ((global::drive_desktop.Models.FileTypeInfo)obj).TypeName,
-                Setter = static (obj, value) => throw new global::System.InvalidOperationException("Setting init-only properties is not supported in source generation mode."),
+                Setter = static (obj, value) => __set_FileTypeInfo_TypeName((global::drive_desktop.Models.FileTypeInfo)obj, value!),
                 IgnoreCondition = null,
                 HasJsonInclude = false,
                 IsExtensionData = false,
@@ -233,5 +235,16 @@ namespace drive_desktop.Services
                 IsNullable = false,
             },
         };
+
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_IconCode")]
+        private static extern void __set_FileTypeInfo_IconCode(global::drive_desktop.Models.FileTypeInfo obj, string value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_FontFamilyResource")]
+        private static extern void __set_FileTypeInfo_FontFamilyResource(global::drive_desktop.Models.FileTypeInfo obj, global::Avalonia.Media.FontFamily value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_HexColor")]
+        private static extern void __set_FileTypeInfo_HexColor(global::drive_desktop.Models.FileTypeInfo obj, string value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_IsImg")]
+        private static extern void __set_FileTypeInfo_IsImg(global::drive_desktop.Models.FileTypeInfo obj, bool value);
+        [global::System.Runtime.CompilerServices.UnsafeAccessorAttribute(global::System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "set_TypeName")]
+        private static extern void __set_FileTypeInfo_TypeName(global::drive_desktop.Models.FileTypeInfo obj, string value);
     }
 }

@@ -29,7 +29,9 @@ namespace drive_desktop.Services
                 var info = new global::System.Text.Json.Serialization.Metadata.JsonCollectionInfoValues<global::System.Collections.Generic.IDictionary<string, object>>
                 {
                     ObjectCreator = () => new global::System.Collections.Generic.Dictionary<string, object>(),
-                    SerializeHandler = null
+                    SerializeHandler = null,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateIDictionaryInfo<global::System.Collections.Generic.IDictionary<string, object>, string, object>(options, info);

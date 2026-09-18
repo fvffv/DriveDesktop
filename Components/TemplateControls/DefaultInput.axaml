@@ -6,14 +6,16 @@
     </Design.PreviewWith>
 
     <Style Selector="controls|DefaultInput">
+        
         <Setter Property="Height" Value="50" />
         <Setter Property="Background" Value="{DynamicResource HomeBg}" />
         <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="ClipToBounds" Value="False"></Setter>
         <Setter Property="Template">
             <ControlTemplate>
                 <Panel>
                     <!--边框-->
-                    <Border Classes="BgBorder1" CornerRadius="{TemplateBinding CornerRadius}"
+                    <Border ClipToBounds="False" Classes="BgBorder1" CornerRadius="{TemplateBinding CornerRadius}"
                              />
                     <!--底色-->
                     <Border Transitions="{StaticResource CommonColorTransitions}"
@@ -63,6 +65,7 @@
     </Style>
     <Style Selector="controls|DefaultInput /template/ Border.BgBorder1">
         <Setter Property="BorderBrush" Value="{TemplateBinding BorderColor}" />
+        <Setter Property="BoxShadow" Value="{DynamicResource AllShadow}"/>
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Transitions">
             <Transitions>

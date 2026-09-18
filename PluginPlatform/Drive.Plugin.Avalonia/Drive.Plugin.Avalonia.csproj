@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <IsAotCompatible>true</IsAotCompatible>
+    <IsTrimmable>true</IsTrimmable>
+    <PackageId>Drive.Plugin.Avalonia</PackageId>
+    <Description>Drive 插件的 Avalonia 窗口辅助库：支持 XAML 界面、窗口复用、UI 线程调度、宿主居中定位与主题同步，配合 Drive.Plugin.Runner 使用。</Description>
+    <PackageTags>Drive;Plugin;Avalonia;XAML;Desktop;UI;net11</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>Copyright (c) 2026 Drive</Copyright>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarningsAsErrors>$(WarningsAsErrors);CS1591;CS1570;CS1572;CS1573;CS1574;CS1584</WarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Drive.Plugin.SDK/Drive.Plugin.SDK.csproj" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- NuGet 展示文档与许可证随包交付，开发用 XML 注释继续由编译器生成。 -->
+    <None Update="README.md" Pack="true" PackagePath="/" />
+    <None Update="LICENSE.txt" Pack="true" PackagePath="/" />
+  </ItemGroup>
+</Project>

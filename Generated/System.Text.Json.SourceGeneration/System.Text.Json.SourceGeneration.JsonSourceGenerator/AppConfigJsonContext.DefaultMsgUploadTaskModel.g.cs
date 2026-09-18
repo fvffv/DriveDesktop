@@ -34,6 +34,8 @@ namespace drive_desktop.Services
                     ConstructorParameterMetadataInitializer = DefaultMsgUploadTaskModelCtorParamInit,
                     ConstructorAttributeProviderFactory = static () => typeof(global::drive_desktop.Models.DefaultMsg<global::drive_desktop.Models.UploadTaskModel>).GetConstructor(InstanceMemberBindingFlags, binder: null, new[] {typeof(int), typeof(string), typeof(global::drive_desktop.Models.UploadTaskModel)}, modifiers: null),
                     SerializeHandler = DefaultMsgUploadTaskModelSerializeHandler,
+                    PolymorphismOptions = new global::System.Text.Json.Serialization.Metadata.JsonPolymorphismOptions(),
+                    TypeClassifierFactory = null,
                 };
                 
                 jsonTypeInfo = global::System.Text.Json.Serialization.Metadata.JsonMetadataServices.CreateObjectInfo<global::drive_desktop.Models.DefaultMsg<global::drive_desktop.Models.UploadTaskModel>>(options, objectInfo);

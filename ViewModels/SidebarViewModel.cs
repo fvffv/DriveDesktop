@@ -141,6 +141,9 @@ public partial class SidebarViewModel : ViewModelBase
                 case 5:
                     WeakReferenceMessenger.Default.Send(new SidebarItemMessage(i, "设置"));
                     break;
+                case 6:
+                    WeakReferenceMessenger.Default.Send(new SidebarItemMessage(i, "插件应用"));
+                    break;
                 default:
                     break;
             }
@@ -166,7 +169,10 @@ public partial class SidebarViewModel : ViewModelBase
     [RelayCommand]
     private async Task AutoCustomView()
     {
-        int i = _constantResourceService.AddDefaultCustomView(CustomViews);
+        var previousViews = CustomViews.ToArray();
+        var viewsToSave = new ObservableCollection<CustomView>(previousViews);
+        int i = _constantResourceService.AddDefaultCustomView(viewsToSave);
+        var addedViews = viewsToSave.Except(previousViews).ToArray();
 
         if (i == 0)
         {
@@ -174,15 +180,21 @@ public partial class SidebarViewModel : ViewModelBase
                 new Toast($"已经全部添加了~"),
                 type: NotificationType.Success
             );
+            return;
         }
 
-        var info = await _webApiService.UserApi.UpdateUserViewAsync(CustomViews.Select(x => new CustomViewDto
+        var info = await _webApiService.UserApi.UpdateUserViewAsync(viewsToSave.Select(x => new CustomViewDto
         {
             Name = x.Name, Keywords = x.Keywords, Icon = _constantResourceService.GetSidebarClassName(x.Icon),
             Type = x.Type
         }).ToArray());
         if (info?.Status == 0)
         {
+            foreach (var view in addedViews)
+            {
+                CustomViews.Add(view);
+                Services.Plugins.PluginEventHub.Publish(new() { Id = Drive.Plugin.Abi.DriveEventId.ViewAdded, View = Services.Plugins.PluginDtoMapper.View(view) });
+            }
             Home.GlobalToastManager?.Show(
                 new Toast($"已添加{i}项~"),
                 type: NotificationType.Success
@@ -206,14 +218,17 @@ public partial class SidebarViewModel : ViewModelBase
     [RelayCommand]
     private async Task DelCustomView(CustomView cv)
     {
-        CustomViews.Remove(cv);
-        var info = await _webApiService.UserApi.UpdateUserViewAsync(CustomViews.Select(x => new CustomViewDto
+        if (!CustomViews.Contains(cv)) return;
+        var pluginView = Services.Plugins.PluginDtoMapper.View(cv);
+        var info = await _webApiService.UserApi.UpdateUserViewAsync(CustomViews.Where(x => !ReferenceEquals(x, cv)).Select(x => new CustomViewDto
         {
             Name = x.Name, Keywords = x.Keywords, Icon = _constantResourceService.GetSidebarClassName(x.Icon),
             Type = x.Type
         }).ToArray());
         if (info.Status == 0)
         {
+            CustomViews.Remove(cv);
+            Services.Plugins.PluginEventHub.Publish(new() { Id = Drive.Plugin.Abi.DriveEventId.ViewDeleted, View = pluginView });
             Home.GlobalToastManager?.Show(
                 new Toast("删除视图成功"),
                 type: NotificationType.Success
