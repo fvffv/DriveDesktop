@@ -25,7 +25,19 @@
 
   </PropertyGroup>
 <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-arm64'">
+      <!-- Win ARM64 链接器 workaround -->
     <LinkerArg Include="/arm64hazardfree" />
+
+    <!--
+        因 GitHub ARM64 Runner 上使用的是 x64 .NET SDK，
+        NativeAOT 属于 win-x64 -> win-arm64 跨架构编译，
+        因此显式提供 ARM64 ILCompiler runtime pack。
+    -->
+    <PackageReference
+        Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler"
+        Version="11.0.0-rc.1.26425.128"
+        PrivateAssets="all" />
+
 </ItemGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
