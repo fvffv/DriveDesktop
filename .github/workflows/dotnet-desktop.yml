@@ -113,49 +113,43 @@ jobs:
           if-no-files-found: error
 
 
-    # ============================================================
+  # ============================================================
   # Windows ARM64
+  # x64 Windows + VS2026 交叉编译 ARM64
   # ============================================================
   build-windows-arm64:
     name: Build Windows ARM64
-    runs-on: windows-11-vs2026-arm
+    runs-on: windows-2025-vs2026
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
-      # ARM64 版 .NET 11 RC1 在这个 Runner 上会 CLR 崩溃
-      # 所以强制安装 x64 SDK，通过 Windows ARM64 的 x64 仿真运行
-      - name: Setup .NET 11 x64
+      - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: ./global.json
-          architecture: x64
 
       - name: Show environment
         shell: pwsh
         run: |
-          Write-Host "================ Windows ================"
-          Write-Host "OS architecture:"
-          Write-Host $env:PROCESSOR_ARCHITECTURE
-
-          Write-Host ""
-          Write-Host "================ .NET ================"
+          Write-Host "================ .NET ================="
           dotnet --info
 
           Write-Host ""
-          Write-Host "================ dotnet.exe ================"
-          where.exe dotnet
+          Write-Host "================ Architecture ================="
+          Write-Host "PROCESSOR_ARCHITECTURE:"
+          Write-Host $env:PROCESSOR_ARCHITECTURE
 
           Write-Host ""
-          Write-Host "================ Visual Studio ================"
+          Write-Host "================ Visual Studio ================="
           & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
             -latest `
             -products * `
             -property installationPath
 
           Write-Host ""
-          Write-Host "================ LLVM ================"
+          Write-Host "================ LLVM ================="
           where.exe lld-link.exe
           lld-link.exe --version
 
@@ -189,7 +183,6 @@ jobs:
           name: Drive-Windows-arm64
           path: ./publish/Drive-Windows-arm64.zip
           if-no-files-found: error
-
 
   # ============================================================
   # Linux x64
