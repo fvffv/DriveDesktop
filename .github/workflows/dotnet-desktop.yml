@@ -1,0 +1,129 @@
+name: Build
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+
+  # =============================
+  # Windows x64
+  # =============================
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET 11
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "11.0.x"
+
+      - name: Show .NET info
+        run: dotnet --info
+
+      - name: Publish Windows x64
+        run: >
+          dotnet publish
+          ./drive-desktop/drive-desktop.csproj
+          -c Release
+          -r win-x64
+          -p:PublishAot=true
+          -p:SelfContained=true
+          -o ./publish/win-x64
+
+      - name: Upload Windows
+        uses: actions/upload-artifact@v7
+        with:
+          name: Drive-Windows-x64
+          path: ./publish/win-x64
+
+
+  # =============================
+  # Linux x64
+  # =============================
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET 11
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "11.0.x"
+
+      - name: Install NativeAOT dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang zlib1g-dev
+
+      - name: Show .NET info
+        run: dotnet --info
+
+      - name: Publish Linux x64
+        run: |
+          dotnet publish \
+            ./drive-desktop/drive-desktop.csproj \
+            -c Release \
+            -r linux-x64 \
+            -p:PublishAot=true \
+            -p:SelfContained=true \
+            -o ./publish/linux-x64
+
+      # 防止 Linux 可执行权限被 artifact ZIP 丢掉
+      - name: Package Linux
+        run: |
+          cd ./publish/linux-x64
+          tar -czf ../../Drive-Linux-x64.tar.gz .
+
+      - name: Upload Linux
+        uses: actions/upload-artifact@v7
+        with:
+          name: Drive-Linux-x64
+          path: ./publish/Drive-Linux-x64.tar.gz
+
+
+  # =============================
+  # macOS ARM64
+  # =============================
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET 11
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "11.0.x"
+
+      - name: Show .NET info
+        run: dotnet --info
+
+      - name: Publish macOS ARM64
+        run: |
+          dotnet publish \
+            ./drive-desktop/drive-desktop.csproj \
+            -c Release \
+            -r osx-arm64 \
+            -p:PublishAot=true \
+            -p:SelfContained=true \
+            -o ./publish/osx-arm64
+
+      - name: Package macOS
+        run: |
+          cd ./publish/osx-arm64
+          tar -czf ../../Drive-macOS-arm64.tar.gz .
+
+      - name: Upload macOS
+        uses: actions/upload-artifact@v7
+        with:
+          name: Drive-macOS-arm64
+          path: ./publish/Drive-macOS-arm64.tar.gz
