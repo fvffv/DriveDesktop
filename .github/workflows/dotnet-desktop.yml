@@ -113,7 +113,7 @@ jobs:
           if-no-files-found: error
 
 
-   # ============================================================
+    # ============================================================
   # Windows ARM64
   # ============================================================
   build-windows-arm64:
@@ -124,19 +124,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup .NET
+      # ARM64 版 .NET 11 RC1 在这个 Runner 上会 CLR 崩溃
+      # 所以强制安装 x64 SDK，通过 Windows ARM64 的 x64 仿真运行
+      - name: Setup .NET 11 x64
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: ./global.json
+          architecture: x64
 
       - name: Show environment
         shell: pwsh
         run: |
+          Write-Host "================ Windows ================"
+          Write-Host "OS architecture:"
+          Write-Host $env:PROCESSOR_ARCHITECTURE
+
+          Write-Host ""
+          Write-Host "================ .NET ================"
           dotnet --info
 
           Write-Host ""
-          Write-Host "================ Architecture ================"
-          Write-Host $env:PROCESSOR_ARCHITECTURE
+          Write-Host "================ dotnet.exe ================"
+          where.exe dotnet
 
           Write-Host ""
           Write-Host "================ Visual Studio ================"
@@ -147,18 +156,19 @@ jobs:
 
           Write-Host ""
           Write-Host "================ LLVM ================"
-          where.exe lld-link
-          lld-link --version
+          where.exe lld-link.exe
+          lld-link.exe --version
 
       - name: Publish Windows ARM64
-        run: >
-          dotnet publish ./drive-desktop.csproj
-          -c Release
-          -r win-arm64
-          -p:PublishAot=true
-          -p:SelfContained=true
-          -p:RestoreIgnoreFailedSources=true
-          -o ./publish/win-arm64
+        shell: pwsh
+        run: |
+          dotnet publish ./drive-desktop.csproj `
+            -c Release `
+            -r win-arm64 `
+            -p:PublishAot=true `
+            -p:SelfContained=true `
+            -p:RestoreIgnoreFailedSources=true `
+            -o ./publish/win-arm64
 
       - name: Show Windows ARM64 files
         shell: pwsh
