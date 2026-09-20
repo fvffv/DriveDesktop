@@ -19,7 +19,6 @@
     <PackageReference Include="RapidOcrNet" Version="4.2.0" ExcludeAssets="build;buildTransitive" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
     <AvaloniaResource Include="Assets/**" />
-    <None Update="Models/**;Licenses/**;README.md;THIRD-PARTY-NOTICES.txt;Assets/Fonts/LICENSE.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <InternalsVisibleTo Include="ImageToolsChecks" />
   </ItemGroup>
   <Import Project="../../Drive.Plugin.SDK/buildTransitive/Drive.Plugin.SDK.targets" />
