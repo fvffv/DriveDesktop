@@ -71,17 +71,17 @@
     <PackageReference Include="StaticLink.libonigwrap" Version="1.0.11.3" />
     <PackageReference Include="Xaml.Behaviors.Avalonia" Version="12.0.7" />
     <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="12.1.2" PrivateAssets="All" Publish="True" />
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-      <PackageReference Include="HotAvalonia"
-                      Version="3.1.4"
-                      PrivateAssets="All" />
-    </ItemGroup>
+
     <PackageReference Include="Xaml.Behaviors.SourceGenerators" Version="12.0.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+      <PackageReference Include="HotAvalonia"
+                      Version="3.1.4"
+                      PrivateAssets="All" />
+    </ItemGroup>
 
   <Import Project="PluginPlatform\Deploy-Runner.targets" />
   <Import Project="PluginPlatform\Deploy-Plugins.targets" />
