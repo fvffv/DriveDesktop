@@ -4,12 +4,13 @@ on:
   push:
     tags:
       - "v*"
+
   workflow_dispatch:
 
-# 你的 NuGet.Config 里存在本机 D:\... 的 NuGet 源，
-# GitHub Runner 上不存在，因此让无效源只产生警告。
-env:
-  RestoreIgnoreFailedSources: "true"
+# 创建 GitHub Release 需要写权限
+permissions:
+  contents: write
+
 
 jobs:
 
@@ -17,35 +18,74 @@ jobs:
   # Windows x64
   # ============================================================
   build-windows:
-    name: Windows x64
+    name: Build Windows x64
     runs-on: windows-latest
 
     steps:
+
+      # ----------------------------------------------------------
+      # 拉取源码
+      # ----------------------------------------------------------
       - name: Checkout
         uses: actions/checkout@v7
 
-      # 直接读取仓库根目录 global.json
-      # 当前项目固定的是 .NET 11 RC1
+
+      # ----------------------------------------------------------
+      # 安装 global.json 指定的 .NET SDK
+      # ----------------------------------------------------------
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: ./global.json
 
+
+      # ----------------------------------------------------------
+      # 显示 .NET 信息，方便出问题时检查
+      # ----------------------------------------------------------
       - name: Show .NET info
         run: dotnet --info
 
-      - name: Publish Windows x64
-        run: dotnet publish ./drive-desktop.csproj -c Release -r win-x64 -p:PublishAot=true -p:SelfContained=true -o ./publish/win-x64
 
+      # ----------------------------------------------------------
+      # NativeAOT 发布 Windows x64
+      # ----------------------------------------------------------
+      - name: Publish Windows x64
+        run: >
+          dotnet publish ./drive-desktop.csproj
+          -c Release
+          -r win-x64
+          -p:PublishAot=true
+          -p:SelfContained=true
+          -p:RestoreIgnoreFailedSources=true
+          -o ./publish/win-x64
+
+
+      # ----------------------------------------------------------
+      # 查看最终发布文件
+      # ----------------------------------------------------------
       - name: Show publish files
         shell: pwsh
-        run: Get-ChildItem ./publish/win-x64 -Recurse
+        run: |
+          Write-Host "================ Publish Files ================"
+          Get-ChildItem ./publish/win-x64 -Recurse
 
-      - name: Create ZIP
+
+      # ----------------------------------------------------------
+      # Windows 打成 zip
+      # ----------------------------------------------------------
+      - name: Package Windows
         shell: pwsh
-        run: Compress-Archive -Path ./publish/win-x64/* -DestinationPath ./publish/Drive-Windows-x64.zip
+        run: |
+          Compress-Archive `
+            -Path ./publish/win-x64/* `
+            -DestinationPath ./publish/Drive-Windows-x64.zip `
+            -Force
 
-      - name: Upload Windows
+
+      # ----------------------------------------------------------
+      # 上传到 Actions Artifact
+      # ----------------------------------------------------------
+      - name: Upload Windows Artifact
         uses: actions/upload-artifact@v7
         with:
           name: Drive-Windows-x64
@@ -53,30 +93,70 @@ jobs:
           if-no-files-found: error
 
 
+
+
   # ============================================================
   # Linux x64
   # ============================================================
   build-linux:
-    name: Linux x64
+    name: Build Linux x64
     runs-on: ubuntu-latest
 
     steps:
+
+      # ----------------------------------------------------------
+      # 拉取源码
+      # ----------------------------------------------------------
       - name: Checkout
         uses: actions/checkout@v7
 
+
+      # ----------------------------------------------------------
+      # 安装 global.json 指定的 .NET SDK
+      # ----------------------------------------------------------
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: ./global.json
 
-      - name: Install NativeAOT dependencies
+
+      # ----------------------------------------------------------
+      # NativeAOT + Avalonia 静态链接需要的 Linux 开发库
+      # ----------------------------------------------------------
+      - name: Install Linux NativeAOT dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang zlib1g-dev
 
+          sudo apt-get install -y \
+            clang \
+            lld \
+            zlib1g-dev \
+            libfontconfig1-dev \
+            libfreetype6-dev \
+            libx11-dev \
+            libxext-dev \
+            libxrender-dev
+
+
+      # ----------------------------------------------------------
+      # 显示环境信息
+      # ----------------------------------------------------------
       - name: Show .NET info
-        run: dotnet --info
+        run: |
+          dotnet --info
 
+          echo ""
+          echo "================ Clang ================"
+          clang --version
+
+          echo ""
+          echo "================ FontConfig ================"
+          pkg-config --libs fontconfig || true
+
+
+      # ----------------------------------------------------------
+      # NativeAOT 发布 Linux x64
+      # ----------------------------------------------------------
       - name: Publish Linux x64
         run: |
           dotnet publish ./drive-desktop.csproj \
@@ -84,23 +164,52 @@ jobs:
             -r linux-x64 \
             -p:PublishAot=true \
             -p:SelfContained=true \
+            -p:RestoreIgnoreFailedSources=true \
             -o ./publish/linux-x64
 
+
+      # ----------------------------------------------------------
+      # 设置 Linux 可执行权限
+      # ----------------------------------------------------------
       - name: Set executable permissions
         run: |
-          chmod +x ./publish/linux-x64/drive-desktop || true
-          chmod +x ./publish/linux-x64/Drive.Plugin.Runner || true
+          chmod +x ./publish/linux-x64/drive-desktop
 
+          if [ -f "./publish/linux-x64/Drive.Plugin.Runner" ]; then
+            chmod +x ./publish/linux-x64/Drive.Plugin.Runner
+          fi
+
+
+      # ----------------------------------------------------------
+      # 查看最终发布结构
+      # ----------------------------------------------------------
       - name: Show publish files
         run: |
-          find ./publish/linux-x64 -maxdepth 4 -type f
+          echo "================ Publish Files ================"
 
-      - name: Create tar.gz
+          find ./publish/linux-x64 \
+            -maxdepth 5 \
+            -type f \
+            -print
+
+
+      # ----------------------------------------------------------
+      # 打 tar.gz
+      #
+      # 不直接让 GitHub Artifact 打包目录，
+      # 是为了保留 Linux executable 权限。
+      # ----------------------------------------------------------
+      - name: Package Linux
         run: |
           cd ./publish/linux-x64
+
           tar -czf ../Drive-Linux-x64.tar.gz .
 
-      - name: Upload Linux
+
+      # ----------------------------------------------------------
+      # 上传到 Actions Artifact
+      # ----------------------------------------------------------
+      - name: Upload Linux Artifact
         uses: actions/upload-artifact@v7
         with:
           name: Drive-Linux-x64
@@ -108,25 +217,54 @@ jobs:
           if-no-files-found: error
 
 
+
+
   # ============================================================
-  # macOS ARM64 / Apple Silicon
+  # macOS ARM64
+  # Apple Silicon:
+  # M1 / M2 / M3 / M4 / ...
   # ============================================================
   build-macos-arm64:
-    name: macOS ARM64
+    name: Build macOS ARM64
     runs-on: macos-latest
 
     steps:
+
+      # ----------------------------------------------------------
+      # 拉取源码
+      # ----------------------------------------------------------
       - name: Checkout
         uses: actions/checkout@v7
 
+
+      # ----------------------------------------------------------
+      # 安装 global.json 指定的 .NET SDK
+      # ----------------------------------------------------------
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: ./global.json
 
-      - name: Show .NET info
-        run: dotnet --info
 
+      # ----------------------------------------------------------
+      # 显示环境
+      # ----------------------------------------------------------
+      - name: Show .NET info
+        run: |
+          dotnet --info
+
+          echo ""
+          echo "================ macOS ================"
+          sw_vers
+
+          echo ""
+          echo "================ CPU ================"
+          uname -m
+
+
+      # ----------------------------------------------------------
+      # NativeAOT 发布 macOS ARM64
+      # ----------------------------------------------------------
       - name: Publish macOS ARM64
         run: |
           dotnet publish ./drive-desktop.csproj \
@@ -134,25 +272,146 @@ jobs:
             -r osx-arm64 \
             -p:PublishAot=true \
             -p:SelfContained=true \
+            -p:RestoreIgnoreFailedSources=true \
             -o ./publish/osx-arm64
 
+
+      # ----------------------------------------------------------
+      # 设置执行权限
+      # ----------------------------------------------------------
       - name: Set executable permissions
         run: |
-          chmod +x ./publish/osx-arm64/drive-desktop || true
-          chmod +x ./publish/osx-arm64/Drive.Plugin.Runner || true
+          chmod +x ./publish/osx-arm64/drive-desktop
 
+          if [ -f "./publish/osx-arm64/Drive.Plugin.Runner" ]; then
+            chmod +x ./publish/osx-arm64/Drive.Plugin.Runner
+          fi
+
+
+      # ----------------------------------------------------------
+      # 查看发布结构
+      # ----------------------------------------------------------
       - name: Show publish files
         run: |
-          find ./publish/osx-arm64 -maxdepth 4 -type f
+          echo "================ Publish Files ================"
 
-      - name: Create tar.gz
+          find ./publish/osx-arm64 \
+            -maxdepth 5 \
+            -type f \
+            -print
+
+
+      # ----------------------------------------------------------
+      # 打 tar.gz
+      # ----------------------------------------------------------
+      - name: Package macOS ARM64
         run: |
           cd ./publish/osx-arm64
+
           tar -czf ../Drive-macOS-arm64.tar.gz .
 
-      - name: Upload macOS ARM64
+
+      # ----------------------------------------------------------
+      # 上传到 Actions Artifact
+      # ----------------------------------------------------------
+      - name: Upload macOS ARM64 Artifact
         uses: actions/upload-artifact@v7
         with:
           name: Drive-macOS-arm64
           path: ./publish/Drive-macOS-arm64.tar.gz
           if-no-files-found: error
+
+
+
+
+  # ============================================================
+  # GitHub Release
+  #
+  # 等三个平台全部编译成功以后才运行
+  # ============================================================
+  release:
+    name: Create GitHub Release
+
+    needs:
+      - build-windows
+      - build-linux
+      - build-macos-arm64
+
+    runs-on: ubuntu-latest
+
+    # ------------------------------------------------------------
+    # 只有：
+    #
+    # v1.0.0
+    # v1.1.0
+    # v2.0.0
+    #
+    # 这种 Tag 才真正发布 Release
+    #
+    # 手动 workflow_dispatch 不会发布 Release
+    # ------------------------------------------------------------
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+
+      # ----------------------------------------------------------
+      # 下载 Windows 编译结果
+      # ----------------------------------------------------------
+      - name: Download Windows Artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Drive-Windows-x64
+          path: ./release/windows
+
+
+      # ----------------------------------------------------------
+      # 下载 Linux 编译结果
+      # ----------------------------------------------------------
+      - name: Download Linux Artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Drive-Linux-x64
+          path: ./release/linux
+
+
+      # ----------------------------------------------------------
+      # 下载 macOS 编译结果
+      # ----------------------------------------------------------
+      - name: Download macOS ARM64 Artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Drive-macOS-arm64
+          path: ./release/macos-arm64
+
+
+      # ----------------------------------------------------------
+      # 查看即将上传到 Release 的文件
+      # ----------------------------------------------------------
+      - name: Show Release files
+        run: |
+          echo "================ Release Files ================"
+
+          find ./release \
+            -type f \
+            -print
+
+
+      # ----------------------------------------------------------
+      # 创建 GitHub Release
+      #
+      # github.ref_name：
+      # v1.0.0
+      # v1.1.0
+      # ...
+      # ----------------------------------------------------------
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            ./release/windows/Drive-Windows-x64.zip \
+            ./release/linux/Drive-Linux-x64.tar.gz \
+            ./release/macos-arm64/Drive-macOS-arm64.tar.gz \
+            --title "DriveDesktop ${{ github.ref_name }}" \
+            --generate-notes
