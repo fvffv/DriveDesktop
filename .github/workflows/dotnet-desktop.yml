@@ -1,4 +1,4 @@
-name: Build
+name: Build DriveDesktop
 
 on:
   push:
@@ -6,57 +6,68 @@ on:
       - "v*"
   workflow_dispatch:
 
+# 你的 NuGet.Config 里存在本机 D:\... 的 NuGet 源，
+# GitHub Runner 上不存在，因此让无效源只产生警告。
+env:
+  RestoreIgnoreFailedSources: "true"
+
 jobs:
 
-  # =============================
+  # ============================================================
   # Windows x64
-  # =============================
+  # ============================================================
   build-windows:
+    name: Windows x64
     runs-on: windows-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup .NET 11
+      # 直接读取仓库根目录 global.json
+      # 当前项目固定的是 .NET 11 RC1
+      - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: "11.0.x"
+          global-json-file: ./global.json
 
       - name: Show .NET info
         run: dotnet --info
 
       - name: Publish Windows x64
-        run: >
-          dotnet publish
-          ./drive-desktop/drive-desktop.csproj
-          -c Release
-          -r win-x64
-          -p:PublishAot=true
-          -p:SelfContained=true
-          -o ./publish/win-x64
+        run: dotnet publish ./drive-desktop.csproj -c Release -r win-x64 -p:PublishAot=true -p:SelfContained=true -o ./publish/win-x64
+
+      - name: Show publish files
+        shell: pwsh
+        run: Get-ChildItem ./publish/win-x64 -Recurse
+
+      - name: Create ZIP
+        shell: pwsh
+        run: Compress-Archive -Path ./publish/win-x64/* -DestinationPath ./publish/Drive-Windows-x64.zip
 
       - name: Upload Windows
         uses: actions/upload-artifact@v7
         with:
           name: Drive-Windows-x64
-          path: ./publish/win-x64
+          path: ./publish/Drive-Windows-x64.zip
+          if-no-files-found: error
 
 
-  # =============================
+  # ============================================================
   # Linux x64
-  # =============================
+  # ============================================================
   build-linux:
+    name: Linux x64
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup .NET 11
+      - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: "11.0.x"
+          global-json-file: ./global.json
 
       - name: Install NativeAOT dependencies
         run: |
@@ -68,62 +79,80 @@ jobs:
 
       - name: Publish Linux x64
         run: |
-          dotnet publish \
-            ./drive-desktop/drive-desktop.csproj \
+          dotnet publish ./drive-desktop.csproj \
             -c Release \
             -r linux-x64 \
             -p:PublishAot=true \
             -p:SelfContained=true \
             -o ./publish/linux-x64
 
-      # 防止 Linux 可执行权限被 artifact ZIP 丢掉
-      - name: Package Linux
+      - name: Set executable permissions
+        run: |
+          chmod +x ./publish/linux-x64/drive-desktop || true
+          chmod +x ./publish/linux-x64/Drive.Plugin.Runner || true
+
+      - name: Show publish files
+        run: |
+          find ./publish/linux-x64 -maxdepth 4 -type f
+
+      - name: Create tar.gz
         run: |
           cd ./publish/linux-x64
-          tar -czf ../../Drive-Linux-x64.tar.gz .
+          tar -czf ../Drive-Linux-x64.tar.gz .
 
       - name: Upload Linux
         uses: actions/upload-artifact@v7
         with:
           name: Drive-Linux-x64
           path: ./publish/Drive-Linux-x64.tar.gz
+          if-no-files-found: error
 
 
-  # =============================
-  # macOS ARM64
-  # =============================
-  build-macos:
+  # ============================================================
+  # macOS ARM64 / Apple Silicon
+  # ============================================================
+  build-macos-arm64:
+    name: macOS ARM64
     runs-on: macos-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup .NET 11
+      - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: "11.0.x"
+          global-json-file: ./global.json
 
       - name: Show .NET info
         run: dotnet --info
 
       - name: Publish macOS ARM64
         run: |
-          dotnet publish \
-            ./drive-desktop/drive-desktop.csproj \
+          dotnet publish ./drive-desktop.csproj \
             -c Release \
             -r osx-arm64 \
             -p:PublishAot=true \
             -p:SelfContained=true \
             -o ./publish/osx-arm64
 
-      - name: Package macOS
+      - name: Set executable permissions
+        run: |
+          chmod +x ./publish/osx-arm64/drive-desktop || true
+          chmod +x ./publish/osx-arm64/Drive.Plugin.Runner || true
+
+      - name: Show publish files
+        run: |
+          find ./publish/osx-arm64 -maxdepth 4 -type f
+
+      - name: Create tar.gz
         run: |
           cd ./publish/osx-arm64
-          tar -czf ../../Drive-macOS-arm64.tar.gz .
+          tar -czf ../Drive-macOS-arm64.tar.gz .
 
-      - name: Upload macOS
+      - name: Upload macOS ARM64
         uses: actions/upload-artifact@v7
         with:
           name: Drive-macOS-arm64
           path: ./publish/Drive-macOS-arm64.tar.gz
+          if-no-files-found: error
