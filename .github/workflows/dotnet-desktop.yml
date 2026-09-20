@@ -7,7 +7,7 @@ on:
 
   workflow_dispatch:
 
-# 创建 GitHub Release 需要写权限
+# 创建 / 修改 GitHub Release 需要权限
 permissions:
   contents: write
 
@@ -22,32 +22,28 @@ jobs:
     runs-on: windows-latest
 
     steps:
-
       # ----------------------------------------------------------
       # 拉取源码
       # ----------------------------------------------------------
       - name: Checkout
         uses: actions/checkout@v7
 
-
       # ----------------------------------------------------------
-      # 安装 global.json 指定的 .NET SDK
+      # 根据 global.json 安装 .NET
       # ----------------------------------------------------------
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: ./global.json
 
-
       # ----------------------------------------------------------
-      # 显示 .NET 信息，方便出问题时检查
+      # 显示环境
       # ----------------------------------------------------------
       - name: Show .NET info
         run: dotnet --info
 
-
       # ----------------------------------------------------------
-      # NativeAOT 发布 Windows x64
+      # 发布 Windows NativeAOT
       # ----------------------------------------------------------
       - name: Publish Windows x64
         run: >
@@ -59,19 +55,17 @@ jobs:
           -p:RestoreIgnoreFailedSources=true
           -o ./publish/win-x64
 
-
       # ----------------------------------------------------------
-      # 查看最终发布文件
+      # 查看文件
       # ----------------------------------------------------------
-      - name: Show publish files
+      - name: Show Windows publish files
         shell: pwsh
         run: |
-          Write-Host "================ Publish Files ================"
+          Write-Host "================ Windows Publish Files ================"
           Get-ChildItem ./publish/win-x64 -Recurse
 
-
       # ----------------------------------------------------------
-      # Windows 打成 zip
+      # 打 ZIP
       # ----------------------------------------------------------
       - name: Package Windows
         shell: pwsh
@@ -81,9 +75,8 @@ jobs:
             -DestinationPath ./publish/Drive-Windows-x64.zip `
             -Force
 
-
       # ----------------------------------------------------------
-      # 上传到 Actions Artifact
+      # 上传 Artifact
       # ----------------------------------------------------------
       - name: Upload Windows Artifact
         uses: actions/upload-artifact@v7
@@ -91,8 +84,6 @@ jobs:
           name: Drive-Windows-x64
           path: ./publish/Drive-Windows-x64.zip
           if-no-files-found: error
-
-
 
 
   # ============================================================
@@ -103,25 +94,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       # ----------------------------------------------------------
       # 拉取源码
       # ----------------------------------------------------------
       - name: Checkout
         uses: actions/checkout@v7
 
-
       # ----------------------------------------------------------
-      # 安装 global.json 指定的 .NET SDK
+      # 根据 global.json 安装 .NET
       # ----------------------------------------------------------
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: ./global.json
 
-
       # ----------------------------------------------------------
-      # NativeAOT + Avalonia 静态链接需要的 Linux 开发库
+      # NativeAOT / Avalonia Linux 依赖
       # ----------------------------------------------------------
       - name: Install Linux NativeAOT dependencies
         run: |
@@ -137,11 +125,10 @@ jobs:
             libxext-dev \
             libxrender-dev
 
-
       # ----------------------------------------------------------
-      # 显示环境信息
+      # 查看环境
       # ----------------------------------------------------------
-      - name: Show .NET info
+      - name: Show Linux environment
         run: |
           dotnet --info
 
@@ -153,9 +140,8 @@ jobs:
           echo "================ FontConfig ================"
           pkg-config --libs fontconfig || true
 
-
       # ----------------------------------------------------------
-      # NativeAOT 发布 Linux x64
+      # 发布 Linux NativeAOT
       # ----------------------------------------------------------
       - name: Publish Linux x64
         run: |
@@ -167,11 +153,10 @@ jobs:
             -p:RestoreIgnoreFailedSources=true \
             -o ./publish/linux-x64
 
-
       # ----------------------------------------------------------
-      # 设置 Linux 可执行权限
+      # 设置可执行权限
       # ----------------------------------------------------------
-      - name: Set executable permissions
+      - name: Set Linux executable permissions
         run: |
           chmod +x ./publish/linux-x64/drive-desktop
 
@@ -179,35 +164,30 @@ jobs:
             chmod +x ./publish/linux-x64/Drive.Plugin.Runner
           fi
 
-
       # ----------------------------------------------------------
-      # 查看最终发布结构
+      # 查看发布文件
       # ----------------------------------------------------------
-      - name: Show publish files
+      - name: Show Linux publish files
         run: |
-          echo "================ Publish Files ================"
+          echo "================ Linux Publish Files ================"
 
           find ./publish/linux-x64 \
             -maxdepth 5 \
             -type f \
             -print
 
-
       # ----------------------------------------------------------
-      # 打 tar.gz
+      # tar.gz
       #
-      # 不直接让 GitHub Artifact 打包目录，
-      # 是为了保留 Linux executable 权限。
+      # 保留 Linux executable 权限
       # ----------------------------------------------------------
       - name: Package Linux
         run: |
           cd ./publish/linux-x64
-
           tar -czf ../Drive-Linux-x64.tar.gz .
 
-
       # ----------------------------------------------------------
-      # 上传到 Actions Artifact
+      # 上传 Artifact
       # ----------------------------------------------------------
       - name: Upload Linux Artifact
         uses: actions/upload-artifact@v7
@@ -217,39 +197,32 @@ jobs:
           if-no-files-found: error
 
 
-
-
   # ============================================================
   # macOS ARM64
-  # Apple Silicon:
-  # M1 / M2 / M3 / M4 / ...
   # ============================================================
   build-macos-arm64:
     name: Build macOS ARM64
     runs-on: macos-latest
 
     steps:
-
       # ----------------------------------------------------------
       # 拉取源码
       # ----------------------------------------------------------
       - name: Checkout
         uses: actions/checkout@v7
 
-
       # ----------------------------------------------------------
-      # 安装 global.json 指定的 .NET SDK
+      # 根据 global.json 安装 .NET
       # ----------------------------------------------------------
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
           global-json-file: ./global.json
 
-
       # ----------------------------------------------------------
-      # 显示环境
+      # 查看环境
       # ----------------------------------------------------------
-      - name: Show .NET info
+      - name: Show macOS environment
         run: |
           dotnet --info
 
@@ -261,9 +234,8 @@ jobs:
           echo "================ CPU ================"
           uname -m
 
-
       # ----------------------------------------------------------
-      # NativeAOT 发布 macOS ARM64
+      # 发布 macOS NativeAOT
       # ----------------------------------------------------------
       - name: Publish macOS ARM64
         run: |
@@ -275,11 +247,10 @@ jobs:
             -p:RestoreIgnoreFailedSources=true \
             -o ./publish/osx-arm64
 
-
       # ----------------------------------------------------------
       # 设置执行权限
       # ----------------------------------------------------------
-      - name: Set executable permissions
+      - name: Set macOS executable permissions
         run: |
           chmod +x ./publish/osx-arm64/drive-desktop
 
@@ -287,32 +258,28 @@ jobs:
             chmod +x ./publish/osx-arm64/Drive.Plugin.Runner
           fi
 
-
       # ----------------------------------------------------------
-      # 查看发布结构
+      # 查看文件
       # ----------------------------------------------------------
-      - name: Show publish files
+      - name: Show macOS publish files
         run: |
-          echo "================ Publish Files ================"
+          echo "================ macOS Publish Files ================"
 
           find ./publish/osx-arm64 \
             -maxdepth 5 \
             -type f \
             -print
 
-
       # ----------------------------------------------------------
-      # 打 tar.gz
+      # tar.gz
       # ----------------------------------------------------------
       - name: Package macOS ARM64
         run: |
           cd ./publish/osx-arm64
-
           tar -czf ../Drive-macOS-arm64.tar.gz .
 
-
       # ----------------------------------------------------------
-      # 上传到 Actions Artifact
+      # 上传 Artifact
       # ----------------------------------------------------------
       - name: Upload macOS ARM64 Artifact
         uses: actions/upload-artifact@v7
@@ -322,12 +289,10 @@ jobs:
           if-no-files-found: error
 
 
-
-
   # ============================================================
   # GitHub Release
   #
-  # 等三个平台全部编译成功以后才运行
+  # 三个平台全部成功后执行
   # ============================================================
   release:
     name: Create GitHub Release
@@ -339,23 +304,35 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    # ------------------------------------------------------------
-    # 只有：
+    # 只有 v 开头的 Tag 才发布
     #
+    # 例如：
+    #
+    # v1.0
     # v1.0.0
-    # v1.1.0
-    # v2.0.0
+    # v1.0.1
     #
-    # 这种 Tag 才真正发布 Release
-    #
-    # 手动 workflow_dispatch 不会发布 Release
-    # ------------------------------------------------------------
+    # 手动 Run workflow 不会执行 Release
     if: startsWith(github.ref, 'refs/tags/v')
 
     steps:
+      # ----------------------------------------------------------
+      # 这里非常重要
+      #
+      # 上一次报：
+      #
+      # fatal: not a git repository
+      #
+      # 就是因为 release job 没有 checkout
+      # ----------------------------------------------------------
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
 
       # ----------------------------------------------------------
-      # 下载 Windows 编译结果
+      # 下载 Windows Artifact
       # ----------------------------------------------------------
       - name: Download Windows Artifact
         uses: actions/download-artifact@v8
@@ -365,7 +342,7 @@ jobs:
 
 
       # ----------------------------------------------------------
-      # 下载 Linux 编译结果
+      # 下载 Linux Artifact
       # ----------------------------------------------------------
       - name: Download Linux Artifact
         uses: actions/download-artifact@v8
@@ -375,7 +352,7 @@ jobs:
 
 
       # ----------------------------------------------------------
-      # 下载 macOS 编译结果
+      # 下载 macOS Artifact
       # ----------------------------------------------------------
       - name: Download macOS ARM64 Artifact
         uses: actions/download-artifact@v8
@@ -385,33 +362,104 @@ jobs:
 
 
       # ----------------------------------------------------------
-      # 查看即将上传到 Release 的文件
+      # 查看即将发布的文件
       # ----------------------------------------------------------
       - name: Show Release files
         run: |
-          echo "================ Release Files ================"
+          echo "================================================"
+          echo "Release files"
+          echo "================================================"
 
-          find ./release \
-            -type f \
-            -print
+          find ./release -type f -print
+
+          echo ""
+          echo "================================================"
+          echo "File sizes"
+          echo "================================================"
+
+          du -h ./release/windows/Drive-Windows-x64.zip || true
+          du -h ./release/linux/Drive-Linux-x64.tar.gz || true
+          du -h ./release/macos-arm64/Drive-macOS-arm64.tar.gz || true
 
 
       # ----------------------------------------------------------
-      # 创建 GitHub Release
+      # 创建或更新 Release
       #
-      # github.ref_name：
-      # v1.0.0
-      # v1.1.0
-      # ...
+      # 如果 Release 不存在：
+      #     创建
+      #
+      # 如果已经存在：
+      #     上传 / 覆盖 Assets
+      #
+      # GH_REPO 显式指定仓库，
+      # 即使 git 环境出现问题，也不会再需要自动猜仓库。
       # ----------------------------------------------------------
-      - name: Create GitHub Release
+      - name: Create or Update GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
 
         run: |
-          gh release create "${{ github.ref_name }}" \
-            ./release/windows/Drive-Windows-x64.zip \
-            ./release/linux/Drive-Linux-x64.tar.gz \
-            ./release/macos-arm64/Drive-macOS-arm64.tar.gz \
-            --title "DriveDesktop ${{ github.ref_name }}" \
-            --generate-notes
+          TAG="${{ github.ref_name }}"
+
+          echo "================================================"
+          echo "Publishing Release"
+          echo "================================================"
+
+          echo "Repository : $GH_REPO"
+          echo "Tag        : $TAG"
+
+          echo ""
+          echo "Checking existing release..."
+
+          if gh release view "$TAG" \
+            --repo "$GH_REPO" \
+            >/dev/null 2>&1
+          then
+
+            echo ""
+            echo "Release already exists:"
+            echo "$TAG"
+
+            echo ""
+            echo "Uploading / replacing assets..."
+
+            gh release upload "$TAG" \
+              ./release/windows/Drive-Windows-x64.zip \
+              ./release/linux/Drive-Linux-x64.tar.gz \
+              ./release/macos-arm64/Drive-macOS-arm64.tar.gz \
+              --repo "$GH_REPO" \
+              --clobber
+
+          else
+
+            echo ""
+            echo "Release does not exist."
+            echo "Creating release..."
+
+            gh release create "$TAG" \
+              ./release/windows/Drive-Windows-x64.zip \
+              ./release/linux/Drive-Linux-x64.tar.gz \
+              ./release/macos-arm64/Drive-macOS-arm64.tar.gz \
+              --repo "$GH_REPO" \
+              --title "DriveDesktop $TAG" \
+              --generate-notes
+
+          fi
+
+
+      # ----------------------------------------------------------
+      # 最后确认 Release Assets
+      # ----------------------------------------------------------
+      - name: Verify GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+
+        run: |
+          echo "================================================"
+          echo "Release verification"
+          echo "================================================"
+
+          gh release view "${{ github.ref_name }}" \
+            --repo "$GH_REPO"
