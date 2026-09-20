@@ -18,7 +18,6 @@
     <!-- 共用已验证的图片读写源码；运行时不依赖图片处理插件。 -->
     <Compile Include="../ImageToolsPlugin/Core/ImageProcessor.cs" Link="Core/ImageProcessor.cs" />
     <AvaloniaResource Include="Assets/**" />
-    <None Update="Models/**;Licenses/**;README.md;THIRD-PARTY-NOTICES.txt;Assets/Fonts/LICENSE.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <InternalsVisibleTo Include="PortraitRetouchChecks" />
   </ItemGroup>
   <Import Project="../../Drive.Plugin.SDK/buildTransitive/Drive.Plugin.SDK.targets" />
