@@ -24,7 +24,9 @@
 
 
   </PropertyGroup>
-
+<ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-arm64'">
+    <LinkerArg Include="/arm64hazardfree" />
+</ItemGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
     <Compile Remove="Generated\**" />
