@@ -113,12 +113,12 @@ jobs:
           if-no-files-found: error
 
 
-  # ============================================================
+   # ============================================================
   # Windows ARM64
   # ============================================================
   build-windows-arm64:
     name: Build Windows ARM64
-    runs-on: windows-11-arm
+    runs-on: windows-11-vs2026-arm
 
     steps:
       - name: Checkout
@@ -129,14 +129,26 @@ jobs:
         with:
           global-json-file: ./global.json
 
-      - name: Show Windows ARM64 environment
+      - name: Show environment
         shell: pwsh
         run: |
           dotnet --info
 
           Write-Host ""
-          Write-Host "================ CPU ================="
-          $env:PROCESSOR_ARCHITECTURE
+          Write-Host "================ Architecture ================"
+          Write-Host $env:PROCESSOR_ARCHITECTURE
+
+          Write-Host ""
+          Write-Host "================ Visual Studio ================"
+          & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
+            -latest `
+            -products * `
+            -property installationPath
+
+          Write-Host ""
+          Write-Host "================ LLVM ================"
+          where.exe lld-link
+          lld-link --version
 
       - name: Publish Windows ARM64
         run: >
